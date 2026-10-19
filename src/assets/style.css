@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500&display=swap');
+
+/* Par défaut : Mode Sombre (fond sombre, accents bleus) */
+:root {
+  --bg-color: #0f172a;
+  --text-color: #f8fafc;
+  --accent-color: #0055A5;
+  --font-text: 'Space Grotesk', sans-serif;
+  --font-title: 'Orbitron', sans-serif;
+}
+
+/* Mode Clair (fond clair, accents rouges) */
+.light-mode {
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --accent-color: #EF4135;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  letter-spacing: 1px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  margin: 0;
+  padding: 0;
+}
