@@ -52,7 +52,7 @@
                 <p>IUT d'Aix-en-Provence</p>
                 <ul>
                     <li>Compétences techniques : Terminaux linux, Git, C++, Python, Java, SQL, Bases réseau, HTML, CSS, MIPS</li>
-                    <li>Projets : Candy Crush, Systèmes de votes, Page web statique, Exploitation BD, Statistiques Page Rank, VigieChiro Compagnon</li>
+                    <li>Projets : Candy Crush, Systèmes de votes, Page web statique, Serveurs DNS / MX / Apache, Exploitation BD, Statistiques Page Rank, VigieChiro Compagnon</li>
                 </ul>
               </div>
             </div>
