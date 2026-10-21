@@ -7,7 +7,7 @@ const skills = [
     description: "Maîtrise des commandes, administration et gestion des scripts shell.", 
     icon: "🐧", 
     projects: ["Intégralité des projets"],
-    rating: 5 
+    rating: 4 
   },
   { 
     id: 2, 
@@ -16,7 +16,7 @@ const skills = [
     description: "Gestion de versions, branches, fusion et travail collaborative.", 
     icon: "🌿", 
     projects: ["Intégralité des projets"],
-    rating: 5 
+    rating: 4 
   },
   { 
     id: 3, 
@@ -25,7 +25,7 @@ const skills = [
     description: "Développement de scripts, automatisation et traitement de données.", 
     icon: "🐍", 
     projects: ["Statistiques Page Rank", "Exploitation BD"],
-    rating: 4 
+    rating: 3.5 
   },
   { 
     id: 4, 
@@ -34,7 +34,7 @@ const skills = [
     description: "Programmation orientée objet, structures de données et robustesse.", 
     icon: "☕", 
     projects: ["VigieChiro Compagnon"],
-    rating: 4 
+    rating: 3
   },
   { 
     id: 5, 
@@ -43,7 +43,7 @@ const skills = [
     description: "Gestion de la mémoire, performance et algorithmique avancée.", 
     icon: "⚙️", 
     projects: ["Systèmes de votes", "Candy Crush"],
-    rating: 4 
+    rating: 3.5
   },
   { 
     id: 6, 
@@ -52,7 +52,7 @@ const skills = [
     description: "Conception de schémas relationnels, requêtes complexes et optimisation.", 
     icon: "🐘", 
     projects: ["DataLab"],
-    rating: 5 
+    rating: 4 
   },
   { 
     id: 7, 
@@ -61,7 +61,7 @@ const skills = [
     description: "Configuration, résolution de noms et architecture des serveurs DNS.", 
     icon: "🌐", 
     projects: ["Serveurs DNS / MX / Apache"],
-    rating: 4 
+    rating: 3.5
   },
   { 
     id: 8, 
@@ -70,7 +70,7 @@ const skills = [
     description: "Déploiement, configuration de virtual hosts et sécurisation web.", 
     icon: "🪶", 
     projects: ["Serveurs DNS / MX / Apache"],
-    rating: 3 
+    rating: 2.5
   },
   { 
     id: 9, 
@@ -79,7 +79,7 @@ const skills = [
     description: "Gestion des serveurs de messagerie et protocoles de routage d'e-mails.", 
     icon: "✉️", 
     projects: ["Serveurs DNS / MX / Apache"],
-    rating: 3 
+    rating: 2.5
   },
   { 
     id: 10, 
@@ -88,7 +88,7 @@ const skills = [
     description: "Sémantique, structure de documents et accessibilité de base.", 
     icon: "📄", 
     projects: ["Portfolio", "Page web statique"],
-    rating: 4 
+    rating: 3.5
   },
   { 
     id: 11, 
@@ -106,7 +106,7 @@ const skills = [
     description: "Dynamisme, manipulation du DOM et programmation asynchrone.", 
     icon: "⚡", 
     projects: ["Portfolio"],
-    rating: 2 
+    rating: 2.5
   },
   { 
     id: 13, 
@@ -115,7 +115,7 @@ const skills = [
     description: "Composants réactifs, composition API et architecture SPA.", 
     icon: "🟢", 
     projects: ["Portfolio"],
-    rating: 4 
+    rating: 3.5
   },
   { 
     id: 14, 
@@ -160,7 +160,10 @@ const skills = [
                 v-for="star in 5" 
                 :key="star" 
                 class="star" 
-                :class="{ 'filled': star <= skill.rating }"
+                :class="{ 
+                  'filled': star <= skill.rating, 
+                  'half': star === Math.ceil(skill.rating) && skill.rating % 1 !== 0 
+                }"
               >★</span>
             </div>
           </div>
@@ -327,5 +330,12 @@ const skills = [
 .star.filled {
   color: var(--accent-color);
   text-shadow: 0 0 5px var(--accent-color);
+}
+
+.star.half {
+  background: linear-gradient(90deg, var(--accent-color) 50%, color-mix(in srgb, var(--text-color) 25%, transparent) 50%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 3px var(--accent-color));
 }
 </style>
