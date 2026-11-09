@@ -2,7 +2,7 @@
 // Note : Le sélecteur d'onglets sera réintégré plus tard pour la version mobile
 </script>
 <template>
-  <section id="accueil" class="hero-section">
+  <section id="home" class="hero-section">
     <div class="hero-header">
       <h1>Futur expert en cyber-sécurité</h1>
       <h2>Ma présentation</h2>
