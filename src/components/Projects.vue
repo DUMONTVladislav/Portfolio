@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed } from 'vue'
+import CandyCrushTerminal from './CandyCrushTerminal.vue'
 
 const projectCategories = [
   {
@@ -18,7 +19,7 @@ const projectCategories = [
         title: "Candy Crush",
         languages: ["C++"],
         description: "Recréation du jeu emblématique Candy Crush en C++ avec les modes suivants : classique, histoire, 1v1",
-        longDescription: "Ce deuxième projet en C++ demandait de recréer cette fois-ci Candy-Crush, l'un des jeux les plus connus sur téléphone. Cette version fonctionne au tour par tour mais simule tout de même le système de combo et la gravité. Plusieurs mode de jeu sont disponible tels que le mode Classique, le mode 1v1, et même un mode Histoire ! BONUS : le jeu est jouable depuis cette page, testez le !",
+        longDescription: "Ce deuxième projet en C++ demandait de recréer cette fois-ci Candy-Crush, l'un des jeux les plus connus sur téléphone. Cette version fonctionne au tour par tour mais simule tout de même le système de combo et la gravité (inversée malheureusement). Plusieurs mode de jeu sont disponible tels que le mode Classique, le mode 1v1, et même un mode Histoire ! BONUS : le jeu est jouable depuis cette page, testez le ! (Jeu adapté au site web grâce à Antigravity)",
         images: [],
         githubUrl: ""
       },
@@ -198,7 +199,11 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
           class="project-card-large clickable-card"
           @click="openModal(project)"
         >
-          <div class="project-screenshot-box">
+          <!-- Si Candy Crush : Terminal émulé directement sans image -->
+          <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
+            <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
+          </div>
+          <div v-else class="project-screenshot-box">
             <template v-if="project.images && project.images.length">
               <img 
                 :src="project.images[0]" 
@@ -289,7 +294,11 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
         </div>
 
         <div class="modal-body">
-          <div class="modal-screenshot-box" v-if="activeProject.images && activeProject.images.length">
+          <!-- Si Candy Crush : Terminal émulé dans la modale sans image -->
+          <div v-if="activeProject.title === 'Candy Crush'" class="modal-terminal-box">
+            <CandyCrushTerminal />
+          </div>
+          <div v-else-if="activeProject.images && activeProject.images.length" class="modal-screenshot-box">
             <button class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1">❮</button>
             
             <img 
@@ -481,6 +490,25 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
 .project-card-large:hover {
   box-shadow: 0 0 20px var(--accent-color);
   transform: translateY(-3px);
+}
+
+.project-terminal-box {
+  flex: 1.5;
+  height: 310px;
+  min-width: 300px;
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.modal-terminal-box {
+  width: 100%;
+  height: 420px;
+  border: 1px solid var(--accent-color);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
 }
 
 .project-screenshot-box {
