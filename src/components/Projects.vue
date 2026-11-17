@@ -7,75 +7,67 @@ const projectCategories = [
     origin: "universitaire",
     projects: [
       {
-        id: 2,
         title: "Systèmes de vote",
         languages: ["C++"],
         description: "Adaptation de plusieurs systèmes de vote en C++ et tests avec des fichiers Oracle",
-        longDescription: "Ce projet universitaire a consisté à concevoir et implémenter différents systèmes de vote (scrutin majoritaire, proportionnel, etc.) en C++. Une attention particulière a été portée à la robustesse du code, à la gestion rigoureuse de la mémoire et à la validation des résultats via des jeux de tests et des fichiers Oracle.",
-        imageSrc: "",
+        longDescription: "Pour ma première expérience en C++ il m'a été demandé à moi et mon groupe de recréer 3 systèmes de vote : le vote majoritaire à 2 tours (utilisé actuellement en France), la méthode de Borda (liste de choix) et le vote limité (scrutin plurinominal majoritaire). Les programmes fonctionnent à l'aide de fichiers d'entrées et les sorties sont comparées à un fichier Oracle pour vérifier leur veracité.",
+        images: ["vote.jpg"],
         githubUrl: ""
       },
       {
-        id: 3,
         title: "Candy Crush",
         languages: ["C++"],
         description: "Recréation du jeu emblématique Candy Crush en C++ avec les modes suivants : classique, histoire, 1v1",
-        longDescription: "Développement complet du jeu Candy Crush en C++ en architecture modulaire. Implémentation des algorithmes de détection d'alignements de bonbons, gestion des scores, de la gravité, et création de plusieurs modes de jeu stimulants : mode classique, mode histoire avec progression, et un mode 1v1 en réseau/local.",
-        imageSrc: "",
+        longDescription: "Ce deuxième projet en C++ demandait de recréer cette fois-ci Candy-Crush, l'un des jeux les plus connus sur téléphone. Cette version fonctionne au tour par tour mais simule tout de même le système de combo et la gravité. Plusieurs mode de jeu sont disponible tels que le mode Classique, le mode 1v1, et même un mode Histoire ! BONUS : le jeu est jouable depuis cette page, testez le !",
+        images: [],
         githubUrl: ""
       },
       {
-        id: 4,
         title: "Page web statique : Rock O' Rama",
         languages: ["HTML", "CSS"],
         description: "Création de ma première page web statique sur le thème du rock !",
-        longDescription: "Premier projet de webdesign et d'intégration HTML/CSS. Structuration sémantique du contenu, mise en page créative aux couleurs du rock, utilisation des balises modernes et application de styles personnalisés pour une immersion totale.",
-        imageSrc: "",
-        githubUrl: ""
+        longDescription: "Pour ma première impression d'HTML et CSS, il nous est demandé de créer une page web statique comportant plusieurs caractéristiques : plusieurs pages responsives avec navbar et menu hamburger maximisant google lighthouse. Je vous présente donc Rock O' Rama !",
+        images: ["ROR1.png", "ROR2.png"],
+        githubUrl: "https://github.com/DUMONTVladislav/Rock_O_Rama"
       },
       {
-        id: 5,
         title: "Modélisation et Exploitation d'une BDD : Les Tenracs",
         languages: ["SQL", "Python"],
         description: "Modélisation du système de la confrérie des TENders RAClette et exploitation de données générées via Faker",
-        longDescription: "Conception complète d'une base de données relationnelle pour la confrérie fictive des TENders RAClette. Génération d'un volume important de données réalistes à l'aide de scripts Python et de la bibliothèque Faker, puis écriture de requêtes SQL complexes pour l'analyse et l'exploitation des données.",
-        imageSrc: "",
-        githubUrl: ""
+        longDescription: "La confrérie imaginaire des TENRACs avait besoin d'une base de donnée fonctionnelle afin d'organiser leurs prochains repas. Nous nous sommes donc occupé de la création d'un MCD opérationnel avec Looping. Pour faire des statistiques de cette base de données, il a fallu créer des fausses données avec Faker puis les analyser de manière pertinente avec des bibliothèques Python telles que pandas, numpy, etc...",
+        images: ["TRL.png", "TRS1.png", "TRS2.png", "TRC1.png", "TRC2.png"],
+        githubUrl: "https://github.com/DUMONTVladislav/SAE-Exploitation-BDD"
       },
       {
-        id: 6,
         title: "Statistiques PageRank",
         languages: ["Python"],
         description: "Analyse de l'algorithme de Google PageRank avec Python",
-        longDescription: "Implémentation et analyse mathématique/statistique de l'algorithme PageRank popularisé par Google. Utilisation de Python pour modéliser le graphe du web, calcul des matrices de transition et étude de la convergence des scores d'autorité des pages.",
-        imageSrc: "",
+        longDescription: "PageRank est un algorithme utilisé pour gérer le système de référencement des sites webs. Nous avons donc tout d'abord recréé un semblant de l'algorithme et l'avons testé avec des matrices simulant un web.",
+        images: ["PR.png"],
         githubUrl: ""
       },
       {
-        id: 7,
         title: "Mise en place de serveurs Apache, DNS et MX",
         languages: ["Apache", "DNS", "MX"],
         description: "Mise en places des serveurs et premières notions de cybersécurité",
-        longDescription: "Projet d'infrastructure réseau et système : déploiement et configuration complète de serveurs de noms (DNS), de serveurs web Apache (virtual hosts, sécurisation de base) et de serveurs de messagerie (MX). Application des premières bonnes pratiques de durcissement et de cybersécurité.",
-        imageSrc: "",
+        longDescription: "Pour ma première expérience en réseau, moi et mon coéquipier avons mis en place un serveur Apache ainsi que deux serveurs DNS (primaire / secondaire) et un serveur de messagerie (MX). Nous avons pu nous sensibiliser sur la cybersécurité et les mesures à prendre en lançant une attaque DoS depuis une VM pirate.",
+        images: ["Apache.png"],
         githubUrl: ""
       },
       {
-        id: 8,
         title: "VigieChiro Compagnon",
         languages: ["Java", "JavaFX"],
         description: "Modélisation, visualisation, conception et tests d'une application portant sur l'étude de la faune de nuit",
-        longDescription: "Application lourde en Java et JavaFX dédiée aux chercheurs étudiant les chiroptères (chauves-souris). Modélisation orientée objet rigoureuse, création d'une interface graphique interactive pour la visualisation de données de bio-acoustique nocturne, et mise en place de tests unitaires.",
-        imageSrc: "",
+        longDescription: "Nous avons contribué à l'application VigieChiro Compagnon en réalisant des tests unitaires pour valider chaque étape de notre Model View Controller. Le but de cette application est de mesurer l'impact de l'éclairage artificiel sur la faune de nuit (chauve-souris principalement), pour faire cela biologistes et amateurs peuvent poser des capteurs de sons qui seront répertoriés et dont les sons seront analysés pour établir des statistiques selon la localisation géographique et l'heure de la journée.",
+        images: ["VC.jpg"],
         githubUrl: ""
       },
       {
-        id: 9,
         title: "DataLab",
         languages: ["HTML", "CSS", "PHP", "SQL", "JavaScript"],
         description: "Création d'un site web de manipulation de BDD a but pédagogique",
-        longDescription: "Plateforme web interactive et pédagogique permettant de s'initier aux bases de données. Combinaison de HTML/CSS et JavaScript pour le frontend, d'un backend en PHP et d'une connexion à une base de données pour permettre aux étudiants d'exécuter et de tester des requêtes en direct.",
-        imageSrc: "",
+        longDescription: "Mon plus gros projet à ce jour. Pour manipuler des bases de données les élèves peuvent utiliser des interprètes en lignes comme OneCompiler qui restent superficiels ou alors PhpMyAdmin qui est plus complet mais dont l'interface est rustique voire hostile pour des débutants. Le but de DataLab serait de faire un site web en ligne qui mélangerait l'aspect 'complet' de PhpMyAdmin tout en le rendant pédagogique comme la plateforme Ametice. Les élèves pourront réaliser des exercices disponibles selon leur année de formation, groupe de TP, etc..., en créant des espaces de travail reprenant la base de données du cours. Il est prévu d'ajouter si possible un système de gamification pour rendre le site plus 'ludique'.",
+        images: [],
         githubUrl: ""
       }
     ]
@@ -85,12 +77,11 @@ const projectCategories = [
     origin: "personnel",
     projects: [
       {
-        id: 1,
         title: "Portfolio",
         languages: ["Vue.js", "CSS"],
         description: "Création d'un espace technique interactif avec design system sur mesure et esthétique de centre de contrôle",
-        longDescription: "Conception et développement de ce portfolio personnel sous Vue.js (Composition API). Utilisation d'un design system futuriste inspiré des centres de contrôle, architecture hautement modulaire, composants réactifs avec filtrage dynamique et gestion des thèmes.",
-        imageSrc: "",
+        longDescription: "Conception et développement de ce portfolio personnel sous Vue.js (Composition API). Ajout de quelques features utiles telles que des barres de recherche, systèmes de filtrage, etc...",
+        images: [],
         githubUrl: "https://github.com/DUMONTVladislav/Portfolio"
       }
     ]
@@ -104,15 +95,40 @@ const searchQuery = ref('')
 const isUniversitaireOpen = ref(true)
 const isPersonnelOpen = ref(true)
 
-// État pour la modale plein écran
 const activeProject = ref(null)
+const currentImageIndex = ref(0)
+const zoomedImageSrc = ref(null)
 
 const openModal = (project) => {
   activeProject.value = project
+  currentImageIndex.value = 0
 }
 
 const closeModal = () => {
   activeProject.value = null
+  currentImageIndex.value = 0
+}
+
+const nextImage = () => {
+  if (activeProject.value && activeProject.value.images) {
+    currentImageIndex.value = (currentImageIndex.value + 1) % activeProject.value.images.length
+  }
+}
+
+const prevImage = () => {
+  if (activeProject.value && activeProject.value.images) {
+    currentImageIndex.value = (currentImageIndex.value - 1 + activeProject.value.images.length) % activeProject.value.images.length
+  }
+}
+
+const openZoom = (imgSrc) => {
+  if (imgSrc) {
+    zoomedImageSrc.value = imgSrc
+  }
+}
+
+const closeZoom = () => {
+  zoomedImageSrc.value = null
 }
 
 const toggleLanguage = (lang) => {
@@ -144,7 +160,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
   <section id="projects" class="projects-section">
     <h2>Mes projets</h2>
 
-    <!-- Barre de contrôles -->
     <div class="projects-controls">
       <div class="search-group">
         <label for="project-search" class="control-label">Rechercher :</label>
@@ -170,7 +185,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
       </div>
     </div>
 
-    <!-- Section Projets Universitaires -->
     <div class="project-category-group" v-if="filteredUniversitaires.length">
       <button class="category-toggle-btn" @click="isUniversitaireOpen = !isUniversitaireOpen">
         <span class="category-title-text">Projets Universitaires <span class="count-badge">({{ filteredUniversitaires.length }})</span></span>
@@ -180,13 +194,26 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
       <div class="projects-container" v-show="isUniversitaireOpen">
         <article 
           v-for="project in filteredUniversitaires" 
-          :key="project.id" 
+          :key="project.title" 
           class="project-card-large clickable-card"
           @click="openModal(project)"
         >
           <div class="project-screenshot-box">
-            <img :src="project.imageSrc" :alt="project.title" class="project-screenshot" />
-            <div class="zoom-overlay"><span>🔍 Agrandir</span></div>
+            <template v-if="project.images && project.images.length">
+              <img 
+                :src="project.images[0]" 
+                :alt="project.title" 
+                class="project-screenshot" 
+              />
+              <div class="zoom-overlay">
+                <span>🔍 Agrandir</span>
+              </div>
+            </template>
+            <div v-else class="no-img-box">
+              <span class="no-img-text">
+                {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+              </span>
+            </div>
           </div>
 
           <div class="project-content">
@@ -204,7 +231,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
       </div>
     </div>
 
-    <!-- Section Projets Personnels -->
     <div class="project-category-group" v-if="filteredPersonnels.length">
       <button class="category-toggle-btn" @click="isPersonnelOpen = !isPersonnelOpen">
         <span class="category-title-text">Projets Personnels <span class="count-badge">({{ filteredPersonnels.length }})</span></span>
@@ -214,13 +240,26 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
       <div class="projects-container" v-show="isPersonnelOpen">
         <article 
           v-for="project in filteredPersonnels" 
-          :key="project.id" 
+          :key="project.title" 
           class="project-card-large clickable-card"
           @click="openModal(project)"
         >
           <div class="project-screenshot-box">
-            <img :src="project.imageSrc" :alt="project.title" class="project-screenshot" />
-            <div class="zoom-overlay"><span>🔍 Agrandir</span></div>
+            <template v-if="project.images && project.images.length">
+              <img 
+                :src="project.images[0]" 
+                :alt="project.title" 
+                class="project-screenshot" 
+              />
+              <div class="zoom-overlay">
+                <span>🔍 Agrandir</span>
+              </div>
+            </template>
+            <div v-else class="no-img-box">
+              <span class="no-img-text">
+                {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+              </span>
+            </div>
           </div>
 
           <div class="project-content">
@@ -238,7 +277,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
       </div>
     </div>
 
-    <!-- MODALE PLEIN ÉCRAN -->
     <div class="modal-backdrop" v-if="activeProject" @click="closeModal">
       <div class="modal-content" @click.stop>
         <button class="modal-close-btn" @click="closeModal">✕</button>
@@ -251,9 +289,28 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
         </div>
 
         <div class="modal-body">
-          <div class="modal-screenshot-box">
-            <img :src="activeProject.imageSrc || ''" :alt="activeProject.title" class="modal-screenshot" />
-            <span class="no-img-text" v-if="!activeProject.imageSrc">[ Capture d'écran en cours d'ajout ]</span>
+          <div class="modal-screenshot-box" v-if="activeProject.images && activeProject.images.length">
+            <button class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1">❮</button>
+            
+            <img 
+              :src="activeProject.images[currentImageIndex]" 
+              :alt="activeProject.title" 
+              class="modal-screenshot zoomable-img" 
+              @click="openZoom(activeProject.images[currentImageIndex])"
+              title="Cliquer pour zoomer en plein écran"
+            />
+            
+            <button class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1">❯</button>
+            
+            <div class="carousel-counter" v-if="activeProject.images.length > 1">
+              {{ currentImageIndex + 1 }} / {{ activeProject.images.length }}
+            </div>
+          </div>
+          
+          <div class="modal-screenshot-box" v-else>
+            <span class="no-img-text">
+              {{ activeProject.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+            </span>
           </div>
 
           <div class="modal-details">
@@ -265,6 +322,13 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
         <div class="modal-footer" v-if="activeProject.githubUrl">
           <a :href="activeProject.githubUrl" target="_blank" class="btn-outline">Voir le dépôt GitHub</a>
         </div>
+      </div>
+    </div>
+
+    <div class="zoom-lightbox-backdrop" v-if="zoomedImageSrc" @click="closeZoom">
+      <div class="zoom-lightbox-content" @click.stop>
+        <button class="modal-close-btn" @click="closeZoom">✕</button>
+        <img :src="zoomedImageSrc" alt="Agrandissement de l'image" class="zoomed-full-img" />
       </div>
     </div>
   </section>
@@ -422,7 +486,7 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
 .project-screenshot-box {
   flex: 1.5;
   height: 250px;
-  background: rgba(0, 0, 0, 0.4);
+  background: color-mix(in srgb, var(--accent-color) 5%, rgba(0, 0, 0, 0.8));
   border: 1px solid var(--accent-color);
   border-radius: 8px;
   overflow: hidden;
@@ -430,32 +494,51 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
   align-items: center;
   justify-content: center;
   position: relative;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
 }
 
 .project-screenshot {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  z-index: 1;
 }
 
 .zoom-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(5, 8, 15, 0.75);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s ease;
-  font-family: var(--font-title);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.zoom-overlay span {
+  background: var(--nav-bg);
+  border: 1px solid var(--accent-color);
   color: var(--accent-color);
-  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-family: var(--font-title);
+  font-size: 0.85rem;
   letter-spacing: 1px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+  transform: translateY(6px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .project-card-large:hover .zoom-overlay {
   opacity: 1;
+}
+
+.project-card-large:hover .zoom-overlay span {
+  transform: translateY(0);
+  box-shadow: 0 0 12px var(--accent-color);
 }
 
 .project-content {
@@ -525,7 +608,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
   transform: translateY(-2px);
 }
 
-/* STLES DE LA MODALE PLEIN ÉCRAN */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -571,6 +653,7 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  z-index: 10;
 }
 
 .modal-close-btn:hover {
@@ -596,32 +679,102 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
 
 .modal-screenshot-box {
   width: 100%;
-  height: 350px;
-  background: rgba(0, 0, 0, 0.5);
+  height: 320px;
+  background: color-mix(in srgb, var(--accent-color) 5%, rgba(0, 0, 0, 0.8));
   border: 1px solid var(--accent-color);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.7);
 }
 
 .modal-screenshot {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+.zoomable-img {
+  cursor: zoom-in;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+  box-shadow: 0 0 10px var(--accent-color);
+}
+
+.carousel-btn.prev {
+  left: 1rem;
+}
+
+.carousel-btn.next {
+  right: 1rem;
+}
+
+.carousel-counter {
+  position: absolute;
+  bottom: 0.8rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.no-img-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  text-align: center;
 }
 
 .no-img-text {
   font-family: var(--font-title);
   font-size: 0.9rem;
   color: var(--accent-color);
-  opacity: 0.7;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+}
+
+.modal-details {
+  background: color-mix(in srgb, var(--text-color) 3%, transparent);
+  border: 1px solid color-mix(in srgb, var(--accent-color) 30%, transparent);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 8px;
+  padding: 1.2rem;
 }
 
 .modal-details h4 {
   font-family: var(--font-title);
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: var(--accent-color);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
@@ -640,5 +793,35 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
   display: flex;
   justify-content: flex-start;
   margin-top: 0.5rem;
+}
+
+.zoom-lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.zoom-lightbox-content {
+  position: relative;
+  max-width: 95vw;
+  max-height: 95vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.zoomed-full-img {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 2px solid var(--accent-color);
+  border-radius: 8px;
+  box-shadow: 0 0 40px var(--accent-color);
 }
 </style>
