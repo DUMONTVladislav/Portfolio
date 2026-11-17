@@ -1,0 +1,14 @@
+================================================================================
+-- Règles --
+
+Déplacements :
+* Sélectionnez les coordoonées d'une case
+* Z - Haut, Q - Gauche, S - Bas, D - Droite, pour la déplacer
+
+But du jeu :
+* Aligner au moins 3 mêmes chiffres pour les faire disparaître
+* Atteindre le plus gros score en un nombre déplacements limités
+
+Appuyez sur 0 pour quitter
+================================================================================
+

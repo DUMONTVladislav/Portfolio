@@ -1,0 +1,12 @@
+================================================================================
+-- Candy Crush --
+Sélectionnez un mode en entrant le chiffre associé :
+
+1. Mode Histoire
+2. Mode Classique
+3. Mode 1v1
+4. Leaderboard
+5. Instructions
+0. Quitter
+================================================================================
+
