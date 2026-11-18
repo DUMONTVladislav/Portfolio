@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import CandyCrushTerminal from './CandyCrushTerminal.vue'
 
 const projectCategories = [
@@ -8,6 +8,7 @@ const projectCategories = [
     origin: "universitaire",
     projects: [
       {
+        id: "project-systemes-de-vote",
         title: "Systèmes de vote",
         languages: ["C++"],
         description: "Adaptation de plusieurs systèmes de vote en C++ et tests avec des fichiers Oracle",
@@ -17,6 +18,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-candy-crush",
         title: "Candy Crush",
         languages: ["C++"],
         description: "Recréation du jeu emblématique Candy Crush en C++ avec les modes suivants : classique, histoire, 1v1",
@@ -26,6 +28,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-rock-o-rama",
         title: "Page web statique : Rock O' Rama",
         languages: ["HTML", "CSS"],
         description: "Création de ma première page web statique sur le thème du rock !",
@@ -35,6 +38,7 @@ const projectCategories = [
         siteUrl: "https://dumont-vladislav-25009525.github.io/Rock_O_Rama/"
       },
       {
+        id: "project-les-tenracs",
         title: "Modélisation et Exploitation d'une BDD : Les Tenracs",
         languages: ["SQL", "Python"],
         description: "Modélisation du système de la confrérie des TENders RAClette et exploitation de données générées via Faker",
@@ -44,6 +48,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-pagerank",
         title: "Statistiques PageRank",
         languages: ["Python"],
         description: "Analyse de l'algorithme de Google PageRank avec Python",
@@ -53,6 +58,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-serveurs-apache-dns-mx",
         title: "Mise en place de serveurs Apache, DNS et MX",
         languages: ["Apache", "DNS", "MX"],
         description: "Mise en places des serveurs et premières notions de cybersécurité",
@@ -62,6 +68,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-vigiechiro",
         title: "VigieChiro Compagnon",
         languages: ["Java", "JavaFX"],
         description: "Modélisation, visualisation, conception et tests d'une application portant sur l'étude de la faune de nuit",
@@ -71,6 +78,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-datalab",
         title: "DataLab",
         languages: ["HTML", "CSS", "PHP", "SQL", "JavaScript"],
         description: "Création d'un site web de manipulation de BDD a but pédagogique",
@@ -80,6 +88,7 @@ const projectCategories = [
         siteUrl: ""
       },
       {
+        id: "project-flexarion",
         title: "Flexarion",
         languages: ["Communication"],
         description: "Stratégie de référencement avancée visant à positionner le site web Flexarion en première position sur Google grâce à différentes techniques de communication",
@@ -95,6 +104,7 @@ const projectCategories = [
     origin: "personnel",
     projects: [
       {
+        id: "project-portfolio",
         title: "Portfolio",
         languages: ["Vue.js", "CSS"],
         description: "Création d'un espace technique interactif avec design system sur mesure et esthétique de centre de contrôle",
@@ -173,6 +183,74 @@ const filterProjects = (origin) => {
 
 const filteredUniversitaires = computed(() => filterProjects('universitaire'))
 const filteredPersonnels = computed(() => filterProjects('personnel'))
+
+const highlightedProjectId = ref(null)
+
+const scrollToProject = (id) => {
+  if (!id) return
+  const cleanId = id.replace(/^#/, '')
+  if (cleanId === 'projects') return
+
+  const cat = projectCategories.find(c => c.projects.some(p => p.id === cleanId))
+  if (!cat) return
+
+  if (cat.origin === 'universitaire') {
+    isUniversitaireOpen.value = true
+  } else if (cat.origin === 'personnel') {
+    isPersonnelOpen.value = true
+  }
+
+  const project = cat.projects.find(p => p.id === cleanId)
+  if (project) {
+    const isLangSelected = project.languages.some(lang => selectedLanguages.value.includes(lang))
+    if (!isLangSelected) {
+      selectedLanguages.value = [...allLanguages]
+    }
+    if (searchQuery.value) {
+      searchQuery.value = ''
+    }
+  }
+
+  nextTick(() => {
+    const el = document.getElementById(cleanId)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      highlightedProjectId.value = cleanId
+      setTimeout(() => {
+        if (highlightedProjectId.value === cleanId) {
+          highlightedProjectId.value = null
+        }
+      }, 2500)
+    }
+  })
+}
+
+const onNavToProject = (e) => {
+  if (e.detail?.id) {
+    scrollToProject(e.detail.id)
+  }
+}
+
+const onHashChange = () => {
+  if (window.location.hash && window.location.hash.startsWith('#project-')) {
+    scrollToProject(window.location.hash.slice(1))
+  }
+}
+
+onMounted(() => {
+  window.addEventListener('nav-to-project', onNavToProject)
+  window.addEventListener('hashchange', onHashChange)
+  if (window.location.hash && window.location.hash.startsWith('#project-')) {
+    setTimeout(() => {
+      scrollToProject(window.location.hash.slice(1))
+    }, 150)
+  }
+})
+
+onUnmounted(() => {
+  window.removeEventListener('nav-to-project', onNavToProject)
+  window.removeEventListener('hashchange', onHashChange)
+})
 </script>
 
 <template>
@@ -214,7 +292,9 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
         <article 
           v-for="project in filteredUniversitaires" 
           :key="project.title" 
+          :id="project.id"
           class="project-card-large clickable-card"
+          :class="{ 'highlighted': highlightedProjectId === project.id }"
           @click="openModal(project)"
         >
           <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
@@ -264,7 +344,9 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
         <article 
           v-for="project in filteredPersonnels" 
           :key="project.title" 
+          :id="project.id"
           class="project-card-large clickable-card"
+          :class="{ 'highlighted': highlightedProjectId === project.id }"
           @click="openModal(project)"
         >
           <div class="project-screenshot-box">
@@ -504,11 +586,38 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
   transition: all 0.3s ease;
   box-sizing: border-box;
   cursor: pointer;
+  scroll-margin-top: 90px;
 }
 
 .project-card-large:hover {
   box-shadow: 0 0 20px var(--accent-color);
   transform: translateY(-3px);
+}
+
+.project-card-large:target,
+.project-card-large.highlighted {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 25px var(--accent-color), inset 0 0 10px color-mix(in srgb, var(--accent-color) 25%, transparent);
+  animation: project-pulse 1.8s ease-in-out;
+}
+
+@keyframes project-pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  }
+  30% {
+    transform: scale(1.015);
+    box-shadow: 0 0 35px var(--accent-color), inset 0 0 15px color-mix(in srgb, var(--accent-color) 40%, transparent);
+  }
+  70% {
+    transform: scale(1.01);
+    box-shadow: 0 0 30px var(--accent-color);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px var(--accent-color);
+  }
 }
 
 .project-terminal-box {

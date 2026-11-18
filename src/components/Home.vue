@@ -38,7 +38,7 @@
                 <p>IUT d'Aix-en-Provence</p>
                 <ul>
                     <li>Compétences techniques : PostgreSQL, PHP</li>
-                    <li>Projet : DataLab</li>
+                    <li>Projets : DataLab, Flexarion</li>
                 </ul>
               </div>
             </div>

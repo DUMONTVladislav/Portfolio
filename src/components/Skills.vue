@@ -185,6 +185,32 @@ const filterAndSort = (origin) => {
 
 const cursusSkills = computed(() => filterAndSort('cursus'))
 const autodidacteSkills = computed(() => filterAndSort('autodidacte'))
+
+const projectLinks = {
+  "Systèmes de vote": "#project-systemes-de-vote",
+  "Candy Crush": "#project-candy-crush",
+  "Rock O' Rama": "#project-rock-o-rama",
+  "Les Tenracs": "#project-les-tenracs",
+  "PageRank": "#project-pagerank",
+  "Serveurs Apache/DNS/MX": "#project-serveurs-apache-dns-mx",
+  "VigieChiro": "#project-vigiechiro",
+  "DataLab": "#project-datalab",
+  "Flexarion": "#project-flexarion",
+  "Portfolio": "#project-portfolio",
+  "Tous les projets": "#projects"
+}
+
+const getProjectLink = (projectName) => {
+  return projectLinks[projectName] || '#projects'
+}
+
+const onProjectClick = (projectName) => {
+  const link = getProjectLink(projectName)
+  if (link.startsWith('#project-')) {
+    const id = link.slice(1)
+    window.dispatchEvent(new CustomEvent('nav-to-project', { detail: { id } }))
+  }
+}
 </script>
 
 <template>
@@ -250,7 +276,14 @@ const autodidacteSkills = computed(() => filterAndSort('autodidacte'))
             
             <div class="skill-projects" v-if="skill.projects && skill.projects.length">
               <span class="projects-label">Projets :</span>
-              <a href="#projects" class="project-tag" v-for="proj in skill.projects" :key="proj">{{ proj }}</a>
+              <a 
+                v-for="proj in skill.projects" 
+                :key="proj"
+                :href="getProjectLink(proj)" 
+                @click="onProjectClick(proj)"
+                class="project-tag"
+                :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
+              >{{ proj }}</a>
             </div>
 
             <div class="skill-rating-container">
@@ -296,7 +329,14 @@ const autodidacteSkills = computed(() => filterAndSort('autodidacte'))
             
             <div class="skill-projects" v-if="skill.projects && skill.projects.length">
               <span class="projects-label">Projets :</span>
-              <a href="#projects" class="project-tag" v-for="proj in skill.projects" :key="proj">{{ proj }}</a>
+              <a 
+                v-for="proj in skill.projects" 
+                :key="proj"
+                :href="getProjectLink(proj)" 
+                @click="onProjectClick(proj)"
+                class="project-tag"
+                :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
+              >{{ proj }}</a>
             </div>
 
             <div class="skill-rating-container">
