@@ -15,7 +15,8 @@ const projectCategories = [
         longDescription: "Pour ma première expérience en C++ il m'a été demandé à moi et mon groupe de recréer 3 systèmes de vote : le vote majoritaire à 2 tours (utilisé actuellement en France), la méthode de Borda (liste de choix) et le vote limité (scrutin plurinominal majoritaire). Les programmes fonctionnent à l'aide de fichiers d'entrées et les sorties sont comparées à un fichier Oracle pour vérifier leur veracité.",
         images: ["vote.jpg"],
         githubUrl: "",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: false
       },
       {
         id: "project-candy-crush",
@@ -25,7 +26,8 @@ const projectCategories = [
         longDescription: "Ce deuxième projet en C++ demandait de recréer cette fois-ci Candy-Crush, l'un des jeux les plus connus sur téléphone. Cette version fonctionne au tour par tour mais simule tout de même le système de combo et la gravité (inversée malheureusement). Plusieurs mode de jeu sont disponible tels que le mode Classique, le mode 1v1, et même un mode Histoire ! BONUS : le jeu est jouable depuis cette page, testez le ! (Jeu adapté au site web grâce à Antigravity)",
         images: [],
         githubUrl: "",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: false
       },
       {
         id: "project-rock-o-rama",
@@ -35,7 +37,8 @@ const projectCategories = [
         longDescription: "Pour ma première impression d'HTML et CSS, il nous est demandé de créer une page web statique comportant plusieurs caractéristiques : plusieurs pages responsives avec navbar et menu hamburger maximisant google lighthouse. Je vous présente donc Rock O' Rama !",
         images: ["ROR1.png", "ROR2.png"],
         githubUrl: "https://github.com/DUMONTVladislav/Rock_O_Rama",
-        siteUrl: "https://dumont-vladislav-25009525.github.io/Rock_O_Rama/"
+        siteUrl: "https://dumont-vladislav-25009525.github.io/Rock_O_Rama/",
+        pinned: false
       },
       {
         id: "project-les-tenracs",
@@ -45,7 +48,8 @@ const projectCategories = [
         longDescription: "La confrérie imaginaire des TENRACs avait besoin d'une base de donnée fonctionnelle afin d'organiser leurs prochains repas. Nous nous sommes donc occupé de la création d'un MCD opérationnel avec Looping. Pour faire des statistiques de cette base de données, il a fallu créer des fausses données avec Faker puis les analyser de manière pertinente avec des bibliothèques Python telles que pandas, numpy, etc...",
         images: ["TRL.png", "TRS1.png", "TRS2.png", "TRC1.png", "TRC2.png"],
         githubUrl: "https://github.com/DUMONTVladislav/SAE-Exploitation-BDD",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: false
       },
       {
         id: "project-pagerank",
@@ -55,7 +59,8 @@ const projectCategories = [
         longDescription: "PageRank est un algorithme utilisé pour gérer le système de référencement des sites webs. Nous avons donc tout d'abord recréé un semblant de l'algorithme et l'avons testé avec des matrices simulant un web.",
         images: ["PR.png"],
         githubUrl: "",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: false
       },
       {
         id: "project-serveurs-apache-dns-mx",
@@ -65,7 +70,8 @@ const projectCategories = [
         longDescription: "Pour ma première expérience en réseau, moi et mon coéquipier avons mis en place un serveur Apache ainsi que deux serveurs DNS (primaire / secondaire) et un serveur de messagerie (MX). Nous avons pu nous sensibiliser sur la cybersécurité et les mesures à prendre en lançant une attaque DoS depuis une VM pirate.",
         images: ["Apache.png"],
         githubUrl: "",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: false
       },
       {
         id: "project-vigiechiro",
@@ -75,7 +81,8 @@ const projectCategories = [
         longDescription: "Nous avons contribué à l'application VigieChiro Compagnon en réalisant des tests unitaires pour valider chaque étape de notre Model View Controller. Le but de cette application est de mesurer l'impact de l'éclairage artificiel sur la faune de nuit (chauve-souris principalement), pour faire cela biologistes et amateurs peuvent poser des capteurs de sons qui seront répertoriés et dont les sons seront analysés pour établir des statistiques selon la localisation géographique et l'heure de la journée.",
         images: ["VC.jpg"],
         githubUrl: "",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: false
       },
       {
         id: "project-datalab",
@@ -85,7 +92,8 @@ const projectCategories = [
         longDescription: "Mon plus gros projet à ce jour. Pour manipuler des bases de données les élèves peuvent utiliser des interprètes en lignes comme OneCompiler qui restent superficiels ou alors PhpMyAdmin qui est plus complet mais dont l'interface est rustique voire hostile pour des débutants. Le but de DataLab serait de faire un site web en ligne qui mélangerait l'aspect 'complet' de PhpMyAdmin tout en le rendant pédagogique comme la plateforme Ametice. Les élèves pourront réaliser des exercices disponibles selon leur année de formation, groupe de TP, etc..., en créant des espaces de travail reprenant la base de données du cours. Il est prévu d'ajouter si possible un système de gamification pour rendre le site plus 'ludique'.",
         images: [],
         githubUrl: "",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: true
       },
       {
         id: "project-flexarion",
@@ -95,7 +103,8 @@ const projectCategories = [
         longDescription: "L'objectif de ce projet est de voir comment bien faire un plan de communication. Le fonctionnement est simple, plusieurs équipes créent un studio de développement fictif Flexarion et la meilleure équipe sera celle la mieux référencée sur Google. Pour y parvenir nous avons utilisé des techniques comme le typosquatting et des outils tels que l'IA pour gérer le site web, créer du contenu sur différent réseaux sociaux afin d'avoir un maximum de visite. Entre autre en suivant le fonctionnement de l'algorithme PageRank étudié en 1ère année si une de ces pages 'perce' et qu'elle pointe vers notre site, celui-ci sera d'avantage référencé (techniquement vous contribuez au bon référencement de Flexarion en visitant mon Portfolio et l'équipe vous en remercie).",
         images: [],
         githubUrl: "https://github.com/Androtim/Flexarion",
-        siteUrl: "https://flexarion.alwaysdata.net/"
+        siteUrl: "https://flexarion.alwaysdata.net/",
+        pinned: true
       }
     ]
   },
@@ -111,7 +120,8 @@ const projectCategories = [
         longDescription: "Conception et développement de ce portfolio personnel sous Vue.js (Composition API). Ajout de quelques features utiles telles que des barres de recherche, systèmes de filtrage, etc...",
         images: [],
         githubUrl: "https://github.com/DUMONTVladislav/Portfolio",
-        siteUrl: ""
+        siteUrl: "",
+        pinned: true
       }
     ]
   }
@@ -172,13 +182,17 @@ const filterProjects = (origin) => {
   const cat = projectCategories.find(c => c.origin === origin)
   if (!cat) return []
 
-  return cat.projects.filter(project => {
+  let list = cat.projects.filter(project => {
     const matchesLang = project.languages.some(lang => selectedLanguages.value.includes(lang))
     const matchesSearch = project.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
                           project.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           project.languages.some(l => l.toLowerCase().includes(searchQuery.value.toLowerCase()))
     return matchesLang && matchesSearch
   })
+
+  list.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0))
+
+  return list
 }
 
 const filteredUniversitaires = computed(() => filterProjects('universitaire'))
@@ -297,6 +311,8 @@ onUnmounted(() => {
           :class="{ 'highlighted': highlightedProjectId === project.id }"
           @click="openModal(project)"
         >
+          <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
+
           <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
             <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
           </div>
@@ -349,6 +365,8 @@ onUnmounted(() => {
           :class="{ 'highlighted': highlightedProjectId === project.id }"
           @click="openModal(project)"
         >
+          <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
+
           <div class="project-screenshot-box">
             <template v-if="project.images && project.images.length">
               <img 
@@ -587,11 +605,29 @@ onUnmounted(() => {
   box-sizing: border-box;
   cursor: pointer;
   scroll-margin-top: 90px;
+  position: relative;
 }
 
 .project-card-large:hover {
   box-shadow: 0 0 20px var(--accent-color);
   transform: translateY(-3px);
+}
+
+.pin-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1.2rem;
+  font-size: 1rem;
+  background: color-mix(in srgb, var(--accent-color) 20%, transparent);
+  border: 1px solid var(--accent-color);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px var(--accent-color);
+  z-index: 5;
 }
 
 .project-card-large:target,
