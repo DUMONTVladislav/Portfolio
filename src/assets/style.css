@@ -10,6 +10,11 @@
   --font-title: 'Orbitron', sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
 .light-mode {
   --bg-color: #e2e8f0;
   --nav-bg: #f1f5f9;
