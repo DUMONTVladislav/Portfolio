@@ -13,10 +13,9 @@
         <p>
           Actuellement en 2ème année de BUT Informatique à l'IUT d'Aix-en-Provence,
           je suis le parcours Déploiement d'applications communicantes et sécurisées.
-          Passionné par les infrastructures réseaux, la gestion des bases de données et 
-          l'évolution constante de l'écosystème IT. Je m'intéresse aux rouages profonds du 
-          numérique et à la sécurisation des systèmes.<br>
-          Bienvenue dans mon espace technique.
+          Je suis passionné par les infrastructures réseaux, la gestion des bases de données et 
+          l'évolution du monde de l'Informatique.<br>
+          Bienvenue dans mon espace technique !
         </p>
       </div>
       

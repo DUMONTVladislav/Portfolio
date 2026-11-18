@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500&display=swap');
 
-/* Par défaut : Mode Sombre (fond sombre, accents bleus) */
 :root {
   --bg-color: #0b0f19;
   --nav-bg: #111827;
@@ -11,12 +10,11 @@
   --font-title: 'Orbitron', sans-serif;
 }
 
-/* Mode Clair (fond clair, accents rouges) */
 .light-mode {
-  --bg-color: #f1f5f9;
-  --nav-bg: #ffffff;
-  --text-color: #0f172a;
-  --accent-color: #EF4135;
+  --bg-color: #e2e8f0;
+  --nav-bg: #f1f5f9;
+  --text-color: #1e293b;
+  --accent-color: #991b1b;
 }
 
 h1, h2, h3, h4, h5, h6 {

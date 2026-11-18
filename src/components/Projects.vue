@@ -13,7 +13,8 @@ const projectCategories = [
         description: "Adaptation de plusieurs systèmes de vote en C++ et tests avec des fichiers Oracle",
         longDescription: "Pour ma première expérience en C++ il m'a été demandé à moi et mon groupe de recréer 3 systèmes de vote : le vote majoritaire à 2 tours (utilisé actuellement en France), la méthode de Borda (liste de choix) et le vote limité (scrutin plurinominal majoritaire). Les programmes fonctionnent à l'aide de fichiers d'entrées et les sorties sont comparées à un fichier Oracle pour vérifier leur veracité.",
         images: ["vote.jpg"],
-        githubUrl: ""
+        githubUrl: "",
+        siteUrl: ""
       },
       {
         title: "Candy Crush",
@@ -21,7 +22,8 @@ const projectCategories = [
         description: "Recréation du jeu emblématique Candy Crush en C++ avec les modes suivants : classique, histoire, 1v1",
         longDescription: "Ce deuxième projet en C++ demandait de recréer cette fois-ci Candy-Crush, l'un des jeux les plus connus sur téléphone. Cette version fonctionne au tour par tour mais simule tout de même le système de combo et la gravité (inversée malheureusement). Plusieurs mode de jeu sont disponible tels que le mode Classique, le mode 1v1, et même un mode Histoire ! BONUS : le jeu est jouable depuis cette page, testez le ! (Jeu adapté au site web grâce à Antigravity)",
         images: [],
-        githubUrl: ""
+        githubUrl: "",
+        siteUrl: ""
       },
       {
         title: "Page web statique : Rock O' Rama",
@@ -29,7 +31,8 @@ const projectCategories = [
         description: "Création de ma première page web statique sur le thème du rock !",
         longDescription: "Pour ma première impression d'HTML et CSS, il nous est demandé de créer une page web statique comportant plusieurs caractéristiques : plusieurs pages responsives avec navbar et menu hamburger maximisant google lighthouse. Je vous présente donc Rock O' Rama !",
         images: ["ROR1.png", "ROR2.png"],
-        githubUrl: "https://github.com/DUMONTVladislav/Rock_O_Rama"
+        githubUrl: "https://github.com/DUMONTVladislav/Rock_O_Rama",
+        siteUrl: "https://dumont-vladislav-25009525.github.io/Rock_O_Rama/"
       },
       {
         title: "Modélisation et Exploitation d'une BDD : Les Tenracs",
@@ -37,7 +40,8 @@ const projectCategories = [
         description: "Modélisation du système de la confrérie des TENders RAClette et exploitation de données générées via Faker",
         longDescription: "La confrérie imaginaire des TENRACs avait besoin d'une base de donnée fonctionnelle afin d'organiser leurs prochains repas. Nous nous sommes donc occupé de la création d'un MCD opérationnel avec Looping. Pour faire des statistiques de cette base de données, il a fallu créer des fausses données avec Faker puis les analyser de manière pertinente avec des bibliothèques Python telles que pandas, numpy, etc...",
         images: ["TRL.png", "TRS1.png", "TRS2.png", "TRC1.png", "TRC2.png"],
-        githubUrl: "https://github.com/DUMONTVladislav/SAE-Exploitation-BDD"
+        githubUrl: "https://github.com/DUMONTVladislav/SAE-Exploitation-BDD",
+        siteUrl: ""
       },
       {
         title: "Statistiques PageRank",
@@ -45,7 +49,8 @@ const projectCategories = [
         description: "Analyse de l'algorithme de Google PageRank avec Python",
         longDescription: "PageRank est un algorithme utilisé pour gérer le système de référencement des sites webs. Nous avons donc tout d'abord recréé un semblant de l'algorithme et l'avons testé avec des matrices simulant un web.",
         images: ["PR.png"],
-        githubUrl: ""
+        githubUrl: "",
+        siteUrl: ""
       },
       {
         title: "Mise en place de serveurs Apache, DNS et MX",
@@ -53,7 +58,8 @@ const projectCategories = [
         description: "Mise en places des serveurs et premières notions de cybersécurité",
         longDescription: "Pour ma première expérience en réseau, moi et mon coéquipier avons mis en place un serveur Apache ainsi que deux serveurs DNS (primaire / secondaire) et un serveur de messagerie (MX). Nous avons pu nous sensibiliser sur la cybersécurité et les mesures à prendre en lançant une attaque DoS depuis une VM pirate.",
         images: ["Apache.png"],
-        githubUrl: ""
+        githubUrl: "",
+        siteUrl: ""
       },
       {
         title: "VigieChiro Compagnon",
@@ -61,7 +67,8 @@ const projectCategories = [
         description: "Modélisation, visualisation, conception et tests d'une application portant sur l'étude de la faune de nuit",
         longDescription: "Nous avons contribué à l'application VigieChiro Compagnon en réalisant des tests unitaires pour valider chaque étape de notre Model View Controller. Le but de cette application est de mesurer l'impact de l'éclairage artificiel sur la faune de nuit (chauve-souris principalement), pour faire cela biologistes et amateurs peuvent poser des capteurs de sons qui seront répertoriés et dont les sons seront analysés pour établir des statistiques selon la localisation géographique et l'heure de la journée.",
         images: ["VC.jpg"],
-        githubUrl: ""
+        githubUrl: "",
+        siteUrl: ""
       },
       {
         title: "DataLab",
@@ -69,7 +76,17 @@ const projectCategories = [
         description: "Création d'un site web de manipulation de BDD a but pédagogique",
         longDescription: "Mon plus gros projet à ce jour. Pour manipuler des bases de données les élèves peuvent utiliser des interprètes en lignes comme OneCompiler qui restent superficiels ou alors PhpMyAdmin qui est plus complet mais dont l'interface est rustique voire hostile pour des débutants. Le but de DataLab serait de faire un site web en ligne qui mélangerait l'aspect 'complet' de PhpMyAdmin tout en le rendant pédagogique comme la plateforme Ametice. Les élèves pourront réaliser des exercices disponibles selon leur année de formation, groupe de TP, etc..., en créant des espaces de travail reprenant la base de données du cours. Il est prévu d'ajouter si possible un système de gamification pour rendre le site plus 'ludique'.",
         images: [],
-        githubUrl: ""
+        githubUrl: "",
+        siteUrl: ""
+      },
+      {
+        title: "Flexarion",
+        languages: ["Communication"],
+        description: "Stratégie de référencement avancée visant à positionner le site web Flexarion en première position sur Google grâce à différentes techniques de communication",
+        longDescription: "L'objectif de ce projet est de voir comment bien faire un plan de communication. Le fonctionnement est simple, plusieurs équipes créent un studio de développement fictif Flexarion et la meilleure équipe sera celle la mieux référencée sur Google. Pour y parvenir nous avons utilisé des techniques comme le typosquatting et des outils tels que l'IA pour gérer le site web, créer du contenu sur différent réseaux sociaux afin d'avoir un maximum de visite. Entre autre en suivant le fonctionnement de l'algorithme PageRank étudié en 1ère année si une de ces pages 'perce' et qu'elle pointe vers notre site, celui-ci sera d'avantage référencé (techniquement vous contribuez au bon référencement de Flexarion en visitant mon Portfolio et l'équipe vous en remercie).",
+        images: [],
+        githubUrl: "https://github.com/Androtim/Flexarion",
+        siteUrl: "https://flexarion.alwaysdata.net/"
       }
     ]
   },
@@ -83,7 +100,8 @@ const projectCategories = [
         description: "Création d'un espace technique interactif avec design system sur mesure et esthétique de centre de contrôle",
         longDescription: "Conception et développement de ce portfolio personnel sous Vue.js (Composition API). Ajout de quelques features utiles telles que des barres de recherche, systèmes de filtrage, etc...",
         images: [],
-        githubUrl: "https://github.com/DUMONTVladislav/Portfolio"
+        githubUrl: "https://github.com/DUMONTVladislav/Portfolio",
+        siteUrl: ""
       }
     ]
   }
@@ -199,7 +217,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
           class="project-card-large clickable-card"
           @click="openModal(project)"
         >
-          <!-- Si Candy Crush : Terminal émulé directement sans image -->
           <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
             <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
           </div>
@@ -228,8 +245,9 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
             <h4>{{ project.title }}</h4>
             <p>{{ project.description }}</p>
             
-            <div class="project-actions" v-if="project.githubUrl" @click.stop>
-              <a :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
+            <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
+              <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
+              <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
             </div>
           </div>
         </article>
@@ -274,8 +292,9 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
             <h4>{{ project.title }}</h4>
             <p>{{ project.description }}</p>
             
-            <div class="project-actions" v-if="project.githubUrl" @click.stop>
-              <a :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
+            <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
+              <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
+              <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
             </div>
           </div>
         </article>
@@ -294,7 +313,6 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
         </div>
 
         <div class="modal-body">
-          <!-- Si Candy Crush : Terminal émulé dans la modale sans image -->
           <div v-if="activeProject.title === 'Candy Crush'" class="modal-terminal-box">
             <CandyCrushTerminal />
           </div>
@@ -328,8 +346,9 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
           </div>
         </div>
 
-        <div class="modal-footer" v-if="activeProject.githubUrl">
-          <a :href="activeProject.githubUrl" target="_blank" class="btn-outline">Voir le dépôt GitHub</a>
+        <div class="modal-footer" v-if="activeProject.githubUrl || activeProject.siteUrl">
+          <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" class="btn-outline">Voir le dépôt GitHub</a>
+          <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
         </div>
       </div>
     </div>
@@ -612,6 +631,8 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
 
 .project-actions {
   display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
 }
 
 .btn-outline {
@@ -819,8 +840,10 @@ const filteredPersonnels = computed(() => filterProjects('personnel'))
 
 .modal-footer {
   display: flex;
+  gap: 1rem;
   justify-content: flex-start;
   margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .zoom-lightbox-backdrop {

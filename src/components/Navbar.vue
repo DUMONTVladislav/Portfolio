@@ -8,10 +8,14 @@ const toggleTheme = () => {
   document.body.classList.toggle('light-mode', isLightMode.value)
 }
 </script>
+
 <template>
 <nav class="navbar">
     <div class="nav-brand">
-      <span class="logo-text">Portfolio</span>
+      <span class="logo-text">
+        <span class="logo-first">Vladislav</span> 
+        <span class="logo-last">Dumont</span>
+      </span>
     </div>
     
     <ul class="nav-links">
@@ -21,12 +25,12 @@ const toggleTheme = () => {
       <li><a href="#footer">Contact</a></li>
     </ul>
 
-    <!-- Le bouton de bascule de thème -->
     <button @click="toggleTheme" class="theme-btn">
         Thème
     </button>
   </nav>
 </template>
+
 <style scoped>
 .navbar {
   position: fixed;
@@ -45,10 +49,21 @@ const toggleTheme = () => {
 }
 
 .logo-text {
-  font-family: var(--font-title);
-  font-weight: 700;
-  font-size: 1.2rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.15rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.logo-first {
+  color: var(--text-color);
+  font-weight: 400;
+}
+
+.logo-last {
   color: var(--accent-color);
+  font-weight: 700;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--accent-color) 40%, transparent);
 }
 
 .nav-links {

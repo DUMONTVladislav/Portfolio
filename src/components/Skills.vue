@@ -2,7 +2,6 @@
 import { ref, computed } from 'vue'
 
 const skills = [
-  // --- CURSUS SCOLAIRE ---
   { 
     name: "Linux terminals", 
     category: "Infrastructure & Réseaux", 
@@ -47,6 +46,15 @@ const skills = [
     icon: "⚙️", 
     projects: ["Systèmes de vote", "Candy Crush"],
     rating: 3.5
+  },
+  { 
+    name: "MIPS", 
+    category: "Développement & Programmation", 
+    origin: "cursus",
+    description: "Architecture des ordinateurs, programmation assembleur et bas niveau.", 
+    icon: "💻", 
+    projects: [],
+    rating: 2.5
   },
   { 
     name: "PHP", 
@@ -111,8 +119,6 @@ const skills = [
     projects: ["Rock O' Rama", "DataLab"],
     rating: 3 
   },
-
-  // --- AUTODIDACTE ---
   { 
     name: "JavaScript", 
     category: "Développement & Programmation", 
@@ -186,7 +192,6 @@ const autodidacteSkills = computed(() => filterAndSort('autodidacte'))
     <h2>Mes compétences</h2>
 
     <div class="skills-controls">
-      <!-- Barre de recherche -->
       <div class="search-group">
         <label for="search-input" class="control-label">Rechercher :</label>
         <input 
@@ -221,7 +226,6 @@ const autodidacteSkills = computed(() => filterAndSort('autodidacte'))
       </div>
     </div>
 
-    <!-- Section Cursus Scolaire -->
     <div class="skill-section-group" v-if="cursusSkills.length">
       <button class="category-toggle-btn" @click="isCursusOpen = !isCursusOpen">
         <span class="category-title-text">Cursus Scolaire <span class="count-badge">({{ cursusSkills.length }})</span></span>
@@ -268,7 +272,6 @@ const autodidacteSkills = computed(() => filterAndSort('autodidacte'))
       </div>
     </div>
 
-    <!-- Section Apprentissage Autodidacte -->
     <div class="skill-section-group" v-if="autodidacteSkills.length">
       <button class="category-toggle-btn" @click="isAutodidacteOpen = !isAutodidacteOpen">
         <span class="category-title-text">Apprentissage Autodidacte & Personnel <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
