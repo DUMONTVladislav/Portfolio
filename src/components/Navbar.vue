@@ -21,6 +21,7 @@ const toggleTheme = () => {
     <ul class="nav-links">
       <li><a href="#home">Accueil</a></li>
       <li><a href="#skills">Compétences</a></li>
+      <li><a href="#news">News</a></li>
       <li><a href="#projects">Projets</a></li>
       <li><a href="#footer">Contact</a></li>
     </ul>
