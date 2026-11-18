@@ -9,6 +9,11 @@
         <p>Vladislav DUMONT — Futur expert en cyber-sécurité</p>
         <p>IUT d'Aix-en-Provence • BUT Informatique (DEPLOI)</p>
         <p>Email : <a href="mailto:vladislav.dumont@gmail.com" class="footer-link">vladislav.dumont@gmail.com</a></p>
+        <div class="footer-socials">
+          <a href="https://github.com/DUMONTVladislav" target="_blank" class="footer-link">GitHub</a>
+          <span class="social-separator">•</span>
+          <a href="www.linkedin.com/in/vladislav-dumont-2301753b3" target="_blank" class="footer-link">LinkedIn</a>
+        </div>
       </div>
 
       <div class="footer-legal">
@@ -59,6 +64,18 @@
   margin: 0;
   line-height: 1.4;
   color: var(--text-color);
+}
+
+.footer-socials {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.3rem;
+}
+
+.social-separator {
+  color: var(--accent-color);
+  opacity: 0.6;
 }
 
 .footer-link {
