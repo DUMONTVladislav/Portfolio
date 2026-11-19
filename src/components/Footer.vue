@@ -5,14 +5,31 @@
   <footer id="footer" class="footer-section">
     <div v-reveal class="footer-container">
       <div class="footer-info">
-        <h3>Contact & Informations</h3>
+        <h3>Contact &amp; Informations</h3>
         <p>Vladislav DUMONT — Futur expert en cyber-sécurité</p>
         <p>IUT d'Aix-en-Provence • BUT Informatique (DEPLOI)</p>
-        <p>Email : <a href="mailto:vladislav.dumont@gmail.com" class="footer-link">vladislav.dumont@gmail.com</a></p>
+        <p>
+          Email :
+          <a href="mailto:vladislav.dumont@gmail.com" class="footer-link">vladislav.dumont@gmail.com</a>
+        </p>
         <div class="footer-socials">
-          <a href="https://github.com/DUMONTVladislav" target="_blank" class="footer-link">GitHub</a>
+          <a
+            href="https://github.com/DUMONTVladislav"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            GitHub
+          </a>
           <span class="social-separator">•</span>
-          <a href="www.linkedin.com/in/vladislav-dumont-2301753b3" target="_blank" class="footer-link">LinkedIn</a>
+          <a
+            href="https://www.linkedin.com/in/vladislav-dumont-2301753b3"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="footer-link"
+          >
+            LinkedIn
+          </a>
         </div>
       </div>
 
@@ -32,21 +49,24 @@
   padding: 3rem 2rem;
   margin-top: 4rem;
   box-sizing: border-box;
+  overflow-x: clip;
 }
 
 .footer-container {
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 3rem;
   text-align: left;
 }
 
-.footer-info, .footer-legal {
+.footer-info,
+.footer-legal {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  min-width: 0;
 }
 
 .footer-section h3 {
@@ -62,7 +82,7 @@
   font-size: 0.85rem;
   opacity: 0.8;
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--text-color);
 }
 
@@ -70,7 +90,8 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  margin-top: 0.3rem;
+  flex-wrap: wrap;
+  margin-top: 0.35rem;
 }
 
 .social-separator {
@@ -81,11 +102,64 @@
 .footer-link {
   color: var(--accent-color);
   text-decoration: none;
+  overflow-wrap: anywhere;
   transition: opacity 0.3s ease;
 }
 
 .footer-link:hover {
   text-decoration: underline;
   opacity: 1;
+}
+
+@media (max-width: 1024px) {
+  .footer-section {
+    padding: 2.75rem 1.75rem;
+    margin-top: 3.5rem;
+  }
+
+  .footer-container {
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-section {
+    padding: 2.5rem 1.25rem;
+    margin-top: 3rem;
+  }
+
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+
+  .footer-socials {
+    justify-content: center;
+    gap: 0.65rem;
+  }
+
+  .footer-socials .footer-link {
+    padding: 0.25rem 0.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-section {
+    padding: 2rem 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .footer-container {
+    gap: 1.75rem;
+  }
+
+  .footer-section h3 {
+    font-size: 1rem;
+  }
+
+  .footer-section p {
+    font-size: 0.8rem;
+  }
 }
 </style>

@@ -14,7 +14,7 @@ const emit = defineEmits(['expand'])
 const terminalBodyRef = ref(null)
 const inputRef = ref(null)
 
-const lines = ref([]) // Tableau de lignes : chaque ligne est un tableau de { text, color }
+const lines = ref([])
 const currentColor = ref(0)
 const isWaitingInput = ref(false)
 const currentPrompt = ref('')
@@ -29,12 +29,51 @@ const scrollToBottom = () => {
   nextTick(() => {
     if (terminalBodyRef.value) {
       terminalBodyRef.value.scrollTop = terminalBodyRef.value.scrollHeight
+      terminalBodyRef.value.scrollLeft = 0
     }
   })
 }
 
+const isGridOrAsciiLine = (str) => {
+  const trimmed = str.trim()
+  if (!trimmed) return false
+  if (/^[+\-=_#|/\\\[\]]{3,}/.test(trimmed)) return true
+  if ((str.match(/\|/g) || []).length >= 3) return true
+  if (/\s{4,}/.test(str)) return true
+  return false
+}
+
+const wrapNarrativeText = (str) => {
+  if (isGridOrAsciiLine(str)) return str
+  const maxWidth = window.innerWidth <= 480 ? 46 : window.innerWidth <= 768 ? 60 : 78
+  if (str.length <= maxWidth) return str
+
+  const words = str.split(' ')
+  const wrapped = []
+  let current = ''
+
+  for (const word of words) {
+    if (!current) {
+      current = word
+    } else if (current.length + 1 + word.length <= maxWidth) {
+      current += ' ' + word
+    } else {
+      wrapped.push(current)
+      current = word
+    }
+  }
+  if (current) wrapped.push(current)
+
+  return wrapped.join('\n')
+}
+
 const addText = (text, isNewline = false) => {
-  const parts = String(text).split('\n')
+  const rawStr = String(text)
+  const normalized = isNewline
+    ? rawStr.split('\n').map(wrapNarrativeText).join('\n')
+    : wrapNarrativeText(rawStr)
+
+  const parts = normalized.split('\n')
   for (let i = 0; i < parts.length; i++) {
     if (i > 0) {
       lines.value.push([])
@@ -91,7 +130,7 @@ const io = {
 
 const focusInput = () => {
   if (inputRef.value) {
-    inputRef.value.focus()
+    inputRef.value.focus({ preventScroll: true })
   }
 }
 
@@ -99,7 +138,6 @@ const submit = (valToSubmit = null) => {
   if (!isWaitingInput.value || !inputResolver) return
 
   const value = valToSubmit !== null ? String(valToSubmit) : userInput.value
-  // Afficher la commande entrée par l'utilisateur
   addText(value, true)
 
   isWaitingInput.value = false
@@ -159,7 +197,6 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="candy-terminal-wrapper" @click="focusInput">
-    <!-- Barre supérieure de la fenêtre de terminal -->
     <div class="terminal-header">
       <div class="terminal-dots">
         <span class="dot red"></span>
@@ -170,19 +207,19 @@ onBeforeUnmount(() => {
         <span class="terminal-icon">&gt;_</span> candy_crush.cpp
       </div>
       <div class="terminal-actions">
-        <button 
-          type="button" 
-          class="terminal-action-btn" 
-          @click.stop="restartGame" 
+        <button
+          type="button"
+          class="terminal-action-btn"
+          @click.stop="restartGame"
           title="Relancer le jeu"
         >
           ↺ Menu
         </button>
-        <button 
-          v-if="allowExpand" 
-          type="button" 
-          class="terminal-action-btn expand-btn" 
-          @click.stop="emit('expand')" 
+        <button
+          v-if="allowExpand"
+          type="button"
+          class="terminal-action-btn expand-btn"
+          @click.stop="emit('expand')"
           title="Plein écran"
         >
           ⛶
@@ -190,7 +227,6 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- Corps du terminal (affichage texte ANSI) -->
     <div class="terminal-screen" ref="terminalBodyRef">
       <div class="terminal-output">
         <div v-for="(line, lineIdx) in lines" :key="lineIdx" class="terminal-line">
@@ -202,7 +238,6 @@ onBeforeUnmount(() => {
         </div>
       </div>
 
-      <!-- Ligne de saisie interactive -->
       <div v-if="isWaitingInput" class="terminal-input-row">
         <span class="terminal-cursor-prompt">&gt;</span>
         <input
@@ -218,33 +253,30 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <!-- Clavier virtuel / Raccourcis contextuels -->
     <div class="terminal-quick-bar" v-if="isWaitingInput && currentPromptMeta" @click.stop>
-      <!-- Menu principal -->
       <template v-if="currentPromptMeta.type === 'menu'">
-        <button class="quick-btn" @click="submit('1')">1. Histoire</button>
-        <button class="quick-btn" @click="submit('2')">2. Classique</button>
-        <button class="quick-btn" @click="submit('3')">3. 1v1</button>
-        <button class="quick-btn" @click="submit('4')">4. Scores</button>
-        <button class="quick-btn" @click="submit('5')">5. Règles</button>
-        <button class="quick-btn danger" @click="submit('0')">0. Quitter</button>
+        <button type="button" class="quick-btn" @click="submit('1')">1. Histoire</button>
+        <button type="button" class="quick-btn" @click="submit('2')">2. Classique</button>
+        <button type="button" class="quick-btn" @click="submit('3')">3. 1v1</button>
+        <button type="button" class="quick-btn" @click="submit('4')">4. Scores</button>
+        <button type="button" class="quick-btn" @click="submit('5')">5. Règles</button>
+        <button type="button" class="quick-btn danger" @click="submit('0')">0. Quitter</button>
       </template>
 
-      <!-- Directions Z Q S D -->
       <template v-else-if="currentPromptMeta.type === 'direction'">
         <span class="quick-label">Direction :</span>
-        <button class="quick-btn" @click="submit('z')">Z (Haut ↑)</button>
-        <button class="quick-btn" @click="submit('q')">Q (Gauche ←)</button>
-        <button class="quick-btn" @click="submit('s')">S (Bas ↓)</button>
-        <button class="quick-btn" @click="submit('d')">D (Droite →)</button>
+        <button type="button" class="quick-btn" @click="submit('z')">Z ↑</button>
+        <button type="button" class="quick-btn" @click="submit('q')">Q ←</button>
+        <button type="button" class="quick-btn" @click="submit('s')">S ↓</button>
+        <button type="button" class="quick-btn" @click="submit('d')">D →</button>
       </template>
 
-      <!-- Numéro de colonne ou ligne -->
       <template v-else-if="currentPromptMeta.type === 'col' || currentPromptMeta.type === 'row'">
-        <span class="quick-label">{{ currentPromptMeta.type === 'col' ? 'Colonne' : 'Ligne' }} :</span>
+        <span class="quick-label">{{ currentPromptMeta.type === 'col' ? 'Col' : 'Ligne' }} :</span>
         <button
           v-for="n in (currentPromptMeta.max || 5)"
           :key="n"
+          type="button"
           class="quick-btn num-btn"
           @click="submit(n)"
         >
@@ -252,28 +284,24 @@ onBeforeUnmount(() => {
         </button>
       </template>
 
-      <!-- Confirmation 1 -->
       <template v-else-if="currentPromptMeta.type === 'confirm_1'">
-        <button class="quick-btn highlight" @click="submit('1')">1. Continuer</button>
+        <button type="button" class="quick-btn highlight" @click="submit('1')">1. Continuer</button>
       </template>
 
-      <!-- Confirmation 2 -->
       <template v-else-if="currentPromptMeta.type === 'confirm_2'">
-        <button class="quick-btn highlight" @click="submit('2')">2. Jouer</button>
+        <button type="button" class="quick-btn highlight" @click="submit('2')">2. Jouer</button>
       </template>
 
-      <!-- Retour Menu 0 -->
       <template v-else-if="currentPromptMeta.type === 'confirm_0'">
-        <button class="quick-btn" @click="submit('0')">0. Retour Menu</button>
+        <button type="button" class="quick-btn" @click="submit('0')">0. Retour Menu</button>
       </template>
 
-      <!-- Taille de grille -->
       <template v-else-if="currentPromptMeta.type === 'size'">
         <span class="quick-label">Taille :</span>
-        <button class="quick-btn" @click="submit('5')">5</button>
-        <button class="quick-btn" @click="submit('6')">6</button>
-        <button class="quick-btn" @click="submit('7')">7</button>
-        <button class="quick-btn" @click="submit('8')">8</button>
+        <button type="button" class="quick-btn" @click="submit('5')">5</button>
+        <button type="button" class="quick-btn" @click="submit('6')">6</button>
+        <button type="button" class="quick-btn" @click="submit('7')">7</button>
+        <button type="button" class="quick-btn" @click="submit('8')">8</button>
       </template>
     </div>
   </div>
@@ -285,6 +313,8 @@ onBeforeUnmount(() => {
   flex-direction: column;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   background: #06090f;
   color: #f1f5f9;
   font-family: 'Space Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
@@ -295,22 +325,24 @@ onBeforeUnmount(() => {
   user-select: text;
 }
 
-/* En-tête du terminal */
 .terminal-header {
   background: #0f172a;
   padding: 0.4rem 0.8rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 0.75rem;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .terminal-dots {
   display: flex;
   gap: 6px;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .dot {
@@ -331,17 +363,22 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 0.4rem;
   font-family: var(--font-title, sans-serif);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .terminal-icon {
   color: var(--accent-color, #38bdf8);
   font-weight: bold;
+  flex-shrink: 0;
 }
 
 .terminal-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
+  flex-shrink: 0;
 }
 
 .terminal-action-btn {
@@ -353,6 +390,7 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   cursor: pointer;
   font-family: inherit;
+  white-space: nowrap;
   transition: all 0.2s ease;
 }
 
@@ -367,34 +405,35 @@ onBeforeUnmount(() => {
   padding: 0.1rem 0.4rem;
 }
 
-/* Écran du terminal */
 .terminal-screen {
   flex: 1;
+  min-height: 0;
   padding: 0.75rem;
-  overflow-y: auto;
+  overflow: auto;
   font-size: 0.8rem;
   line-height: 1.35;
   background: #06090f;
   display: flex;
   flex-direction: column;
+  -webkit-overflow-scrolling: touch;
 }
 
 .terminal-output {
   display: flex;
   flex-direction: column;
+  width: max-content;
+  min-width: 100%;
 }
 
 .terminal-line {
   min-height: 1.25em;
-  white-space: pre-wrap;
-  word-break: break-all;
+  white-space: pre;
 }
 
 .term-segment {
   display: inline;
 }
 
-/* Couleurs ANSI */
 .ansi-reset { color: #f1f5f9; }
 .ansi-red { color: #f87171; font-weight: bold; }
 .ansi-green { color: #4ade80; font-weight: bold; }
@@ -402,14 +441,14 @@ onBeforeUnmount(() => {
 .ansi-blue { color: #60a5fa; font-weight: bold; }
 .ansi-magenta { color: #e879f9; font-weight: bold; }
 .ansi-cyan { color: #22d3ee; font-weight: bold; }
-.ansi-white { color: rgba(255, 255, 255, 0.15); } /* Valeur 0 rendue discrète */
+.ansi-white { color: rgba(255, 255, 255, 0.15); }
 
-/* Ligne de saisie interactive */
 .terminal-input-row {
   display: flex;
   align-items: center;
   gap: 0.4rem;
   margin-top: 0.3rem;
+  flex-shrink: 0;
 }
 
 .terminal-cursor-prompt {
@@ -425,7 +464,8 @@ onBeforeUnmount(() => {
   font-family: inherit;
   font-size: 0.85rem;
   flex: 1;
-  caret-color: transparent; /* Curseur customisé */
+  min-width: 0;
+  caret-color: transparent;
 }
 
 .terminal-cursor-blink {
@@ -438,7 +478,6 @@ onBeforeUnmount(() => {
   50% { opacity: 0; }
 }
 
-/* Barre de raccourcis rapides contextuelle */
 .terminal-quick-bar {
   background: #0b1120;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
@@ -447,6 +486,7 @@ onBeforeUnmount(() => {
   flex-wrap: wrap;
   gap: 0.35rem;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .quick-label {
@@ -461,9 +501,10 @@ onBeforeUnmount(() => {
   color: #f1f5f9;
   font-family: inherit;
   font-size: 0.72rem;
-  padding: 0.2rem 0.5rem;
+  padding: 0.25rem 0.55rem;
   border-radius: 4px;
   cursor: pointer;
+  touch-action: manipulation;
   transition: all 0.2s ease;
 }
 
@@ -490,8 +531,69 @@ onBeforeUnmount(() => {
 }
 
 .quick-btn.num-btn {
-  min-width: 24px;
+  min-width: 28px;
   text-align: center;
   font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .terminal-header {
+    padding: 0.35rem 0.6rem;
+  }
+
+  .terminal-dots {
+    gap: 4px;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .terminal-title {
+    font-size: 0.7rem;
+  }
+
+  .terminal-screen {
+    padding: 0.55rem;
+    font-size: 0.68rem;
+    line-height: 1.3;
+  }
+
+  .terminal-real-input {
+    font-size: 0.8rem;
+  }
+
+  .terminal-quick-bar {
+    padding: 0.35rem 0.45rem;
+    gap: 0.3rem;
+  }
+
+  .quick-btn {
+    font-size: 0.68rem;
+    padding: 0.25rem 0.45rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-screen {
+    padding: 0.45rem;
+    font-size: 0.56rem;
+    line-height: 1.28;
+  }
+
+  .quick-label {
+    font-size: 0.64rem;
+  }
+
+  .quick-btn {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.4rem;
+  }
+
+  .quick-btn.num-btn {
+    min-width: 24px;
+    padding: 0.25rem 0.25rem;
+  }
 }
 </style>

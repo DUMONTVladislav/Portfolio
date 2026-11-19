@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 
 const newsList = ref([
   {
@@ -13,7 +13,7 @@ const newsList = ref([
 ])
 
 const sortedNews = computed(() => {
-  return [...newsList.value].sort((a, b) => new Date(b.date) - new Date(b.date))
+  return [...newsList.value].sort((a, b) => new Date(b.date) - new Date(a.date))
 })
 
 const activeArticle = ref(null)
@@ -25,6 +25,20 @@ const openArticleModal = (article) => {
 const closeArticleModal = () => {
   activeArticle.value = null
 }
+
+const onKeydown = (e) => {
+  if (e.key === 'Escape' && activeArticle.value) {
+    closeArticleModal()
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('keydown', onKeydown)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', onKeydown)
+})
 </script>
 
 <template>
@@ -32,9 +46,9 @@ const closeArticleModal = () => {
     <h2 v-reveal>News</h2>
 
     <div class="news-grid">
-      <article 
-        v-for="item in sortedNews" 
-        :key="item.title" 
+      <article
+        v-for="item in sortedNews"
+        :key="item.title"
         v-reveal="{ delay: 100 }"
         class="news-card"
         @click="openArticleModal(item)"
@@ -56,8 +70,15 @@ const closeArticleModal = () => {
     <Transition name="modal">
       <div class="modal-backdrop" v-if="activeArticle" @click="closeArticleModal">
         <div class="modal-content" @click.stop>
-          <button class="modal-close-btn" @click="closeArticleModal">✕</button>
-          
+          <button
+            type="button"
+            class="modal-close-btn"
+            @click="closeArticleModal"
+            aria-label="Fermer l'article"
+          >
+            ✕
+          </button>
+
           <div class="modal-header">
             <div class="modal-meta-row">
               <span class="news-category">{{ activeArticle.category }}</span>
@@ -87,6 +108,8 @@ const closeArticleModal = () => {
   padding: 4rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  scroll-margin-top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px) + 1rem);
+  box-sizing: border-box;
 }
 
 .news-section > h2 {
@@ -99,7 +122,7 @@ const closeArticleModal = () => {
 
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 }
 
@@ -116,6 +139,7 @@ const closeArticleModal = () => {
   cursor: pointer;
   box-sizing: border-box;
   text-align: left;
+  min-width: 0;
 }
 
 .news-card:hover {
@@ -127,6 +151,8 @@ const closeArticleModal = () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .news-category {
@@ -152,6 +178,7 @@ const closeArticleModal = () => {
   font-size: 1.2rem;
   color: var(--text-color);
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .news-card p {
@@ -180,6 +207,7 @@ const closeArticleModal = () => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .modal-content {
@@ -190,6 +218,8 @@ const closeArticleModal = () => {
   max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 2.5rem;
   position: relative;
   box-shadow: 0 0 30px var(--accent-color);
@@ -211,6 +241,7 @@ const closeArticleModal = () => {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .modal-close-btn {
@@ -249,6 +280,7 @@ const closeArticleModal = () => {
   color: var(--text-color);
   margin: 0;
   text-align: left;
+  overflow-wrap: anywhere;
 }
 
 .modal-body {
@@ -299,9 +331,9 @@ const closeArticleModal = () => {
   opacity: 0.9;
   color: var(--text-color);
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
-/* Animations d'ouverture et fermeture de la modale d'article */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -321,5 +353,87 @@ const closeArticleModal = () => {
 .modal-leave-to .modal-content {
   opacity: 0;
   transform: scale(0.92) translateY(20px);
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .news-section {
+    padding: 3.5rem 1.75rem;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .news-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .news-section > h2 {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .news-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .news-card {
+    padding: 1.5rem;
+  }
+
+  .modal-backdrop {
+    padding: 0.75rem;
+  }
+
+  .modal-content {
+    padding: 1.75rem 1.25rem;
+    max-height: 94vh;
+  }
+
+  .modal-header h3 {
+    font-size: 1.3rem;
+  }
+
+  .modal-images-box {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .news-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .news-card {
+    padding: 1.2rem;
+  }
+
+  .news-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .news-card p {
+    font-size: 0.85rem;
+  }
+
+  .modal-content {
+    padding: 1.5rem 1rem;
+  }
+
+  .modal-close-btn {
+    top: 1rem;
+    right: 1rem;
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .modal-images-box {
+    height: 170px;
+  }
 }
 </style>

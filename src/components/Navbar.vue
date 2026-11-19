@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 const emit = defineEmits(['height-change'])
 
 const isLightMode = ref(false)
+const isMenuOpen = ref(false)
 const navRef = ref(null)
 const navLinksRef = ref(null)
 
@@ -30,16 +31,21 @@ const toggleTheme = () => {
   document.body.classList.toggle('light-mode', isLightMode.value)
 }
 
+const toggleMenu = () => {
+  isMenuOpen.value = !isMenuOpen.value
+}
+
 const reportHeight = () => {
   nextTick(() => {
     const height = navRef.value?.offsetHeight || 64
+    document.documentElement.style.setProperty('--navbar-height', `${height}px`)
     emit('height-change', height)
   })
 }
 
 const updateIndicator = (targetHref) => {
   nextTick(() => {
-    if (!navLinksRef.value) return
+    if (!navLinksRef.value || window.innerWidth <= 868) return
     const activeLink = navLinksRef.value.querySelector(`a[href="${targetHref}"]`)
     if (activeLink) {
       const parentRect = navLinksRef.value.getBoundingClientRect()
@@ -57,6 +63,7 @@ const updateIndicator = (targetHref) => {
 const onNavClick = (href) => {
   activeSection.value = href
   updateIndicator(href)
+  isMenuOpen.value = false
   isScrollingManual = true
   clearTimeout(manualScrollTimeout)
   manualScrollTimeout = setTimeout(() => {
@@ -75,7 +82,6 @@ const onNavLeave = () => {
 const onScroll = () => {
   if (isScrollingManual) return
 
-  // Si on est tout en bas de la page, sélectionner le contact
   const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60
   if (atBottom) {
     if (activeSection.value !== '#footer') {
@@ -85,8 +91,8 @@ const onScroll = () => {
     return
   }
 
-  // Détection de la section visible
-  const scrollPosition = window.scrollY + 180
+  const navOffset = (navRef.value?.offsetHeight || 64) + 116
+  const scrollPosition = window.scrollY + navOffset
   for (let i = navItems.length - 1; i >= 0; i--) {
     const item = navItems[i]
     const el = document.querySelector(item.href)
@@ -104,7 +110,22 @@ const onScroll = () => {
 
 const onResize = () => {
   reportHeight()
+  if (window.innerWidth > 868) {
+    isMenuOpen.value = false
+  }
   updateIndicator(activeSection.value)
+}
+
+const onDocumentClick = (e) => {
+  if (isMenuOpen.value && navRef.value && !navRef.value.contains(e.target)) {
+    isMenuOpen.value = false
+  }
+}
+
+const onKeydown = (e) => {
+  if (e.key === 'Escape' && isMenuOpen.value) {
+    isMenuOpen.value = false
+  }
 }
 
 onMounted(() => {
@@ -115,11 +136,15 @@ onMounted(() => {
   updateIndicator(activeSection.value)
   window.addEventListener('resize', onResize)
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.addEventListener('click', onDocumentClick)
+  document.addEventListener('keydown', onKeydown)
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', onResize)
   window.removeEventListener('scroll', onScroll)
+  document.removeEventListener('click', onDocumentClick)
+  document.removeEventListener('keydown', onKeydown)
   clearTimeout(manualScrollTimeout)
 })
 </script>
@@ -127,17 +152,22 @@ onUnmounted(() => {
 <template>
   <nav ref="navRef" class="navbar">
     <div class="nav-brand">
-      <span class="logo-text">
+      <a href="#home" class="logo-text" @click="onNavClick('#home')">
         <span class="logo-first">Vladislav</span>
         <span class="logo-last">Dumont</span>
-      </span>
+      </a>
     </div>
 
-    <ul ref="navLinksRef" class="nav-links" @mouseleave="onNavLeave">
+    <ul
+      ref="navLinksRef"
+      class="nav-links"
+      :class="{ 'is-open': isMenuOpen }"
+      @mouseleave="onNavLeave"
+    >
       <li v-for="item in navItems" :key="item.href">
-        <a 
+        <a
           :href="item.href"
-          :class="{ 'active': activeSection === item.href }"
+          :class="{ active: activeSection === item.href }"
           @click="onNavClick(item.href)"
           @mouseenter="onNavHover(item.href)"
         >{{ item.label }}</a>
@@ -145,9 +175,24 @@ onUnmounted(() => {
       <span class="nav-indicator" :style="indicatorStyle"></span>
     </ul>
 
-    <button @click="toggleTheme" class="theme-btn">
-      Thème
-    </button>
+    <div class="nav-actions">
+      <button type="button" @click="toggleTheme" class="theme-btn" title="Changer le thème">
+        Thème
+      </button>
+
+      <button
+        type="button"
+        class="hamburger-btn"
+        :class="{ 'is-active': isMenuOpen }"
+        @click="toggleMenu"
+        aria-label="Menu principal"
+        :aria-expanded="isMenuOpen"
+      >
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+    </div>
   </nav>
 </template>
 
@@ -160,12 +205,18 @@ onUnmounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   padding: 1rem 2rem;
   background-color: var(--nav-bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   z-index: 1000;
   box-sizing: border-box;
+  transition: padding 0.3s ease;
+}
+
+.nav-brand {
+  flex-shrink: 0;
 }
 
 .logo-text {
@@ -173,6 +224,8 @@ onUnmounted(() => {
   font-size: 1.15rem;
   letter-spacing: 2px;
   text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 .logo-first {
@@ -202,6 +255,7 @@ onUnmounted(() => {
   font-weight: 500;
   padding: 0.3rem 0.2rem;
   display: inline-block;
+  white-space: nowrap;
   transition: color 0.3s ease, text-shadow 0.3s ease;
   position: relative;
 }
@@ -228,6 +282,13 @@ onUnmounted(() => {
   pointer-events: none;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
 .theme-btn {
   background: transparent;
   border: 2px solid var(--accent-color);
@@ -236,6 +297,7 @@ onUnmounted(() => {
   border-radius: 8px;
   cursor: pointer;
   font-family: var(--font-body);
+  white-space: nowrap;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -248,5 +310,158 @@ onUnmounted(() => {
 
 .theme-btn:active {
   transform: translateY(0) scale(0.96);
+}
+
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  border-radius: 6px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  touch-action: manipulation;
+  transition: all 0.3s ease;
+}
+
+.hamburger-btn:hover {
+  background: color-mix(in srgb, var(--accent-color) 15%, transparent);
+  box-shadow: 0 0 8px var(--accent-color);
+}
+
+.hamburger-bar {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: var(--accent-color);
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.hamburger-btn.is-active .hamburger-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.is-active .hamburger-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger-btn.is-active .hamburger-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (max-width: 1024px) and (min-width: 869px) {
+  .navbar {
+    padding: 0.9rem 1.5rem;
+  }
+
+  .nav-links {
+    gap: 1.25rem;
+  }
+
+  .nav-links a {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 868px) {
+  .navbar {
+    padding: 0.85rem 1.5rem;
+  }
+
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .nav-indicator {
+    display: none;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px));
+    left: 0;
+    width: 100%;
+    background-color: var(--nav-bg);
+    border-bottom: 2px solid var(--accent-color);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem 0;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    backdrop-filter: blur(12px);
+    box-sizing: border-box;
+  }
+
+  .nav-links.is-open {
+    max-height: 380px;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .nav-links li {
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links a {
+    display: block;
+    padding: 0.9rem 1.5rem;
+    font-size: 1.05rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-left: 3px solid transparent;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active {
+    background: color-mix(in srgb, var(--accent-color) 15%, transparent);
+    border-left-color: var(--accent-color);
+    color: var(--accent-color);
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0.75rem 1rem;
+    gap: 0.5rem;
+  }
+
+  .logo-text {
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+  }
+
+  .theme-btn {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
+  .hamburger-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hamburger-bar {
+    width: 18px;
+  }
+
+  .hamburger-btn.is-active .hamburger-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .hamburger-btn.is-active .hamburger-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
 }
 </style>

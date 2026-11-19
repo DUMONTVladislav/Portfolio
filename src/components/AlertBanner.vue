@@ -6,10 +6,12 @@ const emit = defineEmits(['visibility-change', 'height-change'])
 const isVisible = ref(false)
 const bannerRef = ref(null)
 const bannerKey = 'portfolio_alert_v1'
+let resizeObserver = null
 
 const reportHeight = () => {
   nextTick(() => {
     const height = isVisible.value ? (bannerRef.value?.offsetHeight || 46) : 0
+    document.documentElement.style.setProperty('--alert-height', `${height}px`)
     emit('height-change', height)
   })
 }
@@ -20,15 +22,26 @@ onMounted(() => {
   emit('visibility-change', isVisible.value)
   reportHeight()
   window.addEventListener('resize', reportHeight)
+
+  if (typeof ResizeObserver !== 'undefined') {
+    resizeObserver = new ResizeObserver(reportHeight)
+    if (bannerRef.value) resizeObserver.observe(bannerRef.value)
+  }
 })
 
 onUnmounted(() => {
   window.removeEventListener('resize', reportHeight)
+  resizeObserver?.disconnect()
 })
 
 watch(isVisible, (val) => {
   emit('visibility-change', val)
   reportHeight()
+  nextTick(() => {
+    if (val && bannerRef.value && resizeObserver) {
+      resizeObserver.observe(bannerRef.value)
+    }
+  })
 })
 
 const closeBanner = () => {
@@ -37,6 +50,7 @@ const closeBanner = () => {
 }
 
 const onAfterLeave = () => {
+  document.documentElement.style.setProperty('--alert-height', '0px')
   emit('height-change', 0)
 }
 
@@ -56,11 +70,11 @@ defineExpose({
       <div class="banner-content">
         <span class="banner-badge">News</span>
         <p class="banner-text">
-          ⚡ <strong>Nouvel article disponible :</strong> Découvrez mon point de vue sur l'utilisation de l'IA !
+          ⚡ <strong>Nouvel article :</strong> Découvrez mon point de vue sur l'utilisation de l'IA !
         </p>
         <a href="#news" class="banner-link">Lire l'article ➔</a>
       </div>
-      <button @click="closeBanner" class="banner-close-btn" title="Fermer l'alerte">✕</button>
+      <button @click="closeBanner" class="banner-close-btn" title="Fermer l'alerte" aria-label="Fermer l'alerte">✕</button>
     </div>
   </Transition>
 </template>
@@ -77,6 +91,7 @@ defineExpose({
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
   z-index: 999;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
   backdrop-filter: blur(10px);
@@ -91,6 +106,7 @@ defineExpose({
   justify-content: center;
   flex-wrap: wrap;
   text-align: center;
+  min-width: 0;
 }
 
 .banner-badge {
@@ -99,10 +115,11 @@ defineExpose({
   color: var(--accent-color);
   background: color-mix(in srgb, var(--accent-color) 25%, transparent);
   border: 1px solid var(--accent-color);
-  padding: 0.1rem 0.4rem;
+  padding: 0.15rem 0.45rem;
   border-radius: 4px;
   text-transform: uppercase;
   letter-spacing: 1px;
+  flex-shrink: 0;
 }
 
 .banner-text {
@@ -117,6 +134,7 @@ defineExpose({
   color: var(--accent-color);
   text-decoration: none;
   font-weight: 600;
+  white-space: nowrap;
   transition: opacity 0.3s ease;
 }
 
@@ -129,8 +147,8 @@ defineExpose({
   background: transparent;
   border: 1px solid var(--accent-color);
   color: var(--accent-color);
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   font-size: 0.8rem;
   cursor: pointer;
@@ -152,7 +170,6 @@ defineExpose({
   transform: rotate(90deg) scale(0.95);
 }
 
-/* Animations d'ouverture et de fermeture de la bannière */
 .banner-slide-enter-active,
 .banner-slide-leave-active {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
@@ -162,5 +179,42 @@ defineExpose({
 .banner-slide-leave-to {
   transform: translateY(-100%);
   opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .alert-banner {
+    padding: 0.55rem 1rem;
+    gap: 0.75rem;
+  }
+
+  .banner-content {
+    justify-content: flex-start;
+    text-align: left;
+    gap: 0.35rem 0.65rem;
+  }
+
+  .banner-text {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  .banner-link {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .alert-banner {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .banner-badge {
+    font-size: 0.6rem;
+    padding: 0.1rem 0.35rem;
+  }
+
+  .banner-text {
+    font-size: 0.74rem;
+  }
 }
 </style>

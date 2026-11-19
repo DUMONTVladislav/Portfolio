@@ -254,6 +254,7 @@ const onProjectClick = (projectName) => {
 
     <div v-reveal="{ delay: 100 }" class="skill-section-group" v-if="cursusSkills.length">
       <button 
+        type="button"
         class="category-toggle-btn" 
         :class="{ 'is-collapsed': !isCursusOpen }" 
         @click="isCursusOpen = !isCursusOpen"
@@ -316,12 +317,13 @@ const onProjectClick = (projectName) => {
 
     <div v-reveal="{ delay: 100 }" class="skill-section-group" v-if="autodidacteSkills.length">
       <button 
+        type="button"
         class="category-toggle-btn" 
         :class="{ 'is-collapsed': !isAutodidacteOpen }" 
         @click="isAutodidacteOpen = !isAutodidacteOpen"
         :aria-expanded="isAutodidacteOpen"
       >
-        <span class="category-title-text">Apprentissage Autodidacte & Personnel <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
+        <span class="category-title-text">Apprentissage Autodidacte &amp; Personnel <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isAutodidacteOpen }">▼</span>
       </button>
 
@@ -383,6 +385,8 @@ const onProjectClick = (projectName) => {
   padding: 4rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  scroll-margin-top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px) + 1rem);
+  box-sizing: border-box;
 }
 
 .skills-section h2 {
@@ -413,10 +417,11 @@ const onProjectClick = (projectName) => {
 
 .search-input {
   flex: 1;
+  min-width: 0;
   background: color-mix(in srgb, var(--text-color) 5%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent);
   color: var(--text-color);
-  padding: 0.4rem 0.8rem;
+  padding: 0.45rem 0.8rem;
   border-radius: 6px;
   font-size: 0.85rem;
   outline: none;
@@ -431,7 +436,7 @@ const onProjectClick = (projectName) => {
 .filter-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.85rem 1rem;
   align-items: center;
 }
 
@@ -462,7 +467,7 @@ const onProjectClick = (projectName) => {
   background: color-mix(in srgb, var(--text-color) 5%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent);
   color: var(--text-color);
-  padding: 0.3rem 0.6rem;
+  padding: 0.35rem 0.65rem;
   border-radius: 6px;
   font-size: 0.85rem;
   outline: none;
@@ -528,6 +533,7 @@ const onProjectClick = (projectName) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-align: left;
 }
 
 .count-badge {
@@ -540,6 +546,7 @@ const onProjectClick = (projectName) => {
   font-size: 0.9rem;
   color: var(--accent-color);
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .toggle-icon.rotated {
@@ -548,7 +555,7 @@ const onProjectClick = (projectName) => {
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 2rem;
   align-items: stretch;
 }
@@ -564,6 +571,7 @@ const onProjectClick = (projectName) => {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
   height: 100%;
+  min-width: 0;
   box-sizing: border-box;
 }
 
@@ -576,10 +584,7 @@ const onProjectClick = (projectName) => {
   flex-direction: row-reverse;
 }
 
-.skill-card.reverse .skill-text-box {
-  text-align: left;
-}
-
+.skill-card.reverse .skill-text-box,
 .skill-card:not(.reverse) .skill-text-box {
   text-align: left;
 }
@@ -627,13 +632,14 @@ const onProjectClick = (projectName) => {
   font-size: 1.1rem;
   color: var(--text-color);
   margin: 0.2rem 0 0.3rem 0;
+  overflow-wrap: anywhere;
 }
 
 .skill-text-box p {
   font-size: 0.8rem;
   opacity: 0.8;
   margin: 0 0 0.5rem 0;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .skill-projects {
@@ -706,7 +712,6 @@ const onProjectClick = (projectName) => {
   filter: drop-shadow(0 0 3px var(--accent-color));
 }
 
-/* Animation de filtrage et réorganisation fluide des compétences */
 .grid-item-move,
 .grid-item-enter-active,
 .grid-item-leave-active {
@@ -717,5 +722,93 @@ const onProjectClick = (projectName) => {
 .grid-item-leave-to {
   opacity: 0;
   transform: scale(0.92);
+}
+
+@media (max-width: 1024px) and (min-width: 901px) {
+  .skills-section {
+    padding: 3.5rem 1.75rem;
+  }
+
+  .skills-grid {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .skills-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .skills-section h2 {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .skills-controls {
+    padding: 1rem;
+    gap: 0.85rem;
+    margin-bottom: 2rem;
+  }
+
+  .search-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+
+  .sort-group {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .category-toggle-btn {
+    padding: 0.85rem 1rem;
+  }
+
+  .category-title-text {
+    font-size: 1.05rem;
+  }
+}
+
+@media (max-width: 540px) {
+  .skills-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .skill-card,
+  .skill-card.reverse {
+    flex-direction: row;
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+
+  .skill-icon-box {
+    min-width: 54px;
+    height: 54px;
+    font-size: 1.6rem;
+  }
+
+  .skill-text-box h3 {
+    font-size: 1.05rem;
+  }
+
+  .skill-text-box p {
+    font-size: 0.82rem;
+  }
+
+  .filter-group {
+    gap: 0.6rem;
+  }
+
+  .checkbox-label {
+    font-size: 0.8rem;
+  }
 }
 </style>

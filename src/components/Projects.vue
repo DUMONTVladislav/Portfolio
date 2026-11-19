@@ -184,7 +184,7 @@ const filterProjects = (origin) => {
 
   let list = cat.projects.filter(project => {
     const matchesLang = project.languages.some(lang => selectedLanguages.value.includes(lang))
-    const matchesSearch = project.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
+    const matchesSearch = project.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           project.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
                           project.languages.some(l => l.toLowerCase().includes(searchQuery.value.toLowerCase()))
     return matchesLang && matchesSearch
@@ -229,16 +229,18 @@ const scrollToProject = (id) => {
   }
 
   setTimeout(() => {
-    const el = document.getElementById(cleanId)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      highlightedProjectId.value = cleanId
-      setTimeout(() => {
-        if (highlightedProjectId.value === cleanId) {
-          highlightedProjectId.value = null
-        }
-      }, 2500)
-    }
+    nextTick(() => {
+      const el = document.getElementById(cleanId)
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        highlightedProjectId.value = cleanId
+        setTimeout(() => {
+          if (highlightedProjectId.value === cleanId) {
+            highlightedProjectId.value = null
+          }
+        }, 2500)
+      }
+    })
   }, wasClosed ? 200 : 0)
 }
 
@@ -254,9 +256,20 @@ const onHashChange = () => {
   }
 }
 
+const onKeydown = (e) => {
+  if (e.key === 'Escape') {
+    if (zoomedImageSrc.value) {
+      closeZoom()
+    } else if (activeProject.value) {
+      closeModal()
+    }
+  }
+}
+
 onMounted(() => {
   window.addEventListener('nav-to-project', onNavToProject)
   window.addEventListener('hashchange', onHashChange)
+  document.addEventListener('keydown', onKeydown)
   if (window.location.hash && window.location.hash.startsWith('#project-')) {
     setTimeout(() => {
       scrollToProject(window.location.hash.slice(1))
@@ -267,6 +280,7 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('nav-to-project', onNavToProject)
   window.removeEventListener('hashchange', onHashChange)
+  document.removeEventListener('keydown', onKeydown)
 })
 </script>
 
@@ -277,11 +291,11 @@ onUnmounted(() => {
     <div v-reveal="{ delay: 80 }" class="projects-controls">
       <div class="search-group">
         <label for="project-search" class="control-label">Rechercher :</label>
-        <input 
+        <input
           id="project-search"
-          type="text" 
-          v-model="searchQuery" 
-          placeholder="Ex: C++, Python, Portfolio..." 
+          type="text"
+          v-model="searchQuery"
+          placeholder="Ex: C++, Python, Portfolio..."
           class="search-input"
         />
       </div>
@@ -289,9 +303,9 @@ onUnmounted(() => {
       <div class="filter-group">
         <span class="control-label">Langages / Outils :</span>
         <label v-for="lang in allLanguages" :key="lang" class="checkbox-label">
-          <input 
-            type="checkbox" 
-            :checked="selectedLanguages.includes(lang)" 
+          <input
+            type="checkbox"
+            :checked="selectedLanguages.includes(lang)"
             @change="toggleLanguage(lang)"
           />
           {{ lang }}
@@ -300,25 +314,26 @@ onUnmounted(() => {
     </div>
 
     <div v-reveal="{ delay: 100 }" class="project-category-group" v-if="filteredUniversitaires.length">
-      <button 
-        class="category-toggle-btn" 
-        :class="{ 'is-collapsed': !isUniversitaireOpen }" 
+      <button
+        type="button"
+        class="category-toggle-btn"
+        :class="{ 'is-collapsed': !isUniversitaireOpen }"
         @click="isUniversitaireOpen = !isUniversitaireOpen"
         :aria-expanded="isUniversitaireOpen"
       >
         <span class="category-title-text">Projets Universitaires <span class="count-badge">({{ filteredUniversitaires.length }})</span></span>
-        <span class="toggle-icon" :class="{ 'rotated': !isUniversitaireOpen }">▼</span>
+        <span class="toggle-icon" :class="{ rotated: !isUniversitaireOpen }">▼</span>
       </button>
-      
+
       <div class="section-collapse" :class="{ 'is-collapsed': !isUniversitaireOpen }">
         <div class="section-collapse-inner">
           <TransitionGroup name="project-item" tag="div" class="projects-container">
-            <article 
-              v-for="project in filteredUniversitaires" 
-              :key="project.id" 
+            <article
+              v-for="project in filteredUniversitaires"
+              :key="project.id"
               :id="project.id"
               class="project-card-large clickable-card"
-              :class="{ 'highlighted': highlightedProjectId === project.id }"
+              :class="{ highlighted: highlightedProjectId === project.id }"
               @click="openModal(project)"
             >
               <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
@@ -328,10 +343,10 @@ onUnmounted(() => {
               </div>
               <div v-else class="project-screenshot-box">
                 <template v-if="project.images && project.images.length">
-                  <img 
-                    :src="project.images[0]" 
-                    :alt="project.title" 
-                    class="project-screenshot" 
+                  <img
+                    :src="project.images[0]"
+                    :alt="project.title"
+                    class="project-screenshot"
                   />
                   <div class="zoom-overlay">
                     <span>🔍 Agrandir</span>
@@ -350,10 +365,10 @@ onUnmounted(() => {
                 </div>
                 <h4>{{ project.title }}</h4>
                 <p>{{ project.description }}</p>
-                
+
                 <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
-                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
-                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Voir sur GitHub</a>
+                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Visiter le site</a>
                 </div>
               </div>
             </article>
@@ -363,35 +378,36 @@ onUnmounted(() => {
     </div>
 
     <div v-reveal="{ delay: 100 }" class="project-category-group" v-if="filteredPersonnels.length">
-      <button 
-        class="category-toggle-btn" 
-        :class="{ 'is-collapsed': !isPersonnelOpen }" 
+      <button
+        type="button"
+        class="category-toggle-btn"
+        :class="{ 'is-collapsed': !isPersonnelOpen }"
         @click="isPersonnelOpen = !isPersonnelOpen"
         :aria-expanded="isPersonnelOpen"
       >
         <span class="category-title-text">Projets Personnels <span class="count-badge">({{ filteredPersonnels.length }})</span></span>
-        <span class="toggle-icon" :class="{ 'rotated': !isPersonnelOpen }">▼</span>
+        <span class="toggle-icon" :class="{ rotated: !isPersonnelOpen }">▼</span>
       </button>
-      
+
       <div class="section-collapse" :class="{ 'is-collapsed': !isPersonnelOpen }">
         <div class="section-collapse-inner">
           <TransitionGroup name="project-item" tag="div" class="projects-container">
-            <article 
-              v-for="project in filteredPersonnels" 
-              :key="project.id" 
+            <article
+              v-for="project in filteredPersonnels"
+              :key="project.id"
               :id="project.id"
               class="project-card-large clickable-card"
-              :class="{ 'highlighted': highlightedProjectId === project.id }"
+              :class="{ highlighted: highlightedProjectId === project.id }"
               @click="openModal(project)"
             >
               <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
 
               <div class="project-screenshot-box">
                 <template v-if="project.images && project.images.length">
-                  <img 
-                    :src="project.images[0]" 
-                    :alt="project.title" 
-                    class="project-screenshot" 
+                  <img
+                    :src="project.images[0]"
+                    :alt="project.title"
+                    class="project-screenshot"
                   />
                   <div class="zoom-overlay">
                     <span>🔍 Agrandir</span>
@@ -410,10 +426,10 @@ onUnmounted(() => {
                 </div>
                 <h4>{{ project.title }}</h4>
                 <p>{{ project.description }}</p>
-                
+
                 <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
-                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
-                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Voir sur GitHub</a>
+                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Visiter le site</a>
                 </div>
               </div>
             </article>
@@ -425,8 +441,8 @@ onUnmounted(() => {
     <Transition name="modal">
       <div class="modal-backdrop" v-if="activeProject" @click="closeModal">
         <div class="modal-content" @click.stop>
-          <button class="modal-close-btn" @click="closeModal">✕</button>
-          
+          <button type="button" class="modal-close-btn" @click="closeModal" aria-label="Fermer la fenêtre">✕</button>
+
           <div class="modal-header">
             <div class="project-languages-tags">
               <span class="project-tag-lang" v-for="lang in activeProject.languages" :key="lang">{{ lang }}</span>
@@ -439,26 +455,26 @@ onUnmounted(() => {
               <CandyCrushTerminal />
             </div>
             <div v-else-if="activeProject.images && activeProject.images.length" class="modal-screenshot-box">
-              <button class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1">❮</button>
-              
+              <button type="button" class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1" aria-label="Image précédente">❮</button>
+
               <Transition name="carousel-fade" mode="out-in">
-                <img 
+                <img
                   :key="currentImageIndex"
-                  :src="activeProject.images[currentImageIndex]" 
-                  :alt="activeProject.title" 
-                  class="modal-screenshot zoomable-img" 
+                  :src="activeProject.images[currentImageIndex]"
+                  :alt="activeProject.title"
+                  class="modal-screenshot zoomable-img"
                   @click="openZoom(activeProject.images[currentImageIndex])"
                   title="Cliquer pour zoomer en plein écran"
                 />
               </Transition>
-              
-              <button class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1">❯</button>
-              
+
+              <button type="button" class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1" aria-label="Image suivante">❯</button>
+
               <div class="carousel-counter" v-if="activeProject.images.length > 1">
                 {{ currentImageIndex + 1 }} / {{ activeProject.images.length }}
               </div>
             </div>
-            
+
             <div class="modal-screenshot-box" v-else>
               <span class="no-img-text">
                 {{ activeProject.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
@@ -472,8 +488,8 @@ onUnmounted(() => {
           </div>
 
           <div class="modal-footer" v-if="activeProject.githubUrl || activeProject.siteUrl">
-            <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" class="btn-outline">Voir le dépôt GitHub</a>
-            <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+            <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Voir le dépôt GitHub</a>
+            <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Visiter le site</a>
           </div>
         </div>
       </div>
@@ -482,7 +498,7 @@ onUnmounted(() => {
     <Transition name="zoom-modal">
       <div class="zoom-lightbox-backdrop" v-if="zoomedImageSrc" @click="closeZoom">
         <div class="zoom-lightbox-content" @click.stop>
-          <button class="modal-close-btn" @click="closeZoom">✕</button>
+          <button type="button" class="modal-close-btn" @click="closeZoom" aria-label="Fermer l'agrandissement">✕</button>
           <img :src="zoomedImageSrc" alt="Agrandissement de l'image" class="zoomed-full-img" />
         </div>
       </div>
@@ -495,6 +511,8 @@ onUnmounted(() => {
   padding: 4rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  scroll-margin-top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px) + 1rem);
+  box-sizing: border-box;
 }
 
 .projects-section > h2 {
@@ -525,10 +543,11 @@ onUnmounted(() => {
 
 .search-input {
   flex: 1;
+  min-width: 0;
   background: color-mix(in srgb, var(--text-color) 5%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-color) 20%, transparent);
   color: var(--text-color);
-  padding: 0.4rem 0.8rem;
+  padding: 0.45rem 0.8rem;
   border-radius: 6px;
   font-size: 0.85rem;
   outline: none;
@@ -543,7 +562,7 @@ onUnmounted(() => {
 .filter-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 0.85rem 1rem;
   align-items: center;
 }
 
@@ -623,6 +642,7 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-align: left;
 }
 
 .count-badge {
@@ -635,6 +655,7 @@ onUnmounted(() => {
   font-size: 0.9rem;
   color: var(--accent-color);
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .toggle-icon.rotated {
@@ -659,7 +680,7 @@ onUnmounted(() => {
   transition: all 0.3s ease;
   box-sizing: border-box;
   cursor: pointer;
-  scroll-margin-top: 90px;
+  scroll-margin-top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px) + 1.5rem);
   position: relative;
 }
 
@@ -714,7 +735,7 @@ onUnmounted(() => {
 .project-terminal-box {
   flex: 1.5;
   height: 310px;
-  min-width: 300px;
+  min-width: 280px;
   border: 1px solid var(--accent-color);
   border-radius: 8px;
   overflow: hidden;
@@ -732,6 +753,7 @@ onUnmounted(() => {
 
 .project-screenshot-box {
   flex: 1.5;
+  min-width: 0;
   height: 250px;
   background: color-mix(in srgb, var(--accent-color) 5%, rgba(0, 0, 0, 0.8));
   border: 1px solid var(--accent-color);
@@ -790,6 +812,7 @@ onUnmounted(() => {
 
 .project-content {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -819,6 +842,7 @@ onUnmounted(() => {
   font-size: 1.4rem;
   color: var(--text-color);
   margin: 0 0 0.8rem 0;
+  overflow-wrap: anywhere;
 }
 
 .project-content p {
@@ -848,6 +872,7 @@ onUnmounted(() => {
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .btn-outline:hover {
@@ -867,6 +892,7 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 .modal-content {
@@ -877,6 +903,8 @@ onUnmounted(() => {
   max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   padding: 2.5rem;
   position: relative;
   box-shadow: 0 0 30px var(--accent-color);
@@ -922,6 +950,7 @@ onUnmounted(() => {
   color: var(--text-color);
   margin-top: 0.5rem;
   text-align: left;
+  overflow-wrap: anywhere;
 }
 
 .modal-body {
@@ -971,6 +1000,7 @@ onUnmounted(() => {
   justify-content: center;
   font-size: 1rem;
   z-index: 10;
+  touch-action: manipulation;
   transition: all 0.3s ease;
 }
 
@@ -1041,6 +1071,7 @@ onUnmounted(() => {
   opacity: 0.9;
   color: var(--text-color);
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .modal-footer {
@@ -1061,6 +1092,8 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   padding: 2rem;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
 }
 
 .zoom-lightbox-content {
@@ -1081,7 +1114,6 @@ onUnmounted(() => {
   box-shadow: 0 0 40px var(--accent-color);
 }
 
-/* Animations d'ouverture et fermeture de la modale de projet */
 .modal-enter-active,
 .modal-leave-active {
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1103,7 +1135,6 @@ onUnmounted(() => {
   transform: scale(0.92) translateY(20px);
 }
 
-/* Animations d'ouverture et fermeture de la modale zoom image */
 .zoom-modal-enter-active,
 .zoom-modal-leave-active {
   transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1125,7 +1156,6 @@ onUnmounted(() => {
   transform: scale(0.9);
 }
 
-/* Animation de transition entre les images du carrousel */
 .carousel-fade-enter-active,
 .carousel-fade-leave-active {
   transition: opacity 0.22s ease, transform 0.22s ease;
@@ -1141,7 +1171,6 @@ onUnmounted(() => {
   transform: scale(1.04);
 }
 
-/* Animation de filtrage et réorganisation fluide des projets */
 .project-item-move,
 .project-item-enter-active,
 .project-item-leave-active {
@@ -1152,5 +1181,191 @@ onUnmounted(() => {
 .project-item-leave-to {
   opacity: 0;
   transform: scale(0.95);
+}
+
+@media (max-width: 1024px) and (min-width: 869px) {
+  .projects-section {
+    padding: 3.5rem 1.75rem;
+  }
+
+  .project-card-large {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .project-terminal-box {
+    min-width: 240px;
+    height: 290px;
+  }
+}
+
+@media (max-width: 868px) {
+  .projects-section {
+    padding: 3rem 1.25rem;
+  }
+
+  .projects-section > h2 {
+    font-size: clamp(1.4rem, 5vw, 1.8rem);
+    margin-bottom: 1.5rem;
+  }
+
+  .projects-controls {
+    padding: 1rem;
+    gap: 0.85rem;
+    margin-bottom: 2rem;
+  }
+
+  .search-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+  }
+
+  .category-toggle-btn {
+    padding: 0.85rem 1rem;
+  }
+
+  .category-title-text {
+    font-size: 1.05rem;
+  }
+
+  .project-card-large {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .project-screenshot-box {
+    width: 100%;
+    height: 230px;
+  }
+
+  .project-terminal-box {
+    width: 100%;
+    height: 300px;
+    min-width: 0;
+  }
+
+  .modal-backdrop {
+    padding: 0.75rem;
+  }
+
+  .modal-content {
+    padding: 1.75rem 1.25rem;
+    max-height: 94vh;
+    gap: 1rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.35rem;
+    padding-right: 2rem;
+  }
+
+  .modal-screenshot-box {
+    height: 240px;
+  }
+
+  .modal-terminal-box {
+    height: 350px;
+  }
+}
+
+@media (max-width: 540px) {
+  .projects-section {
+    padding: 2.5rem 1rem;
+  }
+
+  .project-card-large {
+    padding: 1.15rem;
+    gap: 1.15rem;
+    border-radius: 10px;
+  }
+
+  .project-screenshot-box {
+    height: 180px;
+  }
+
+  .project-terminal-box {
+    height: 260px;
+  }
+
+  .project-content h4 {
+    font-size: 1.15rem;
+  }
+
+  .project-content p {
+    font-size: 0.85rem;
+  }
+
+  .project-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .project-actions .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+
+  .modal-backdrop {
+    padding: 0.35rem;
+  }
+
+  .modal-content {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .modal-close-btn {
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 30px;
+    height: 30px;
+    font-size: 0.85rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.15rem;
+  }
+
+  .modal-screenshot-box {
+    height: 180px;
+  }
+
+  .modal-terminal-box {
+    height: 290px;
+  }
+
+  .carousel-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 0.8rem;
+  }
+
+  .carousel-btn.prev {
+    left: 0.5rem;
+  }
+
+  .carousel-btn.next {
+    right: 0.5rem;
+  }
+
+  .modal-footer {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .modal-footer .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+
+  .filter-group {
+    gap: 0.6rem;
+  }
+
+  .checkbox-label {
+    font-size: 0.8rem;
+  }
 }
 </style>
