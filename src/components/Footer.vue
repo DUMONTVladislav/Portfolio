@@ -36,7 +36,7 @@
       <div class="footer-legal">
         <h3>Mentions Légales</h3>
         <p>Ce portfolio est un site web personnel à vocation technique et professionnelle.</p>
-        <p>Hébergé sur ... • Tous droits réservés © 2026</p>
+        <p>Hébergé sur Hostinger • Tous droits réservés © 2026</p>
       </div>
     </div>
   </footer>
