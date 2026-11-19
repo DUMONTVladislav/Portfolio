@@ -36,6 +36,10 @@ const closeBanner = () => {
   localStorage.setItem(bannerKey, 'true')
 }
 
+const onAfterLeave = () => {
+  emit('height-change', 0)
+}
+
 const resetBanner = () => {
   localStorage.removeItem(bannerKey)
   isVisible.value = true
@@ -47,16 +51,18 @@ defineExpose({
 </script>
 
 <template>
-  <div v-if="isVisible" ref="bannerRef" class="alert-banner">
-    <div class="banner-content">
-      <span class="banner-badge">News</span>
-      <p class="banner-text">
-        ⚡ <strong>Nouvel article disponible :</strong> Découvrez mon point de vue sur l'utilisation de l'IA !
-      </p>
-      <a href="#news" class="banner-link">Lire l'article ➔</a>
+  <Transition name="banner-slide" @after-leave="onAfterLeave">
+    <div v-if="isVisible" ref="bannerRef" class="alert-banner">
+      <div class="banner-content">
+        <span class="banner-badge">News</span>
+        <p class="banner-text">
+          ⚡ <strong>Nouvel article disponible :</strong> Découvrez mon point de vue sur l'utilisation de l'IA !
+        </p>
+        <a href="#news" class="banner-link">Lire l'article ➔</a>
+      </div>
+      <button @click="closeBanner" class="banner-close-btn" title="Fermer l'alerte">✕</button>
     </div>
-    <button @click="closeBanner" class="banner-close-btn" title="Fermer l'alerte">✕</button>
-  </div>
+  </Transition>
 </template>
 
 <style scoped>
@@ -139,5 +145,22 @@ defineExpose({
   background: var(--accent-color);
   color: #ffffff;
   box-shadow: 0 0 8px var(--accent-color);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.banner-close-btn:active {
+  transform: rotate(90deg) scale(0.95);
+}
+
+/* Animations d'ouverture et de fermeture de la bannière */
+.banner-slide-enter-active,
+.banner-slide-leave-active {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+
+.banner-slide-enter-from,
+.banner-slide-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
 }
 </style>

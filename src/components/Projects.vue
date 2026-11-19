@@ -208,9 +208,12 @@ const scrollToProject = (id) => {
   const cat = projectCategories.find(c => c.projects.some(p => p.id === cleanId))
   if (!cat) return
 
+  let wasClosed = false
   if (cat.origin === 'universitaire') {
+    if (!isUniversitaireOpen.value) wasClosed = true
     isUniversitaireOpen.value = true
   } else if (cat.origin === 'personnel') {
+    if (!isPersonnelOpen.value) wasClosed = true
     isPersonnelOpen.value = true
   }
 
@@ -225,7 +228,7 @@ const scrollToProject = (id) => {
     }
   }
 
-  nextTick(() => {
+  setTimeout(() => {
     const el = document.getElementById(cleanId)
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' })
@@ -236,7 +239,7 @@ const scrollToProject = (id) => {
         }
       }, 2500)
     }
-  })
+  }, wasClosed ? 200 : 0)
 }
 
 const onNavToProject = (e) => {
@@ -269,9 +272,9 @@ onUnmounted(() => {
 
 <template>
   <section id="projects" class="projects-section">
-    <h2>Mes projets</h2>
+    <h2 v-reveal>Mes projets</h2>
 
-    <div class="projects-controls">
+    <div v-reveal="{ delay: 80 }" class="projects-controls">
       <div class="search-group">
         <label for="project-search" class="control-label">Rechercher :</label>
         <input 
@@ -296,169 +299,194 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="project-category-group" v-if="filteredUniversitaires.length">
-      <button class="category-toggle-btn" @click="isUniversitaireOpen = !isUniversitaireOpen">
+    <div v-reveal="{ delay: 100 }" class="project-category-group" v-if="filteredUniversitaires.length">
+      <button 
+        class="category-toggle-btn" 
+        :class="{ 'is-collapsed': !isUniversitaireOpen }" 
+        @click="isUniversitaireOpen = !isUniversitaireOpen"
+        :aria-expanded="isUniversitaireOpen"
+      >
         <span class="category-title-text">Projets Universitaires <span class="count-badge">({{ filteredUniversitaires.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isUniversitaireOpen }">▼</span>
       </button>
       
-      <div class="projects-container" v-show="isUniversitaireOpen">
-        <article 
-          v-for="project in filteredUniversitaires" 
-          :key="project.title" 
-          :id="project.id"
-          class="project-card-large clickable-card"
-          :class="{ 'highlighted': highlightedProjectId === project.id }"
-          @click="openModal(project)"
-        >
-          <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
+      <div class="section-collapse" :class="{ 'is-collapsed': !isUniversitaireOpen }">
+        <div class="section-collapse-inner">
+          <TransitionGroup name="project-item" tag="div" class="projects-container">
+            <article 
+              v-for="project in filteredUniversitaires" 
+              :key="project.id" 
+              :id="project.id"
+              class="project-card-large clickable-card"
+              :class="{ 'highlighted': highlightedProjectId === project.id }"
+              @click="openModal(project)"
+            >
+              <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
 
-          <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
-            <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
-          </div>
-          <div v-else class="project-screenshot-box">
-            <template v-if="project.images && project.images.length">
-              <img 
-                :src="project.images[0]" 
-                :alt="project.title" 
-                class="project-screenshot" 
-              />
-              <div class="zoom-overlay">
-                <span>🔍 Agrandir</span>
+              <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
+                <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
               </div>
-            </template>
-            <div v-else class="no-img-box">
-              <span class="no-img-text">
-                {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
-              </span>
-            </div>
-          </div>
+              <div v-else class="project-screenshot-box">
+                <template v-if="project.images && project.images.length">
+                  <img 
+                    :src="project.images[0]" 
+                    :alt="project.title" 
+                    class="project-screenshot" 
+                  />
+                  <div class="zoom-overlay">
+                    <span>🔍 Agrandir</span>
+                  </div>
+                </template>
+                <div v-else class="no-img-box">
+                  <span class="no-img-text">
+                    {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+                  </span>
+                </div>
+              </div>
 
-          <div class="project-content">
-            <div class="project-languages-tags">
-              <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
-            </div>
-            <h4>{{ project.title }}</h4>
-            <p>{{ project.description }}</p>
-            
-            <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
-              <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
-              <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
-            </div>
-          </div>
-        </article>
+              <div class="project-content">
+                <div class="project-languages-tags">
+                  <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
+                </div>
+                <h4>{{ project.title }}</h4>
+                <p>{{ project.description }}</p>
+                
+                <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
+                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
+                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+                </div>
+              </div>
+            </article>
+          </TransitionGroup>
+        </div>
       </div>
     </div>
 
-    <div class="project-category-group" v-if="filteredPersonnels.length">
-      <button class="category-toggle-btn" @click="isPersonnelOpen = !isPersonnelOpen">
+    <div v-reveal="{ delay: 100 }" class="project-category-group" v-if="filteredPersonnels.length">
+      <button 
+        class="category-toggle-btn" 
+        :class="{ 'is-collapsed': !isPersonnelOpen }" 
+        @click="isPersonnelOpen = !isPersonnelOpen"
+        :aria-expanded="isPersonnelOpen"
+      >
         <span class="category-title-text">Projets Personnels <span class="count-badge">({{ filteredPersonnels.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isPersonnelOpen }">▼</span>
       </button>
       
-      <div class="projects-container" v-show="isPersonnelOpen">
-        <article 
-          v-for="project in filteredPersonnels" 
-          :key="project.title" 
-          :id="project.id"
-          class="project-card-large clickable-card"
-          :class="{ 'highlighted': highlightedProjectId === project.id }"
-          @click="openModal(project)"
-        >
-          <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
+      <div class="section-collapse" :class="{ 'is-collapsed': !isPersonnelOpen }">
+        <div class="section-collapse-inner">
+          <TransitionGroup name="project-item" tag="div" class="projects-container">
+            <article 
+              v-for="project in filteredPersonnels" 
+              :key="project.id" 
+              :id="project.id"
+              class="project-card-large clickable-card"
+              :class="{ 'highlighted': highlightedProjectId === project.id }"
+              @click="openModal(project)"
+            >
+              <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
 
-          <div class="project-screenshot-box">
-            <template v-if="project.images && project.images.length">
-              <img 
-                :src="project.images[0]" 
-                :alt="project.title" 
-                class="project-screenshot" 
-              />
-              <div class="zoom-overlay">
-                <span>🔍 Agrandir</span>
+              <div class="project-screenshot-box">
+                <template v-if="project.images && project.images.length">
+                  <img 
+                    :src="project.images[0]" 
+                    :alt="project.title" 
+                    class="project-screenshot" 
+                  />
+                  <div class="zoom-overlay">
+                    <span>🔍 Agrandir</span>
+                  </div>
+                </template>
+                <div v-else class="no-img-box">
+                  <span class="no-img-text">
+                    {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+                  </span>
+                </div>
               </div>
-            </template>
-            <div v-else class="no-img-box">
+
+              <div class="project-content">
+                <div class="project-languages-tags">
+                  <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
+                </div>
+                <h4>{{ project.title }}</h4>
+                <p>{{ project.description }}</p>
+                
+                <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
+                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
+                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+                </div>
+              </div>
+            </article>
+          </TransitionGroup>
+        </div>
+      </div>
+    </div>
+
+    <Transition name="modal">
+      <div class="modal-backdrop" v-if="activeProject" @click="closeModal">
+        <div class="modal-content" @click.stop>
+          <button class="modal-close-btn" @click="closeModal">✕</button>
+          
+          <div class="modal-header">
+            <div class="project-languages-tags">
+              <span class="project-tag-lang" v-for="lang in activeProject.languages" :key="lang">{{ lang }}</span>
+            </div>
+            <h3>{{ activeProject.title }}</h3>
+          </div>
+
+          <div class="modal-body">
+            <div v-if="activeProject.title === 'Candy Crush'" class="modal-terminal-box">
+              <CandyCrushTerminal />
+            </div>
+            <div v-else-if="activeProject.images && activeProject.images.length" class="modal-screenshot-box">
+              <button class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1">❮</button>
+              
+              <Transition name="carousel-fade" mode="out-in">
+                <img 
+                  :key="currentImageIndex"
+                  :src="activeProject.images[currentImageIndex]" 
+                  :alt="activeProject.title" 
+                  class="modal-screenshot zoomable-img" 
+                  @click="openZoom(activeProject.images[currentImageIndex])"
+                  title="Cliquer pour zoomer en plein écran"
+                />
+              </Transition>
+              
+              <button class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1">❯</button>
+              
+              <div class="carousel-counter" v-if="activeProject.images.length > 1">
+                {{ currentImageIndex + 1 }} / {{ activeProject.images.length }}
+              </div>
+            </div>
+            
+            <div class="modal-screenshot-box" v-else>
               <span class="no-img-text">
-                {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+                {{ activeProject.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
               </span>
             </div>
-          </div>
 
-          <div class="project-content">
-            <div class="project-languages-tags">
-              <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
-            </div>
-            <h4>{{ project.title }}</h4>
-            <p>{{ project.description }}</p>
-            
-            <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
-              <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" class="btn-outline">Voir sur GitHub</a>
-              <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+            <div class="modal-details">
+              <h4>Description détaillée</h4>
+              <p>{{ activeProject.longDescription || activeProject.description }}</p>
             </div>
           </div>
-        </article>
-      </div>
-    </div>
 
-    <div class="modal-backdrop" v-if="activeProject" @click="closeModal">
-      <div class="modal-content" @click.stop>
-        <button class="modal-close-btn" @click="closeModal">✕</button>
-        
-        <div class="modal-header">
-          <div class="project-languages-tags">
-            <span class="project-tag-lang" v-for="lang in activeProject.languages" :key="lang">{{ lang }}</span>
-          </div>
-          <h3>{{ activeProject.title }}</h3>
-        </div>
-
-        <div class="modal-body">
-          <div v-if="activeProject.title === 'Candy Crush'" class="modal-terminal-box">
-            <CandyCrushTerminal />
-          </div>
-          <div v-else-if="activeProject.images && activeProject.images.length" class="modal-screenshot-box">
-            <button class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1">❮</button>
-            
-            <img 
-              :src="activeProject.images[currentImageIndex]" 
-              :alt="activeProject.title" 
-              class="modal-screenshot zoomable-img" 
-              @click="openZoom(activeProject.images[currentImageIndex])"
-              title="Cliquer pour zoomer en plein écran"
-            />
-            
-            <button class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1">❯</button>
-            
-            <div class="carousel-counter" v-if="activeProject.images.length > 1">
-              {{ currentImageIndex + 1 }} / {{ activeProject.images.length }}
-            </div>
-          </div>
-          
-          <div class="modal-screenshot-box" v-else>
-            <span class="no-img-text">
-              {{ activeProject.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
-            </span>
-          </div>
-
-          <div class="modal-details">
-            <h4>Description détaillée</h4>
-            <p>{{ activeProject.longDescription || activeProject.description }}</p>
+          <div class="modal-footer" v-if="activeProject.githubUrl || activeProject.siteUrl">
+            <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" class="btn-outline">Voir le dépôt GitHub</a>
+            <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
           </div>
         </div>
+      </div>
+    </Transition>
 
-        <div class="modal-footer" v-if="activeProject.githubUrl || activeProject.siteUrl">
-          <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" class="btn-outline">Voir le dépôt GitHub</a>
-          <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" class="btn-outline">Visiter le site</a>
+    <Transition name="zoom-modal">
+      <div class="zoom-lightbox-backdrop" v-if="zoomedImageSrc" @click="closeZoom">
+        <div class="zoom-lightbox-content" @click.stop>
+          <button class="modal-close-btn" @click="closeZoom">✕</button>
+          <img :src="zoomedImageSrc" alt="Agrandissement de l'image" class="zoomed-full-img" />
         </div>
       </div>
-    </div>
-
-    <div class="zoom-lightbox-backdrop" v-if="zoomedImageSrc" @click="closeZoom">
-      <div class="zoom-lightbox-content" @click.stop>
-        <button class="modal-close-btn" @click="closeZoom">✕</button>
-        <img :src="zoomedImageSrc" alt="Agrandissement de l'image" class="zoomed-full-img" />
-      </div>
-    </div>
+    </Transition>
   </section>
 </template>
 
@@ -552,13 +580,40 @@ onUnmounted(() => {
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-toggle-btn:hover {
   background: color-mix(in srgb, var(--accent-color) 10%, var(--nav-bg));
   box-shadow: 0 0 12px var(--accent-color);
+}
+
+.category-toggle-btn:active {
+  transform: scale(0.995);
+}
+
+.section-collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-top 0.35s ease;
+  opacity: 1;
+  margin-top: 1.5rem;
+}
+
+.section-collapse.is-collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: 0;
+  visibility: hidden;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin-top 0.35s ease, visibility 0.35s step-end;
+}
+
+.section-collapse-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding: 6px 4px;
+  margin: -6px -4px;
 }
 
 .category-title-text {
@@ -854,6 +909,11 @@ onUnmounted(() => {
   background: var(--accent-color);
   color: #ffffff;
   box-shadow: 0 0 10px var(--accent-color);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.modal-close-btn:active {
+  transform: rotate(90deg) scale(0.95);
 }
 
 .modal-header h3 {
@@ -1019,5 +1079,78 @@ onUnmounted(() => {
   border: 2px solid var(--accent-color);
   border-radius: 8px;
   box-shadow: 0 0 40px var(--accent-color);
+}
+
+/* Animations d'ouverture et fermeture de la modale de projet */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .modal-content,
+.modal-leave-active .modal-content {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  opacity: 0;
+  transform: scale(0.92) translateY(20px);
+}
+
+/* Animations d'ouverture et fermeture de la modale zoom image */
+.zoom-modal-enter-active,
+.zoom-modal-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.zoom-modal-enter-from,
+.zoom-modal-leave-to {
+  opacity: 0;
+}
+
+.zoom-modal-enter-active .zoom-lightbox-content,
+.zoom-modal-leave-active .zoom-lightbox-content {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.zoom-modal-enter-from .zoom-lightbox-content,
+.zoom-modal-leave-to .zoom-lightbox-content {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+/* Animation de transition entre les images du carrousel */
+.carousel-fade-enter-active,
+.carousel-fade-leave-active {
+  transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.carousel-fade-enter-from {
+  opacity: 0;
+  transform: scale(0.96);
+}
+
+.carousel-fade-leave-to {
+  opacity: 0;
+  transform: scale(1.04);
+}
+
+/* Animation de filtrage et réorganisation fluide des projets */
+.project-item-move,
+.project-item-enter-active,
+.project-item-leave-active {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.project-item-enter-from,
+.project-item-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
 }
 </style>
