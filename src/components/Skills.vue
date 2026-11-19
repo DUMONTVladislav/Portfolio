@@ -215,9 +215,9 @@ const onProjectClick = (projectName) => {
 
 <template>
   <section id="skills" class="skills-section">
-    <h2>Mes compétences</h2>
+    <h2 v-reveal>Mes compétences</h2>
 
-    <div class="skills-controls">
+    <div v-reveal="{ delay: 80 }" class="skills-controls">
       <div class="search-group">
         <label for="search-input" class="control-label">Rechercher :</label>
         <input 
@@ -252,108 +252,126 @@ const onProjectClick = (projectName) => {
       </div>
     </div>
 
-    <div class="skill-section-group" v-if="cursusSkills.length">
-      <button class="category-toggle-btn" @click="isCursusOpen = !isCursusOpen">
+    <div v-reveal="{ delay: 100 }" class="skill-section-group" v-if="cursusSkills.length">
+      <button 
+        class="category-toggle-btn" 
+        :class="{ 'is-collapsed': !isCursusOpen }" 
+        @click="isCursusOpen = !isCursusOpen"
+        :aria-expanded="isCursusOpen"
+      >
         <span class="category-title-text">Cursus Scolaire <span class="count-badge">({{ cursusSkills.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isCursusOpen }">▼</span>
       </button>
 
-      <div class="skills-grid" v-show="isCursusOpen">
-        <div 
-          v-for="(skill, index) in cursusSkills" 
-          :key="skill.name" 
-          class="skill-card"
-          :class="{ 'reverse': index % 2 !== 1 }"
-        >
-          <div class="skill-icon-box">
-            <span class="skill-emoji">{{ skill.icon }}</span>
-          </div>
+      <div class="section-collapse" :class="{ 'is-collapsed': !isCursusOpen }">
+        <div class="section-collapse-inner">
+          <TransitionGroup name="grid-item" tag="div" class="skills-grid">
+            <div 
+              v-for="(skill, index) in cursusSkills" 
+              :key="skill.name" 
+              class="skill-card"
+              :class="{ 'reverse': index % 2 !== 1 }"
+            >
+              <div class="skill-icon-box">
+                <span class="skill-emoji">{{ skill.icon }}</span>
+              </div>
 
-          <div class="skill-text-box">
-            <span class="skill-category">{{ skill.category }}</span>
-            <h3>{{ skill.name }}</h3>
-            <p>{{ skill.description }}</p>
-            
-            <div class="skill-projects" v-if="skill.projects && skill.projects.length">
-              <span class="projects-label">Projets :</span>
-              <a 
-                v-for="proj in skill.projects" 
-                :key="proj"
-                :href="getProjectLink(proj)" 
-                @click="onProjectClick(proj)"
-                class="project-tag"
-                :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
-              >{{ proj }}</a>
-            </div>
+              <div class="skill-text-box">
+                <span class="skill-category">{{ skill.category }}</span>
+                <h3>{{ skill.name }}</h3>
+                <p>{{ skill.description }}</p>
+                
+                <div class="skill-projects" v-if="skill.projects && skill.projects.length">
+                  <span class="projects-label">Projets :</span>
+                  <a 
+                    v-for="proj in skill.projects" 
+                    :key="proj"
+                    :href="getProjectLink(proj)" 
+                    @click="onProjectClick(proj)"
+                    class="project-tag"
+                    :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
+                  >{{ proj }}</a>
+                </div>
 
-            <div class="skill-rating-container">
-              <span class="rating-label">Aisance :</span>
-              <div class="skill-rating">
-                <span 
-                  v-for="star in 5" 
-                  :key="star" 
-                  class="star" 
-                  :class="{ 
-                    'filled': star <= skill.rating, 
-                    'half': star === Math.ceil(skill.rating) && skill.rating % 1 !== 0 
-                  }"
-                >★</span>
+                <div class="skill-rating-container">
+                  <span class="rating-label">Aisance :</span>
+                  <div class="skill-rating">
+                    <span 
+                      v-for="star in 5" 
+                      :key="star" 
+                      class="star" 
+                      :class="{ 
+                        'filled': star <= skill.rating, 
+                        'half': star === Math.ceil(skill.rating) && skill.rating % 1 !== 0 
+                      }"
+                    >★</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </TransitionGroup>
         </div>
       </div>
     </div>
 
-    <div class="skill-section-group" v-if="autodidacteSkills.length">
-      <button class="category-toggle-btn" @click="isAutodidacteOpen = !isAutodidacteOpen">
+    <div v-reveal="{ delay: 100 }" class="skill-section-group" v-if="autodidacteSkills.length">
+      <button 
+        class="category-toggle-btn" 
+        :class="{ 'is-collapsed': !isAutodidacteOpen }" 
+        @click="isAutodidacteOpen = !isAutodidacteOpen"
+        :aria-expanded="isAutodidacteOpen"
+      >
         <span class="category-title-text">Apprentissage Autodidacte & Personnel <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isAutodidacteOpen }">▼</span>
       </button>
 
-      <div class="skills-grid" v-show="isAutodidacteOpen">
-        <div 
-          v-for="(skill, index) in autodidacteSkills" 
-          :key="skill.name" 
-          class="skill-card"
-          :class="{ 'reverse': index % 2 !== 1 }"
-        >
-          <div class="skill-icon-box">
-            <span class="skill-emoji">{{ skill.icon }}</span>
-          </div>
+      <div class="section-collapse" :class="{ 'is-collapsed': !isAutodidacteOpen }">
+        <div class="section-collapse-inner">
+          <TransitionGroup name="grid-item" tag="div" class="skills-grid">
+            <div 
+              v-for="(skill, index) in autodidacteSkills" 
+              :key="skill.name" 
+              class="skill-card"
+              :class="{ 'reverse': index % 2 !== 1 }"
+            >
+              <div class="skill-icon-box">
+                <span class="skill-emoji">{{ skill.icon }}</span>
+              </div>
 
-          <div class="skill-text-box">
-            <span class="skill-category">{{ skill.category }}</span>
-            <h3>{{ skill.name }}</h3>
-            <p>{{ skill.description }}</p>
-            
-            <div class="skill-projects" v-if="skill.projects && skill.projects.length">
-              <span class="projects-label">Projets :</span>
-              <a 
-                v-for="proj in skill.projects" 
-                :key="proj"
-                :href="getProjectLink(proj)" 
-                @click="onProjectClick(proj)"
-                class="project-tag"
-                :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
-              >{{ proj }}</a>
-            </div>
+              <div class="skill-text-box">
+                <span class="skill-category">{{ skill.category }}</span>
+                <h3>{{ skill.name }}</h3>
+                <p>{{ skill.description }}</p>
+                
+                <div class="skill-projects" v-if="skill.projects && skill.projects.length">
+                  <span class="projects-label">Projets :</span>
+                  <a 
+                    v-for="proj in skill.projects" 
+                    :key="proj"
+                    :href="getProjectLink(proj)" 
+                    @click="onProjectClick(proj)"
+                    class="project-tag"
+                    :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
+                  >{{ proj }}</a>
+                </div>
 
-            <div class="skill-rating-container">
-              <span class="rating-label">Aisance :</span>
-              <div class="skill-rating">
-                <span 
-                  v-for="star in 5" 
-                  :key="star" 
-                  class="star" 
-                  :class="{ 
-                    'filled': star <= skill.rating, 
-                    'half': star === Math.ceil(skill.rating) && skill.rating % 1 !== 0 
-                  }"
-                >★</span>
+                <div class="skill-rating-container">
+                  <span class="rating-label">Aisance :</span>
+                  <div class="skill-rating">
+                    <span 
+                      v-for="star in 5" 
+                      :key="star" 
+                      class="star" 
+                      :class="{ 
+                        'filled': star <= skill.rating, 
+                        'half': star === Math.ceil(skill.rating) && skill.rating % 1 !== 0 
+                      }"
+                    >★</span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </TransitionGroup>
         </div>
       </div>
     </div>
@@ -467,13 +485,40 @@ const onProjectClick = (projectName) => {
   align-items: center;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
 .category-toggle-btn:hover {
   background: color-mix(in srgb, var(--accent-color) 10%, var(--nav-bg));
   box-shadow: 0 0 12px var(--accent-color);
+}
+
+.category-toggle-btn:active {
+  transform: scale(0.995);
+}
+
+.section-collapse {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, margin-top 0.35s ease;
+  opacity: 1;
+  margin-top: 1.5rem;
+}
+
+.section-collapse.is-collapsed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: 0;
+  visibility: hidden;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, margin-top 0.35s ease, visibility 0.35s step-end;
+}
+
+.section-collapse-inner {
+  overflow: hidden;
+  min-height: 0;
+  padding: 6px 4px;
+  margin: -6px -4px;
 }
 
 .category-title-text {
@@ -659,5 +704,18 @@ const onProjectClick = (projectName) => {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 3px var(--accent-color));
+}
+
+/* Animation de filtrage et réorganisation fluide des compétences */
+.grid-item-move,
+.grid-item-enter-active,
+.grid-item-leave-active {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+}
+
+.grid-item-enter-from,
+.grid-item-leave-to {
+  opacity: 0;
+  transform: scale(0.92);
 }
 </style>

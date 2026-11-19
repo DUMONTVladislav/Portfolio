@@ -3,12 +3,12 @@
 </script>
 <template>
   <section id="home" class="hero-section">
-    <div class="hero-header">
+    <div v-reveal class="hero-header">
       <h1>Futur expert en cyber-sécurité</h1>
       <h2>Ma présentation</h2>
     </div>
 
-    <div class="hero-middle-row">
+    <div v-reveal="{ delay: 100 }" class="hero-middle-row">
       <div class="hero-content">
         <p>
           Actuellement en 2ème année de BUT Informatique à l'IUT d'Aix-en-Provence,
@@ -27,10 +27,10 @@
 
     <div class="hero-card-container">
       <div class="card-display-box">
-        <div class="tab-content timeline-container">
+        <div v-reveal="{ delay: 150 }" class="tab-content timeline-container">
           <h3>Mon Parcours</h3>
           <div class="timeline">
-            <div class="timeline-item">
+            <div v-reveal="{ delay: 80 }" class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <span class="timeline-date">2026 - Présent</span>
@@ -43,7 +43,7 @@
               </div>
             </div>
             
-            <div class="timeline-item">
+            <div v-reveal="{ delay: 160 }" class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <span class="timeline-date">2025 - 2026</span>
@@ -56,7 +56,7 @@
               </div>
             </div>
 
-            <div class="timeline-item">
+            <div v-reveal="{ delay: 240 }" class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <span class="timeline-date">2024 - 2025</span>
@@ -71,7 +71,7 @@
           </div>
         </div>
 
-        <div class="tab-content cv-container">
+        <div v-reveal="{ delay: 200 }" class="tab-content cv-container">
           <h3>Mon CV</h3>
           <iframe src="/cv.pdf" class="cv-viewer" title="CV - Vladislav DUMONT"></iframe>
           <div class="cv-actions">

@@ -29,12 +29,13 @@ const closeArticleModal = () => {
 
 <template>
   <section id="news" class="news-section">
-    <h2>News</h2>
+    <h2 v-reveal>News</h2>
 
     <div class="news-grid">
       <article 
         v-for="item in sortedNews" 
         :key="item.title" 
+        v-reveal="{ delay: 100 }"
         class="news-card"
         @click="openArticleModal(item)"
       >
@@ -52,30 +53,32 @@ const closeArticleModal = () => {
       </article>
     </div>
 
-    <div class="modal-backdrop" v-if="activeArticle" @click="closeArticleModal">
-      <div class="modal-content" @click.stop>
-        <button class="modal-close-btn" @click="closeArticleModal">✕</button>
-        
-        <div class="modal-header">
-          <div class="modal-meta-row">
-            <span class="news-category">{{ activeArticle.category }}</span>
-            <span class="news-date">{{ activeArticle.date }}</span>
-          </div>
-          <h3>{{ activeArticle.title }}</h3>
-        </div>
-
-        <div class="modal-body">
-          <div class="modal-images-box" v-if="activeArticle.images && activeArticle.images.length">
-            <img :src="activeArticle.images[0]" :alt="activeArticle.title" class="modal-img" />
+    <Transition name="modal">
+      <div class="modal-backdrop" v-if="activeArticle" @click="closeArticleModal">
+        <div class="modal-content" @click.stop>
+          <button class="modal-close-btn" @click="closeArticleModal">✕</button>
+          
+          <div class="modal-header">
+            <div class="modal-meta-row">
+              <span class="news-category">{{ activeArticle.category }}</span>
+              <span class="news-date">{{ activeArticle.date }}</span>
+            </div>
+            <h3>{{ activeArticle.title }}</h3>
           </div>
 
-          <div class="modal-details">
-            <h4>Contenu de l'article</h4>
-            <p>{{ activeArticle.content }}</p>
+          <div class="modal-body">
+            <div class="modal-images-box" v-if="activeArticle.images && activeArticle.images.length">
+              <img :src="activeArticle.images[0]" :alt="activeArticle.title" class="modal-img" />
+            </div>
+
+            <div class="modal-details">
+              <h4>Contenu de l'article</h4>
+              <p>{{ activeArticle.content }}</p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Transition>
   </section>
 </template>
 
@@ -233,6 +236,11 @@ const closeArticleModal = () => {
   background: var(--accent-color);
   color: #ffffff;
   box-shadow: 0 0 10px var(--accent-color);
+  transform: rotate(90deg) scale(1.1);
+}
+
+.modal-close-btn:active {
+  transform: rotate(90deg) scale(0.95);
 }
 
 .modal-header h3 {
@@ -291,5 +299,27 @@ const closeArticleModal = () => {
   opacity: 0.9;
   color: var(--text-color);
   margin: 0;
+}
+
+/* Animations d'ouverture et fermeture de la modale d'article */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-active .modal-content,
+.modal-leave-active .modal-content {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+}
+
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  opacity: 0;
+  transform: scale(0.92) translateY(20px);
 }
 </style>

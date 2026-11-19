@@ -3,7 +3,7 @@
 
 <template>
   <footer id="footer" class="footer-section">
-    <div class="footer-container">
+    <div v-reveal class="footer-container">
       <div class="footer-info">
         <h3>Contact & Informations</h3>
         <p>Vladislav DUMONT — Futur expert en cyber-sécurité</p>
