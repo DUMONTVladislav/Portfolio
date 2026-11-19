@@ -1,23 +1,42 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+
+const emit = defineEmits(['height-change'])
 
 const isLightMode = ref(false)
+const navRef = ref(null)
 
 const toggleTheme = () => {
   isLightMode.value = !isLightMode.value
   document.body.classList.toggle('light-mode', isLightMode.value)
 }
+
+const reportHeight = () => {
+  nextTick(() => {
+    const height = navRef.value?.offsetHeight || 64
+    emit('height-change', height)
+  })
+}
+
+onMounted(() => {
+  reportHeight()
+  window.addEventListener('resize', reportHeight)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', reportHeight)
+})
 </script>
 
 <template>
-<nav class="navbar">
+  <nav ref="navRef" class="navbar">
     <div class="nav-brand">
       <span class="logo-text">
-        <span class="logo-first">Vladislav</span> 
+        <span class="logo-first">Vladislav</span>
         <span class="logo-last">Dumont</span>
       </span>
     </div>
-    
+
     <ul class="nav-links">
       <li><a href="#home">Accueil</a></li>
       <li><a href="#skills">Compétences</a></li>
@@ -27,7 +46,7 @@ const toggleTheme = () => {
     </ul>
 
     <button @click="toggleTheme" class="theme-btn">
-        Thème
+      Thème
     </button>
   </nav>
 </template>
