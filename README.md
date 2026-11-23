@@ -68,6 +68,10 @@ Portfolio technique personnel développé avec **Vue 3 (Composition API)**, con�
 
 - Améliorations graphiques
 
+- Optimisation du code
+
+- Documentation
+
 - Easter-eggs ?
 
 ## Contact
