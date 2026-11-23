@@ -46,7 +46,7 @@ Portfolio technique personnel développé avec **Vue 3 (Composition API)**, con�
    git clone [https://github.com/DUMONTVladislav/Portfolio.git](https://github.com/DUMONTVladislav/Portfolio.git)
    cd Portfolio
    ```
-2. **Installer les dépendances ** :
+2. **Installer les dépendances** :
    ```bash
    npm install
    ```
