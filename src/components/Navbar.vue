@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref } from 'vue';
 
 const emit = defineEmits(['height-change'])
 
@@ -25,6 +25,7 @@ const indicatorStyle = ref({
 
 let isScrollingManual = false
 let manualScrollTimeout = null
+let navResizeObserver = null
 
 const toggleTheme = () => {
   isLightMode.value = !isLightMode.value
@@ -37,9 +38,10 @@ const toggleMenu = () => {
 
 const reportHeight = () => {
   nextTick(() => {
-    const height = navRef.value?.offsetHeight || 64
-    document.documentElement.style.setProperty('--navbar-height', `${height}px`)
-    emit('height-change', height)
+    if (!navRef.value) return
+    const exactHeight = navRef.value.getBoundingClientRect().height
+    document.documentElement.style.setProperty('--navbar-height', `${exactHeight}px`)
+    emit('height-change', exactHeight)
   })
 }
 
@@ -91,7 +93,7 @@ const onScroll = () => {
     return
   }
 
-  const navOffset = (navRef.value?.offsetHeight || 64) + 116
+  const navOffset = (navRef.value?.getBoundingClientRect().height || 64) + 116
   const scrollPosition = window.scrollY + navOffset
   for (let i = navItems.length - 1; i >= 0; i--) {
     const item = navItems[i]
@@ -130,6 +132,13 @@ const onKeydown = (e) => {
 
 onMounted(() => {
   reportHeight()
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reportHeight)
+  }
+  if (typeof ResizeObserver !== 'undefined' && navRef.value) {
+    navResizeObserver = new ResizeObserver(reportHeight)
+    navResizeObserver.observe(navRef.value)
+  }
   if (window.location.hash && navItems.some(item => item.href === window.location.hash)) {
     activeSection.value = window.location.hash
   }
@@ -141,6 +150,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
+  navResizeObserver?.disconnect()
   window.removeEventListener('resize', onResize)
   window.removeEventListener('scroll', onScroll)
   document.removeEventListener('click', onDocumentClick)
@@ -206,12 +216,14 @@ onUnmounted(() => {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  padding: 1rem 2rem;
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 2rem 1rem 2rem;
   background-color: var(--nav-bg);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   z-index: 1000;
   box-sizing: border-box;
+  transform: translateZ(0);
   transition: padding 0.3s ease;
 }
 
@@ -357,7 +369,7 @@ onUnmounted(() => {
 
 @media (max-width: 1024px) and (min-width: 869px) {
   .navbar {
-    padding: 0.9rem 1.5rem;
+    padding: calc(0.9rem + env(safe-area-inset-top, 0px)) 1.5rem 0.9rem 1.5rem;
   }
 
   .nav-links {
@@ -371,7 +383,7 @@ onUnmounted(() => {
 
 @media (max-width: 868px) {
   .navbar {
-    padding: 0.85rem 1.5rem;
+    padding: calc(0.85rem + env(safe-area-inset-top, 0px)) 1.5rem 0.85rem 1.5rem;
   }
 
   .hamburger-btn {
@@ -384,7 +396,7 @@ onUnmounted(() => {
 
   .nav-links {
     position: fixed;
-    top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px));
+    top: calc(var(--navbar-height, 64px) + var(--alert-height, 0px) - 0.5px);
     left: 0;
     width: 100%;
     background-color: var(--nav-bg);
@@ -398,6 +410,7 @@ onUnmounted(() => {
     opacity: 0;
     pointer-events: none;
     transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     box-sizing: border-box;
   }
@@ -433,7 +446,7 @@ onUnmounted(() => {
 
 @media (max-width: 480px) {
   .navbar {
-    padding: 0.75rem 1rem;
+    padding: calc(0.75rem + env(safe-area-inset-top, 0px)) 1rem 0.75rem 1rem;
     gap: 0.5rem;
   }
 
