@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 
 const emit = defineEmits(['visibility-change', 'height-change'])
 
@@ -10,7 +10,9 @@ let resizeObserver = null
 
 const reportHeight = () => {
   nextTick(() => {
-    const height = isVisible.value ? (bannerRef.value?.offsetHeight || 46) : 0
+    const height = isVisible.value && bannerRef.value
+      ? bannerRef.value.getBoundingClientRect().height
+      : 0
     document.documentElement.style.setProperty('--alert-height', `${height}px`)
     emit('height-change', height)
   })
@@ -21,7 +23,10 @@ onMounted(() => {
   isVisible.value = !dismissed
   emit('visibility-change', isVisible.value)
   reportHeight()
-  window.addEventListener('resize', reportHeight)
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(reportHeight)
+  }
 
   if (typeof ResizeObserver !== 'undefined') {
     resizeObserver = new ResizeObserver(reportHeight)
@@ -30,7 +35,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  window.removeEventListener('resize', reportHeight)
   resizeObserver?.disconnect()
 })
 
@@ -74,7 +78,15 @@ defineExpose({
         </p>
         <a href="#news" class="banner-link">Lire l'article ➔</a>
       </div>
-      <button @click="closeBanner" class="banner-close-btn" title="Fermer l'alerte" aria-label="Fermer l'alerte">✕</button>
+      <button
+        type="button"
+        @click="closeBanner"
+        class="banner-close-btn"
+        title="Fermer l'alerte"
+        aria-label="Fermer l'alerte"
+      >
+        ✕
+      </button>
     </div>
   </Transition>
 </template>
@@ -82,7 +94,7 @@ defineExpose({
 <style scoped>
 .alert-banner {
   position: fixed;
-  top: var(--navbar-height, 64px);
+  top: calc(var(--navbar-height, 64px) - 0.5px);
   left: 0;
   width: 100%;
   background: color-mix(in srgb, var(--accent-color) 15%, var(--nav-bg));
@@ -94,8 +106,10 @@ defineExpose({
   gap: 1rem;
   z-index: 999;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-sizing: border-box;
+  transform: translateZ(0);
 }
 
 .banner-content {
@@ -155,6 +169,7 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
+  touch-action: manipulation;
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
