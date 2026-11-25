@@ -1,15 +1,18 @@
 <script setup>
+import { useI18n } from '@/composables/useI18n.js'
+
+const { t } = useI18n()
 </script>
 
 <template>
   <footer id="footer" class="footer-section">
     <div v-reveal class="footer-container">
       <div class="footer-info">
-        <h3>Contact &amp; Informations</h3>
-        <p>Vladislav DUMONT — Futur expert en cyber-sécurité</p>
-        <p>IUT d'Aix-en-Provence • BUT Informatique (DEPLOI)</p>
+        <h3>{{ t('footer.contactTitle') }}</h3>
+        <p>{{ t('footer.subtitle') }}</p>
+        <p>{{ t('footer.university') }}</p>
         <p>
-          Email :
+          {{ t('footer.emailLabel') }}
           <a href="mailto:vladislav.dumont@gmail.com" class="footer-link">vladislav.dumont@gmail.com</a>
         </p>
         <div class="footer-socials">
@@ -34,9 +37,9 @@
       </div>
 
       <div class="footer-legal">
-        <h3>Mentions Légales</h3>
-        <p>Ce portfolio est un site web personnel à vocation technique et professionnelle.</p>
-        <p>Hébergé sur Hostinger • Tous droits réservés © 2026</p>
+        <h3>{{ t('footer.legalTitle') }}</h3>
+        <p>{{ t('footer.legalP1') }}</p>
+        <p>{{ t('footer.legalP2') }}</p>
       </div>
     </div>
   </footer>

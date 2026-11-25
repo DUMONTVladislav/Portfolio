@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { useI18n } from '@/composables/useI18n.js'
+
+const { t } = useI18n()
 
 const activeMobileTab = ref('timeline')
 </script>
@@ -7,29 +10,26 @@ const activeMobileTab = ref('timeline')
 <template>
   <section id="home" class="hero-section">
     <div v-reveal class="hero-header">
-      <h1>Futur expert en cyber-sécurité</h1>
-      <h2>Ma présentation</h2>
+      <h1>{{ t('home.heroTitle') }}</h1>
+      <h2>{{ t('home.heroSubtitle') }}</h2>
     </div>
 
     <div v-reveal="{ delay: 100 }" class="hero-middle-row">
       <div class="hero-content">
         <p>
-          Actuellement en 2ème année de BUT Informatique à l'IUT d'Aix-en-Provence,
-          je suis le parcours Déploiement d'applications communicantes et sécurisées.
-          Je suis passionné par les infrastructures réseaux, la gestion des bases de données et
-          l'évolution du monde de l'Informatique.<br />
-          Bienvenue dans mon espace technique !
+          {{ t('home.introText') }}<br />
+          {{ t('home.welcomeText') }}
         </p>
       </div>
 
       <div class="hero-nav-links">
-        <a href="#skills" class="btn-outline">Mes compétences</a>
-        <a href="#projects" class="btn-outline">Mes projets</a>
+        <a href="#skills" class="btn-outline">{{ t('home.btnSkills') }}</a>
+        <a href="#projects" class="btn-outline">{{ t('home.btnProjects') }}</a>
       </div>
     </div>
 
     <div class="hero-card-container">
-      <div class="mobile-tabs-bar" role="tablist" aria-label="Parcours et CV">
+      <div class="mobile-tabs-bar" role="tablist" :aria-label="t('home.heroSubtitle')">
         <button
           type="button"
           role="tab"
@@ -38,7 +38,7 @@ const activeMobileTab = ref('timeline')
           :class="{ active: activeMobileTab === 'timeline' }"
           @click="activeMobileTab = 'timeline'"
         >
-          📅 Mon Parcours
+          {{ t('home.tabTimeline') }}
         </button>
         <button
           type="button"
@@ -48,7 +48,7 @@ const activeMobileTab = ref('timeline')
           :class="{ active: activeMobileTab === 'cv' }"
           @click="activeMobileTab = 'cv'"
         >
-          📄 Mon CV
+          {{ t('home.tabCv') }}
         </button>
       </div>
 
@@ -58,17 +58,17 @@ const activeMobileTab = ref('timeline')
           class="tab-content timeline-container"
           :class="{ 'mobile-hidden': activeMobileTab !== 'timeline' }"
         >
-          <h3 class="desktop-only-title">Mon Parcours</h3>
+          <h3 class="desktop-only-title">{{ t('home.titleTimeline') }}</h3>
           <div class="timeline">
             <div v-reveal="{ delay: 80 }" class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
-                <span class="timeline-date">2026 - Présent</span>
-                <h4>BUT Informatique - 2ème année (DEPLOI)</h4>
-                <p>IUT d'Aix-en-Provence</p>
+                <span class="timeline-date">{{ t('home.timeline.item1Date') }}</span>
+                <h4>{{ t('home.timeline.item1Title') }}</h4>
+                <p>{{ t('home.timeline.item1Location') }}</p>
                 <ul>
-                  <li>Compétences techniques : PostgreSQL, PHP</li>
-                  <li>Projets : DataLab, Flexarion</li>
+                  <li>{{ t('home.timeline.item1Skills') }}</li>
+                  <li>{{ t('home.timeline.item1Projects') }}</li>
                 </ul>
               </div>
             </div>
@@ -76,12 +76,12 @@ const activeMobileTab = ref('timeline')
             <div v-reveal="{ delay: 160 }" class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
-                <span class="timeline-date">2025 - 2026</span>
-                <h4>BUT Informatique - 1ère année</h4>
-                <p>IUT d'Aix-en-Provence</p>
+                <span class="timeline-date">{{ t('home.timeline.item2Date') }}</span>
+                <h4>{{ t('home.timeline.item2Title') }}</h4>
+                <p>{{ t('home.timeline.item2Location') }}</p>
                 <ul>
-                  <li>Compétences techniques : Terminaux linux, Git, C++, Python, Java, SQL, Bases réseau, HTML, CSS, MIPS</li>
-                  <li>Projets : Candy Crush, Systèmes de votes, Page web statique, Serveurs DNS / MX / Apache, Exploitation BD, Statistiques Page Rank, VigieChiro Compagnon</li>
+                  <li>{{ t('home.timeline.item2Skills') }}</li>
+                  <li>{{ t('home.timeline.item2Projects') }}</li>
                 </ul>
               </div>
             </div>
@@ -89,12 +89,12 @@ const activeMobileTab = ref('timeline')
             <div v-reveal="{ delay: 240 }" class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
-                <span class="timeline-date">2024 - 2025</span>
-                <h4>Obtention du Baccalauréat</h4>
-                <p>Lycée Adam de Craponne</p>
+                <span class="timeline-date">{{ t('home.timeline.item3Date') }}</span>
+                <h4>{{ t('home.timeline.item3Title') }}</h4>
+                <p>{{ t('home.timeline.item3Location') }}</p>
                 <ul>
-                  <li>Spécialités : Mathématiques et Numériques Sciences Informatiques</li>
-                  <li>Options : Mathématiques expertes et Anglais euro mathématiques</li>
+                  <li>{{ t('home.timeline.item3Specialties') }}</li>
+                  <li>{{ t('home.timeline.item3Options') }}</li>
                 </ul>
               </div>
             </div>
@@ -106,14 +106,14 @@ const activeMobileTab = ref('timeline')
           class="tab-content cv-container"
           :class="{ 'mobile-hidden': activeMobileTab !== 'cv' }"
         >
-          <h3 class="desktop-only-title">Mon CV</h3>
-          <iframe src="/cv.pdf" class="cv-viewer" title="CV - Vladislav DUMONT"></iframe>
+          <h3 class="desktop-only-title">{{ t('home.titleCv') }}</h3>
+          <iframe src="/cv.pdf" class="cv-viewer" :title="t('home.cvAria')"></iframe>
           <div class="cv-actions">
             <a href="/cv.pdf" target="_blank" rel="noopener noreferrer" class="btn-outline">
-              Ouvrir dans un nouvel onglet
+              {{ t('home.cvOpenTab') }}
             </a>
             <a href="/cv.pdf" download class="btn-outline btn-secondary">
-              Télécharger le CV
+              {{ t('home.cvDownload') }}
             </a>
           </div>
         </div>

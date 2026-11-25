@@ -1,20 +1,23 @@
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { useI18n } from '@/composables/useI18n.js';
 
 const emit = defineEmits(['height-change'])
+
+const { locale, toggleLocale, t } = useI18n()
 
 const isLightMode = ref(false)
 const isMenuOpen = ref(false)
 const navRef = ref(null)
 const navLinksRef = ref(null)
 
-const navItems = [
-  { href: '#home', label: 'Accueil' },
-  { href: '#skills', label: 'Compétences' },
-  { href: '#news', label: 'News' },
-  { href: '#projects', label: 'Projets' },
-  { href: '#footer', label: 'Contact' }
-]
+const navItems = computed(() => [
+  { href: '#home', label: t('nav.home') },
+  { href: '#skills', label: t('nav.skills') },
+  { href: '#news', label: t('nav.news') },
+  { href: '#projects', label: t('nav.projects') },
+  { href: '#footer', label: t('nav.contact') }
+])
 
 const activeSection = ref('#home')
 const indicatorStyle = ref({
@@ -95,7 +98,7 @@ const onScroll = () => {
 
   const navOffset = (navRef.value?.getBoundingClientRect().height || 64) + 116
   const scrollPosition = window.scrollY + navOffset
-  for (let i = navItems.length - 1; i >= 0; i--) {
+  for (let i = navItems.value.length - 1; i >= 0; i--) {
     const item = navItems[i]
     const el = document.querySelector(item.href)
     if (el) {
@@ -139,7 +142,7 @@ onMounted(() => {
     navResizeObserver = new ResizeObserver(reportHeight)
     navResizeObserver.observe(navRef.value)
   }
-  if (window.location.hash && navItems.some(item => item.href === window.location.hash)) {
+  if (window.location.hash && navItems.value.some(item => item.href === window.location.hash)) {
     activeSection.value = window.location.hash
   }
   updateIndicator(activeSection.value)
@@ -186,8 +189,18 @@ onUnmounted(() => {
     </ul>
 
     <div class="nav-actions">
-      <button type="button" @click="toggleTheme" class="theme-btn" title="Changer le thème">
-        Thème
+      <button
+        type="button"
+        @click="toggleLocale"
+        class="lang-btn"
+        :title="t('nav.toggleLang')"
+        :aria-label="t('nav.langSwitchAria')"
+      >
+        <span class="lang-text">{{ locale === 'fr' ? 'EN' : 'FR' }}</span>
+      </button>
+
+      <button type="button" @click="toggleTheme" class="theme-btn" :title="t('nav.toggleTheme')">
+        {{ t('nav.theme') }}
       </button>
 
       <button
@@ -195,7 +208,7 @@ onUnmounted(() => {
         class="hamburger-btn"
         :class="{ 'is-active': isMenuOpen }"
         @click="toggleMenu"
-        aria-label="Menu principal"
+        :aria-label="t('nav.menuAria')"
         :aria-expanded="isMenuOpen"
       >
         <span class="hamburger-bar"></span>
@@ -301,18 +314,27 @@ onUnmounted(() => {
   flex-shrink: 0;
 }
 
+.lang-btn,
 .theme-btn {
   background: transparent;
   border: 2px solid var(--accent-color);
   color: var(--text-color);
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.85rem;
   border-radius: 8px;
   cursor: pointer;
   font-family: var(--font-body);
   white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.5px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.lang-btn {
+  min-width: 44px;
+  text-align: center;
+}
+
+.lang-btn:hover,
 .theme-btn:hover {
   background-color: var(--accent-color);
   color: #fff;
@@ -320,6 +342,7 @@ onUnmounted(() => {
   box-shadow: 0 0 12px var(--accent-color);
 }
 
+.lang-btn:active,
 .theme-btn:active {
   transform: translateY(0) scale(0.96);
 }
@@ -455,8 +478,9 @@ onUnmounted(() => {
     letter-spacing: 1px;
   }
 
+  .lang-btn,
   .theme-btn {
-    padding: 0.4rem 0.7rem;
+    padding: 0.4rem 0.6rem;
     font-size: 0.78rem;
   }
 

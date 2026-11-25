@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { useI18n } from '@/composables/useI18n.js'
+
+const { t } = useI18n()
 
 const skills = [
   { 
@@ -204,6 +207,28 @@ const getProjectLink = (projectName) => {
   return projectLinks[projectName] || '#projects'
 }
 
+const getSkillCategory = (cat) => {
+  return t(`skills.categories.${cat}`) || cat
+}
+
+const getSkillDescription = (skill) => {
+  return t(`skills.descriptions.${skill.name}`) || skill.description
+}
+
+const getProjectTagTitle = (proj) => {
+  if (proj === 'Tous les projets') {
+    return t('skills.allProjectsTitle')
+  }
+  return t('skills.projectTagTitle', { name: proj })
+}
+
+const getProjectDisplayName = (proj) => {
+  if (proj === 'Tous les projets') {
+    return t('skills.allProjects')
+  }
+  return proj
+}
+
 const onProjectClick = (projectName) => {
   const link = getProjectLink(projectName)
   if (link.startsWith('#project-')) {
@@ -215,39 +240,39 @@ const onProjectClick = (projectName) => {
 
 <template>
   <section id="skills" class="skills-section">
-    <h2 v-reveal>Mes compétences</h2>
+    <h2 v-reveal>{{ t('skills.title') }}</h2>
 
     <div v-reveal="{ delay: 80 }" class="skills-controls">
       <div class="search-group">
-        <label for="search-input" class="control-label">Rechercher :</label>
+        <label for="search-input" class="control-label">{{ t('skills.searchLabel') }}</label>
         <input 
           id="search-input"
           type="text" 
           v-model="searchQuery" 
-          placeholder="Ex: Python, Docker, Linux..." 
+          :placeholder="t('skills.searchPlaceholder')" 
           class="search-input"
         />
       </div>
 
       <div class="filter-group">
-        <span class="control-label">Catégories :</span>
+        <span class="control-label">{{ t('skills.categoriesLabel') }}</span>
         <label v-for="cat in allCategories" :key="cat" class="checkbox-label">
           <input 
             type="checkbox" 
             :checked="selectedCategories.includes(cat)" 
             @change="toggleCategory(cat)"
           />
-          {{ cat }}
+          {{ getSkillCategory(cat) }}
         </label>
       </div>
 
       <div class="sort-group">
-        <label for="sort-select" class="control-label">Trier par :</label>
+        <label for="sort-select" class="control-label">{{ t('skills.sortLabel') }}</label>
         <select id="sort-select" v-model="sortBy" class="sort-select">
-          <option value="default">Par défaut</option>
-          <option value="ratingDesc">Aisance (décroissante)</option>
-          <option value="ratingAsc">Aisance (croissante)</option>
-          <option value="nameAsc">Nom (A-Z)</option>
+          <option value="default">{{ t('skills.sortDefault') }}</option>
+          <option value="ratingDesc">{{ t('skills.sortRatingDesc') }}</option>
+          <option value="ratingAsc">{{ t('skills.sortRatingAsc') }}</option>
+          <option value="nameAsc">{{ t('skills.sortNameAsc') }}</option>
         </select>
       </div>
     </div>
@@ -260,7 +285,7 @@ const onProjectClick = (projectName) => {
         @click="isCursusOpen = !isCursusOpen"
         :aria-expanded="isCursusOpen"
       >
-        <span class="category-title-text">Cursus Scolaire <span class="count-badge">({{ cursusSkills.length }})</span></span>
+        <span class="category-title-text">{{ t('skills.sectionCursus') }} <span class="count-badge">({{ cursusSkills.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isCursusOpen }">▼</span>
       </button>
 
@@ -278,24 +303,24 @@ const onProjectClick = (projectName) => {
               </div>
 
               <div class="skill-text-box">
-                <span class="skill-category">{{ skill.category }}</span>
+                <span class="skill-category">{{ getSkillCategory(skill.category) }}</span>
                 <h3>{{ skill.name }}</h3>
-                <p>{{ skill.description }}</p>
+                <p>{{ getSkillDescription(skill) }}</p>
                 
                 <div class="skill-projects" v-if="skill.projects && skill.projects.length">
-                  <span class="projects-label">Projets :</span>
+                  <span class="projects-label">{{ t('skills.projectsLabel') }}</span>
                   <a 
                     v-for="proj in skill.projects" 
                     :key="proj"
                     :href="getProjectLink(proj)" 
                     @click="onProjectClick(proj)"
                     class="project-tag"
-                    :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
-                  >{{ proj }}</a>
+                    :title="getProjectTagTitle(proj)"
+                  >{{ getProjectDisplayName(proj) }}</a>
                 </div>
 
                 <div class="skill-rating-container">
-                  <span class="rating-label">Aisance :</span>
+                  <span class="rating-label">{{ t('skills.ratingLabel') }}</span>
                   <div class="skill-rating">
                     <span 
                       v-for="star in 5" 
@@ -323,7 +348,7 @@ const onProjectClick = (projectName) => {
         @click="isAutodidacteOpen = !isAutodidacteOpen"
         :aria-expanded="isAutodidacteOpen"
       >
-        <span class="category-title-text">Apprentissage Autodidacte &amp; Personnel <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
+        <span class="category-title-text">{{ t('skills.sectionAutodidacte') }} <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
         <span class="toggle-icon" :class="{ 'rotated': !isAutodidacteOpen }">▼</span>
       </button>
 
@@ -341,24 +366,24 @@ const onProjectClick = (projectName) => {
               </div>
 
               <div class="skill-text-box">
-                <span class="skill-category">{{ skill.category }}</span>
+                <span class="skill-category">{{ getSkillCategory(skill.category) }}</span>
                 <h3>{{ skill.name }}</h3>
-                <p>{{ skill.description }}</p>
+                <p>{{ getSkillDescription(skill) }}</p>
                 
                 <div class="skill-projects" v-if="skill.projects && skill.projects.length">
-                  <span class="projects-label">Projets :</span>
+                  <span class="projects-label">{{ t('skills.projectsLabel') }}</span>
                   <a 
                     v-for="proj in skill.projects" 
                     :key="proj"
                     :href="getProjectLink(proj)" 
                     @click="onProjectClick(proj)"
                     class="project-tag"
-                    :title="proj === 'Tous les projets' ? 'Voir la section projets' : `Voir le projet ${proj}`"
-                  >{{ proj }}</a>
+                    :title="getProjectTagTitle(proj)"
+                  >{{ getProjectDisplayName(proj) }}</a>
                 </div>
 
                 <div class="skill-rating-container">
-                  <span class="rating-label">Aisance :</span>
+                  <span class="rating-label">{{ t('skills.ratingLabel') }}</span>
                   <div class="skill-rating">
                     <span 
                       v-for="star in 5" 

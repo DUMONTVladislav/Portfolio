@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import CandyCrushTerminal from './CandyCrushTerminal.vue'
+import { useI18n } from '@/composables/useI18n.js'
+
+const { t } = useI18n()
 
 const projectCategories = [
   {
@@ -170,6 +173,24 @@ const closeZoom = () => {
   zoomedImageSrc.value = null
 }
 
+const getProjectTitle = (project) => {
+  const trans = t(`projects.items.${project.id}.title`)
+  return (trans && trans !== `projects.items.${project.id}.title`) ? trans : project.title
+}
+
+const getProjectDescription = (project) => {
+  const trans = t(`projects.items.${project.id}.description`)
+  return (trans && trans !== `projects.items.${project.id}.description`) ? trans : project.description
+}
+
+const getProjectLongDescription = (project) => {
+  const trans = t(`projects.items.${project.id}.longDescription`)
+  if (trans && trans !== `projects.items.${project.id}.longDescription`) {
+    return trans
+  }
+  return project.longDescription || project.description
+}
+
 const toggleLanguage = (lang) => {
   if (selectedLanguages.value.includes(lang)) {
     selectedLanguages.value = selectedLanguages.value.filter(l => l !== lang)
@@ -182,11 +203,20 @@ const filterProjects = (origin) => {
   const cat = projectCategories.find(c => c.origin === origin)
   if (!cat) return []
 
+  const query = searchQuery.value.toLowerCase()
+
   let list = cat.projects.filter(project => {
     const matchesLang = project.languages.some(lang => selectedLanguages.value.includes(lang))
-    const matchesSearch = project.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                          project.description.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                          project.languages.some(l => l.toLowerCase().includes(searchQuery.value.toLowerCase()))
+    const title = getProjectTitle(project).toLowerCase()
+    const desc = getProjectDescription(project).toLowerCase()
+    const origTitle = project.title.toLowerCase()
+    const origDesc = project.description.toLowerCase()
+
+    const matchesSearch = title.includes(query) ||
+                          desc.includes(query) ||
+                          origTitle.includes(query) ||
+                          origDesc.includes(query) ||
+                          project.languages.some(l => l.toLowerCase().includes(query))
     return matchesLang && matchesSearch
   })
 
@@ -286,22 +316,22 @@ onUnmounted(() => {
 
 <template>
   <section id="projects" class="projects-section">
-    <h2 v-reveal>Mes projets</h2>
+    <h2 v-reveal>{{ t('projects.title') }}</h2>
 
     <div v-reveal="{ delay: 80 }" class="projects-controls">
       <div class="search-group">
-        <label for="project-search" class="control-label">Rechercher :</label>
+        <label for="project-search" class="control-label">{{ t('projects.searchLabel') }}</label>
         <input
           id="project-search"
           type="text"
           v-model="searchQuery"
-          placeholder="Ex: C++, Python, Portfolio..."
+          :placeholder="t('projects.searchPlaceholder')"
           class="search-input"
         />
       </div>
 
       <div class="filter-group">
-        <span class="control-label">Langages / Outils :</span>
+        <span class="control-label">{{ t('projects.filterLabel') }}</span>
         <label v-for="lang in allLanguages" :key="lang" class="checkbox-label">
           <input
             type="checkbox"
@@ -321,7 +351,7 @@ onUnmounted(() => {
         @click="isUniversitaireOpen = !isUniversitaireOpen"
         :aria-expanded="isUniversitaireOpen"
       >
-        <span class="category-title-text">Projets Universitaires <span class="count-badge">({{ filteredUniversitaires.length }})</span></span>
+        <span class="category-title-text">{{ t('projects.sectionUniversitaire') }} <span class="count-badge">({{ filteredUniversitaires.length }})</span></span>
         <span class="toggle-icon" :class="{ rotated: !isUniversitaireOpen }">▼</span>
       </button>
 
@@ -336,7 +366,7 @@ onUnmounted(() => {
               :class="{ highlighted: highlightedProjectId === project.id }"
               @click="openModal(project)"
             >
-              <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
+              <div class="pin-badge" v-if="project.pinned" :title="t('projects.pinnedTitle')">📌</div>
 
               <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
                 <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
@@ -349,12 +379,12 @@ onUnmounted(() => {
                     class="project-screenshot"
                   />
                   <div class="zoom-overlay">
-                    <span>🔍 Agrandir</span>
+                    <span>{{ t('projects.zoomBadge') }}</span>
                   </div>
                 </template>
                 <div v-else class="no-img-box">
                   <span class="no-img-text">
-                    {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+                    {{ project.title === 'Portfolio' ? t('projects.noImgPortfolio') : t('projects.noImgDefault') }}
                   </span>
                 </div>
               </div>
@@ -363,12 +393,12 @@ onUnmounted(() => {
                 <div class="project-languages-tags">
                   <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
                 </div>
-                <h4>{{ project.title }}</h4>
-                <p>{{ project.description }}</p>
+                <h4>{{ getProjectTitle(project) }}</h4>
+                <p>{{ getProjectDescription(project) }}</p>
 
                 <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
-                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Voir sur GitHub</a>
-                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Visiter le site</a>
+                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">{{ t('projects.viewGithub') }}</a>
+                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">{{ t('projects.visitSite') }}</a>
                 </div>
               </div>
             </article>
@@ -385,7 +415,7 @@ onUnmounted(() => {
         @click="isPersonnelOpen = !isPersonnelOpen"
         :aria-expanded="isPersonnelOpen"
       >
-        <span class="category-title-text">Projets Personnels <span class="count-badge">({{ filteredPersonnels.length }})</span></span>
+        <span class="category-title-text">{{ t('projects.sectionPersonnel') }} <span class="count-badge">({{ filteredPersonnels.length }})</span></span>
         <span class="toggle-icon" :class="{ rotated: !isPersonnelOpen }">▼</span>
       </button>
 
@@ -400,22 +430,22 @@ onUnmounted(() => {
               :class="{ highlighted: highlightedProjectId === project.id }"
               @click="openModal(project)"
             >
-              <div class="pin-badge" v-if="project.pinned" title="Projet épinglé">📌</div>
+              <div class="pin-badge" v-if="project.pinned" :title="t('projects.pinnedTitle')">📌</div>
 
               <div class="project-screenshot-box">
                 <template v-if="project.images && project.images.length">
                   <img
                     :src="project.images[0]"
-                    :alt="project.title"
+                    :alt="getProjectTitle(project)"
                     class="project-screenshot"
                   />
                   <div class="zoom-overlay">
-                    <span>🔍 Agrandir</span>
+                    <span>{{ t('projects.zoomBadge') }}</span>
                   </div>
                 </template>
                 <div v-else class="no-img-box">
                   <span class="no-img-text">
-                    {{ project.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+                    {{ project.title === 'Portfolio' ? t('projects.noImgPortfolio') : t('projects.noImgDefault') }}
                   </span>
                 </div>
               </div>
@@ -424,12 +454,12 @@ onUnmounted(() => {
                 <div class="project-languages-tags">
                   <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
                 </div>
-                <h4>{{ project.title }}</h4>
-                <p>{{ project.description }}</p>
+                <h4>{{ getProjectTitle(project) }}</h4>
+                <p>{{ getProjectDescription(project) }}</p>
 
                 <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
-                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Voir sur GitHub</a>
-                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Visiter le site</a>
+                  <a v-if="project.githubUrl" :href="project.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">{{ t('projects.viewGithub') }}</a>
+                  <a v-if="project.siteUrl" :href="project.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">{{ t('projects.visitSite') }}</a>
                 </div>
               </div>
             </article>
@@ -441,13 +471,13 @@ onUnmounted(() => {
     <Transition name="modal">
       <div class="modal-backdrop" v-if="activeProject" @click="closeModal">
         <div class="modal-content" @click.stop>
-          <button type="button" class="modal-close-btn" @click="closeModal" aria-label="Fermer la fenêtre">✕</button>
+          <button type="button" class="modal-close-btn" @click="closeModal" :aria-label="t('projects.closeModalAria')">✕</button>
 
           <div class="modal-header">
             <div class="project-languages-tags">
               <span class="project-tag-lang" v-for="lang in activeProject.languages" :key="lang">{{ lang }}</span>
             </div>
-            <h3>{{ activeProject.title }}</h3>
+            <h3>{{ getProjectTitle(activeProject) }}</h3>
           </div>
 
           <div class="modal-body">
@@ -455,20 +485,20 @@ onUnmounted(() => {
               <CandyCrushTerminal />
             </div>
             <div v-else-if="activeProject.images && activeProject.images.length" class="modal-screenshot-box">
-              <button type="button" class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1" aria-label="Image précédente">❮</button>
+              <button type="button" class="carousel-btn prev" @click="prevImage" v-if="activeProject.images.length > 1" :aria-label="t('projects.prevImageAria')">❮</button>
 
               <Transition name="carousel-fade" mode="out-in">
                 <img
                   :key="currentImageIndex"
                   :src="activeProject.images[currentImageIndex]"
-                  :alt="activeProject.title"
+                  :alt="getProjectTitle(activeProject)"
                   class="modal-screenshot zoomable-img"
                   @click="openZoom(activeProject.images[currentImageIndex])"
-                  title="Cliquer pour zoomer en plein écran"
+                  :title="t('projects.zoomTitle')"
                 />
               </Transition>
 
-              <button type="button" class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1" aria-label="Image suivante">❯</button>
+              <button type="button" class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1" :aria-label="t('projects.nextImageAria')">❯</button>
 
               <div class="carousel-counter" v-if="activeProject.images.length > 1">
                 {{ currentImageIndex + 1 }} / {{ activeProject.images.length }}
@@ -477,19 +507,19 @@ onUnmounted(() => {
 
             <div class="modal-screenshot-box" v-else>
               <span class="no-img-text">
-                {{ activeProject.title === 'Portfolio' ? "A-ton vraiment besoin d'images ?" : "[ Capture d'écran en cours d'ajout ]" }}
+                {{ activeProject.title === 'Portfolio' ? t('projects.noImgPortfolio') : t('projects.noImgDefault') }}
               </span>
             </div>
 
             <div class="modal-details">
-              <h4>Description détaillée</h4>
-              <p>{{ activeProject.longDescription || activeProject.description }}</p>
+              <h4>{{ t('projects.detailedDescription') }}</h4>
+              <p>{{ getProjectLongDescription(activeProject) }}</p>
             </div>
           </div>
 
           <div class="modal-footer" v-if="activeProject.githubUrl || activeProject.siteUrl">
-            <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Voir le dépôt GitHub</a>
-            <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">Visiter le site</a>
+            <a v-if="activeProject.githubUrl" :href="activeProject.githubUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">{{ t('projects.viewGithubRepo') }}</a>
+            <a v-if="activeProject.siteUrl" :href="activeProject.siteUrl" target="_blank" rel="noopener noreferrer" class="btn-outline">{{ t('projects.visitSite') }}</a>
           </div>
         </div>
       </div>
@@ -498,8 +528,8 @@ onUnmounted(() => {
     <Transition name="zoom-modal">
       <div class="zoom-lightbox-backdrop" v-if="zoomedImageSrc" @click="closeZoom">
         <div class="zoom-lightbox-content" @click.stop>
-          <button type="button" class="modal-close-btn" @click="closeZoom" aria-label="Fermer l'agrandissement">✕</button>
-          <img :src="zoomedImageSrc" alt="Agrandissement de l'image" class="zoomed-full-img" />
+          <button type="button" class="modal-close-btn" @click="closeZoom" :aria-label="t('projects.closeZoomAria')">✕</button>
+          <img :src="zoomedImageSrc" :alt="t('projects.zoomAlt')" class="zoomed-full-img" />
         </div>
       </div>
     </Transition>

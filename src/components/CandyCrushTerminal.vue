@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { CandyCrushEngine } from '@/games/candy-crush/candyCrushEngine.js'
+import { useI18n } from '@/composables/useI18n.js'
 
-const props = defineProps({
+const { t } = useI18n()
+
+defineProps({
   allowExpand: {
     type: Boolean,
     default: false
@@ -37,7 +40,7 @@ const scrollToBottom = () => {
 const isGridOrAsciiLine = (str) => {
   const trimmed = str.trim()
   if (!trimmed) return false
-  if (/^[+\-=_#|/\\\[\]]{3,}/.test(trimmed)) return true
+  if (/^[+\-=_#|/\\[\]]{3,}/.test(trimmed)) return true
   if ((str.match(/\|/g) || []).length >= 3) return true
   if (/\s{4,}/.test(str)) return true
   return false
@@ -211,16 +214,16 @@ onBeforeUnmount(() => {
           type="button"
           class="terminal-action-btn"
           @click.stop="restartGame"
-          title="Relancer le jeu"
+          :title="t('terminal.restartTitle')"
         >
-          ↺ Menu
+          {{ t('terminal.restartBtn') }}
         </button>
         <button
           v-if="allowExpand"
           type="button"
           class="terminal-action-btn expand-btn"
           @click.stop="emit('expand')"
-          title="Plein écran"
+          :title="t('terminal.fullscreenTitle')"
         >
           ⛶
         </button>
@@ -255,16 +258,16 @@ onBeforeUnmount(() => {
 
     <div class="terminal-quick-bar" v-if="isWaitingInput && currentPromptMeta" @click.stop>
       <template v-if="currentPromptMeta.type === 'menu'">
-        <button type="button" class="quick-btn" @click="submit('1')">1. Histoire</button>
-        <button type="button" class="quick-btn" @click="submit('2')">2. Classique</button>
-        <button type="button" class="quick-btn" @click="submit('3')">3. 1v1</button>
-        <button type="button" class="quick-btn" @click="submit('4')">4. Scores</button>
-        <button type="button" class="quick-btn" @click="submit('5')">5. Règles</button>
-        <button type="button" class="quick-btn danger" @click="submit('0')">0. Quitter</button>
+        <button type="button" class="quick-btn" @click="submit('1')">{{ t('terminal.quickStory') }}</button>
+        <button type="button" class="quick-btn" @click="submit('2')">{{ t('terminal.quickClassic') }}</button>
+        <button type="button" class="quick-btn" @click="submit('3')">{{ t('terminal.quick1v1') }}</button>
+        <button type="button" class="quick-btn" @click="submit('4')">{{ t('terminal.quickScores') }}</button>
+        <button type="button" class="quick-btn" @click="submit('5')">{{ t('terminal.quickRules') }}</button>
+        <button type="button" class="quick-btn danger" @click="submit('0')">{{ t('terminal.quickQuit') }}</button>
       </template>
 
       <template v-else-if="currentPromptMeta.type === 'direction'">
-        <span class="quick-label">Direction :</span>
+        <span class="quick-label">{{ t('terminal.quickDirection') }}</span>
         <button type="button" class="quick-btn" @click="submit('z')">Z ↑</button>
         <button type="button" class="quick-btn" @click="submit('q')">Q ←</button>
         <button type="button" class="quick-btn" @click="submit('s')">S ↓</button>
@@ -272,7 +275,7 @@ onBeforeUnmount(() => {
       </template>
 
       <template v-else-if="currentPromptMeta.type === 'col' || currentPromptMeta.type === 'row'">
-        <span class="quick-label">{{ currentPromptMeta.type === 'col' ? 'Col' : 'Ligne' }} :</span>
+        <span class="quick-label">{{ currentPromptMeta.type === 'col' ? t('terminal.quickCol') : t('terminal.quickRow') }}</span>
         <button
           v-for="n in (currentPromptMeta.max || 5)"
           :key="n"
@@ -285,19 +288,19 @@ onBeforeUnmount(() => {
       </template>
 
       <template v-else-if="currentPromptMeta.type === 'confirm_1'">
-        <button type="button" class="quick-btn highlight" @click="submit('1')">1. Continuer</button>
+        <button type="button" class="quick-btn highlight" @click="submit('1')">{{ t('terminal.quickContinue') }}</button>
       </template>
 
       <template v-else-if="currentPromptMeta.type === 'confirm_2'">
-        <button type="button" class="quick-btn highlight" @click="submit('2')">2. Jouer</button>
+        <button type="button" class="quick-btn highlight" @click="submit('2')">{{ t('terminal.quickPlay') }}</button>
       </template>
 
       <template v-else-if="currentPromptMeta.type === 'confirm_0'">
-        <button type="button" class="quick-btn" @click="submit('0')">0. Retour Menu</button>
+        <button type="button" class="quick-btn" @click="submit('0')">{{ t('terminal.quickBackMenu') }}</button>
       </template>
 
       <template v-else-if="currentPromptMeta.type === 'size'">
-        <span class="quick-label">Taille :</span>
+        <span class="quick-label">{{ t('terminal.quickSize') }}</span>
         <button type="button" class="quick-btn" @click="submit('5')">5</button>
         <button type="button" class="quick-btn" @click="submit('6')">6</button>
         <button type="button" class="quick-btn" @click="submit('7')">7</button>
