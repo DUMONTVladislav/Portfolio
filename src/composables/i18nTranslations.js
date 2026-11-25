@@ -122,59 +122,7 @@ export const messages = {
       detailedDescription: 'Description détaillée',
       viewGithubRepo: 'Voir le dépôt GitHub',
       closeZoomAria: "Fermer l'agrandissement",
-      zoomAlt: "Agrandissement de l'image",
-      items: {
-        'project-systemes-de-vote': {
-          title: 'Systèmes de vote',
-          description: 'Adaptation de plusieurs systèmes de vote en C++ et tests avec des fichiers Oracle',
-          longDescription: "Pour ma première expérience en C++ il m'a été demandé à moi et mon groupe de recréer 3 systèmes de vote : le vote majoritaire à 2 tours (utilisé actuellement en France), la méthode de Borda (liste de choix) et le vote limité (scrutin plurinominal majoritaire). Les programmes fonctionnent à l'aide de fichiers d'entrées et les sorties sont comparées à un fichier Oracle pour vérifier leur veracité."
-        },
-        'project-candy-crush': {
-          title: 'Candy Crush',
-          description: 'Recréation du jeu emblématique Candy Crush en C++ avec les modes suivants : classique, histoire, 1v1',
-          longDescription: "Ce deuxième projet en C++ demandait de recréer cette fois-ci Candy-Crush, l'un des jeux les plus connus sur téléphone. Cette version fonctionne au tour par tour mais simule tout de même le système de combo et la gravité (inversée malheureusement). Plusieurs mode de jeu sont disponible tels que le mode Classique, le mode 1v1, et même un mode Histoire ! BONUS : le jeu est jouable depuis cette page, testez le ! (Jeu adapté au site web grâce à Antigravity)"
-        },
-        'project-rock-o-rama': {
-          title: "Page web statique : Rock O' Rama",
-          description: "Création de ma première page web statique sur le thème du rock !",
-          longDescription: "Pour ma première impression d'HTML et CSS, il nous est demandé de créer une page web statique comportant plusieurs caractéristiques : plusieurs pages responsives avec navbar et menu hamburger maximisant google lighthouse. Je vous présente donc Rock O' Rama !"
-        },
-        'project-les-tenracs': {
-          title: "Modélisation et Exploitation d'une BDD : Les Tenracs",
-          description: "Modélisation du système de la confrérie des TENders RAClette et exploitation de données générées via Faker",
-          longDescription: "La confrérie imaginaire des TENRACs avait besoin d'une base de donnée fonctionnelle afin d'organiser leurs prochains repas. Nous nous sommes donc occupé de la création d'un MCD opérationnel avec Looping. Pour faire des statistiques de cette base de données, il a fallu créer des fausses données avec Faker puis les analyser de manière pertinente avec des bibliothèques Python telles que pandas, numpy, etc..."
-        },
-        'project-pagerank': {
-          title: 'Statistiques PageRank',
-          description: "Analyse de l'algorithme de Google PageRank avec Python",
-          longDescription: "PageRank est un algorithme utilisé pour gérer le système de référencement des sites webs. Nous avons donc tout d'abord recréé un semblant de l'algorithme et l'avons testé avec des matrices simulant un web."
-        },
-        'project-serveurs-apache-dns-mx': {
-          title: 'Mise en place de serveurs Apache, DNS et MX',
-          description: 'Mise en places des serveurs et premières notions de cybersécurité',
-          longDescription: "Pour ma première expérience en réseau, moi et mon coéquipier avons mis en place un serveur Apache ainsi que deux serveurs DNS (primaire / secondaire) et un serveur de messagerie (MX). Nous avons pu nous sensibiliser sur la cybersécurité et les mesures à prendre en lançant une attaque DoS depuis une VM pirate."
-        },
-        'project-vigiechiro': {
-          title: 'VigieChiro Compagnon',
-          description: "Modélisation, visualisation, conception et tests d'une application portant sur l'étude de la faune de nuit",
-          longDescription: "Nous avons contribué à l'application VigieChiro Compagnon en réalisant des tests unitaires pour valider chaque étape de notre Model View Controller. Le but de cette application est de mesurer l'impact de l'éclairage artificiel sur la faune de nuit (chauve-souris principalement), pour faire cela biologistes et amateurs peuvent poser des capteurs de sons qui seront répertoriés et dont les sons seront analysés pour établir des statistiques selon la localisation géographique et l'heure de la journée."
-        },
-        'project-datalab': {
-          title: 'DataLab',
-          description: 'Création d\'un site web de manipulation de BDD a but pédagogique',
-          longDescription: "Mon plus gros projet à ce jour. Pour manipuler des bases de données les élèves peuvent utiliser des interprètes en lignes comme OneCompiler qui restent superficiels ou alors PhpMyAdmin qui est plus complet mais dont l'interface est rustique voire hostile pour des débutants. Le but de DataLab serait de faire un site web en ligne qui mélangerait l'aspect 'complet' de PhpMyAdmin tout en le rendant pédagogique comme la plateforme Ametice. Les élèves pourront réaliser des exercices disponibles selon leur année de formation, groupe de TP, etc..., en créant des espaces de travail reprenant la base de données du cours. Il est prévu d'ajouter si possible un système de gamification pour rendre le site plus 'ludique'."
-        },
-        'project-flexarion': {
-          title: 'Flexarion',
-          description: 'Stratégie de référencement avancée visant à positionner le site web Flexarion en première position sur Google grâce à différentes techniques de communication',
-          longDescription: "L'objectif de ce projet est de voir comment bien faire un plan de communication. Le fonctionnement est simple, plusieurs équipes créent un studio de développement fictif Flexarion et la meilleure équipe sera celle la mieux référencée sur Google. Pour y parvenir nous avons utilisé des techniques comme le typosquatting et des outils tels que l'IA pour gérer le site web, créer du contenu sur différent réseaux sociaux afin d'avoir un maximum de visite. Entre autre en suivant le fonctionnement de l'algorithme PageRank étudié en 1ère année si une de ces pages 'perce' et qu'elle pointe vers notre site, celui-ci sera d'avantage référencé (techniquement vous contribuez au bon référencement de Flexarion en visitant mon Portfolio et l'équipe vous en remercie)."
-        },
-        'project-portfolio': {
-          title: 'Portfolio',
-          description: "Création d'un espace technique interactif avec design system sur mesure et esthétique de centre de contrôle",
-          longDescription: "Conception et développement de ce portfolio personnel sous Vue.js (Composition API). Ajout de quelques features utiles telles que des barres de recherche, systèmes de filtrage, etc..."
-        }
-      }
+      zoomAlt: "Agrandissement de l'image"
     },
     terminal: {
       restartTitle: 'Relancer le jeu',
@@ -327,59 +275,7 @@ export const messages = {
       detailedDescription: 'Detailed Description',
       viewGithubRepo: 'View GitHub Repository',
       closeZoomAria: 'Close zoomed image',
-      zoomAlt: 'Enlarged image view',
-      items: {
-        'project-systemes-de-vote': {
-          title: 'Voting Systems',
-          description: 'Implementation of several voting algorithms in C++ and validation with Oracle test files',
-          longDescription: 'For my first C++ experience, my team and I recreated 3 distinct voting systems: two-round majority runoff (as used in France), the Borda count (ranked choice), and the limited vote (block voting). The programs read formatted input datasets and compared outputs against an Oracle truth file to ensure complete algorithmic accuracy.'
-        },
-        'project-candy-crush': {
-          title: 'Candy Crush',
-          description: 'Recreation of the iconic Candy Crush game in C++ featuring Classic, Story, and 1v1 modes',
-          longDescription: 'This second C++ project involved recreating Candy Crush, one of the most famous mobile puzzle games. Running turn-by-turn in a terminal environment, it simulates full combo cascades and gravity mechanics. Several game modes are available: Classic, 1v1 duel, and a Story mode! BONUS: you can play it directly in this portfolio! (Web port assisted by Antigravity).'
-        },
-        'project-rock-o-rama': {
-          title: "Static Website: Rock O' Rama",
-          description: 'Design and build of my first static rock music website!',
-          longDescription: 'For my first hands-on experience with HTML and CSS, we built a static multi-page responsive website featuring a navigation bar, a mobile hamburger menu, and optimized Google Lighthouse performance metrics. Introducing Rock O\' Rama!'
-        },
-        'project-les-tenracs': {
-          title: 'Database Modeling & Querying: Les Tenracs',
-          description: 'Conceptual data modeling and analysis of synthetic data generated via Faker for a culinary brotherhood',
-          longDescription: 'The fictional brotherhood of TENRACs needed an operational database to organize their upcoming events. We created a conceptual data model (CDM) using Looping. To perform in-depth statistical insights, we generated realistic mock data using Faker and processed queries using Python libraries such as pandas and numpy.'
-        },
-        'project-pagerank': {
-          title: 'PageRank Statistics',
-          description: 'Analysis and simulation of Google\'s PageRank algorithm using Python',
-          longDescription: 'PageRank is the foundational algorithm used to rank websites in search engine results. We implemented a working model of the algorithm from scratch and benchmarked its convergence using transition matrices that simulate interconnected web networks.'
-        },
-        'project-serveurs-apache-dns-mx': {
-          title: 'Apache, DNS & MX Server Deployment',
-          description: 'Infrastructure setup and foundational cybersecurity defense exercises',
-          longDescription: 'For my first networking project, my teammate and I deployed an Apache web server alongside primary and secondary DNS servers and an email routing (MX) server. We explored cybersecurity essentials and hardening strategies by launching and mitigating a simulated DoS attack from a rogue virtual machine.'
-        },
-        'project-vigiechiro': {
-          title: 'VigieChiro Companion',
-          description: 'Data modeling, UI design, implementation, and automated testing of a night fauna monitoring app',
-          longDescription: 'We contributed to the VigieChiro Companion software by implementing unit tests and validating each layer of our Model-View-Controller architecture. The application measures the ecological impact of artificial light on nocturnal wildlife (primarily bats) by recording, geolocating, and analyzing sound frequencies collected by field biologists.'
-        },
-        'project-datalab': {
-          title: 'DataLab',
-          description: 'Creation of an educational web application for relational database learning and querying',
-          longDescription: 'My largest ongoing project to date. To practice database querying, students typically either use lightweight online interpreters like OneCompiler (often too simplistic) or full PhpMyAdmin instances (powerful but intimidating for beginners). DataLab provides an accessible web application combining the capabilities of PhpMyAdmin with the guided pedagogical experience of platforms like Ametice. Students can complete tailored lab exercises with dedicated sandbox workspaces, with planned gamification features.'
-        },
-        'project-flexarion': {
-          title: 'Flexarion',
-          description: 'Advanced SEO and communication strategy to rank the Flexarion website #1 on Google',
-          longDescription: 'The objective of this challenge was to execute an effective digital marketing and communication plan. Competing teams created a fictional game studio called Flexarion, with the winner being the highest-ranked team on Google. We leveraged strategies such as typosquatting and AI content workflows across multiple social networks to maximize organic traffic and backlink authority.'
-        },
-        'project-portfolio': {
-          title: 'Portfolio',
-          description: 'Interactive technical workspace with custom design system and control-center aesthetics',
-          longDescription: 'Design and implementation of this personal portfolio powered by Vue.js (Composition API). Features full bilingual localization (FR/EN), real-time search, interactive terminal emulator, and responsive layout system.'
-        }
-      }
+      zoomAlt: 'Enlarged image view'
     },
     terminal: {
       restartTitle: 'Restart game',

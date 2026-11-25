@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, onUnmounted, ref } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useI18n } from '@/composables/useI18n.js';
 
 const emit = defineEmits(['height-change'])
@@ -29,6 +29,14 @@ const indicatorStyle = ref({
 let isScrollingManual = false
 let manualScrollTimeout = null
 let navResizeObserver = null
+
+// Quand la langue change, les libellés changent de largeur : on recalcule immédiatement la barre lumineuse et la hauteur
+watch(locale, () => {
+  nextTick(() => {
+    updateIndicator(activeSection.value)
+    reportHeight()
+  })
+})
 
 const toggleTheme = () => {
   isLightMode.value = !isLightMode.value
@@ -231,13 +239,13 @@ onUnmounted(() => {
   gap: 1rem;
   padding: calc(1rem + env(safe-area-inset-top, 0px)) 2rem 1rem 2rem;
   background-color: var(--nav-bg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid color-mix(in srgb, var(--accent-color) 25%, transparent);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   z-index: 1000;
   box-sizing: border-box;
   transform: translateZ(0);
-  transition: padding 0.3s ease;
+  transition: padding 0.3s ease, border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .nav-brand {
@@ -474,8 +482,8 @@ onUnmounted(() => {
   }
 
   .logo-text {
-    font-size: 0.95rem;
-    letter-spacing: 1px;
+    font-size: 1.15rem;
+    letter-spacing: 2px;
   }
 
   .lang-btn,

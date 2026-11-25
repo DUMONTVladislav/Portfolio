@@ -54,13 +54,12 @@ const activeMobileTab = ref('timeline')
 
       <div class="card-display-box">
         <div
-          v-reveal="{ delay: 150 }"
           class="tab-content timeline-container"
           :class="{ 'mobile-hidden': activeMobileTab !== 'timeline' }"
         >
           <h3 class="desktop-only-title">{{ t('home.titleTimeline') }}</h3>
           <div class="timeline">
-            <div v-reveal="{ delay: 80 }" class="timeline-item">
+            <div class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <span class="timeline-date">{{ t('home.timeline.item1Date') }}</span>
@@ -73,7 +72,7 @@ const activeMobileTab = ref('timeline')
               </div>
             </div>
 
-            <div v-reveal="{ delay: 160 }" class="timeline-item">
+            <div class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <span class="timeline-date">{{ t('home.timeline.item2Date') }}</span>
@@ -86,7 +85,7 @@ const activeMobileTab = ref('timeline')
               </div>
             </div>
 
-            <div v-reveal="{ delay: 240 }" class="timeline-item">
+            <div class="timeline-item">
               <div class="timeline-dot"></div>
               <div class="timeline-content">
                 <span class="timeline-date">{{ t('home.timeline.item3Date') }}</span>
@@ -102,7 +101,6 @@ const activeMobileTab = ref('timeline')
         </div>
 
         <div
-          v-reveal="{ delay: 200 }"
           class="tab-content cv-container"
           :class="{ 'mobile-hidden': activeMobileTab !== 'cv' }"
         >
@@ -190,6 +188,8 @@ const activeMobileTab = ref('timeline')
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
 .card-display-box {
