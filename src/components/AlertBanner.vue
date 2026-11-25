@@ -1,7 +1,10 @@
 <script setup>
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
+import { useI18n } from '@/composables/useI18n.js';
 
 const emit = defineEmits(['visibility-change', 'height-change'])
+
+const { t } = useI18n()
 
 const isVisible = ref(false)
 const bannerRef = ref(null)
@@ -72,18 +75,18 @@ defineExpose({
   <Transition name="banner-slide" @after-leave="onAfterLeave">
     <div v-if="isVisible" ref="bannerRef" class="alert-banner">
       <div class="banner-content">
-        <span class="banner-badge">News</span>
+        <span class="banner-badge">{{ t('alert.badge') }}</span>
         <p class="banner-text">
-          ⚡ <strong>Nouvel article :</strong> Découvrez mon point de vue sur l'utilisation de l'IA !
+          {{ t('alert.textPrefix') }} <strong>{{ t('alert.textStrong') }}</strong> {{ t('alert.textSuffix') }}
         </p>
-        <a href="#news" class="banner-link">Lire l'article ➔</a>
+        <a href="#news" class="banner-link">{{ t('alert.link') }}</a>
       </div>
       <button
         type="button"
         @click="closeBanner"
         class="banner-close-btn"
-        title="Fermer l'alerte"
-        aria-label="Fermer l'alerte"
+        :title="t('alert.closeTitle')"
+        :aria-label="t('alert.closeAria')"
       >
         ✕
       </button>

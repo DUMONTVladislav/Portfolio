@@ -1,13 +1,19 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useI18n } from '@/composables/useI18n.js'
+
+const { locale, t } = useI18n()
 
 const newsList = ref([
   {
     date: "18 Novembre 2026",
     category: "IA",
     title: "Mon avis sur l'utilisation de l'IA",
+    titleEn: "My thoughts on the use of AI",
     summary: "Pour le premier article de mon Portfolio, je vous propose mon point de vue sur l'utilisation de l'IA dans le domaine professionnel et scolaire",
+    summaryEn: "For the first article of my Portfolio, here is my perspective on the use of AI in professional and academic environments.",
     content: "L'IA est devenue omniprésente dans le monde du travail et la question qui revient souvent est 'Est-ce que nous sommes remplacables par celle-ci ?'. Et bien de mon point de vue, pas forcément ! L'arrivée de l'IA peut-être comparable à celle de l'électricité ou encore celle du train à vapeur, ces technologies ont remplacé des emplois mais en ont créé d'autres. De plus, l'IA ne se débrouille pas d'elle même, il faut savoir s'en servir. De mon point de vue, il faut la voir comme un assistant qui connait beaucoup de documentation et qui code très vite ce qui peut faire gagner beaucoup de temps. Cependant elle a tendance à un peu 'mixer' tout ce qu'elle trouve et peut donc par ailleurs faire des erreurs. Ce qui est le plus souvent reproché par mes professeurs n'est pas l'utilisation de l'IA en elle même mais le fait qu'on valide son travail sans relecture et sans le comprendre. Et c'est là qu'est le point le plus important, il faut savoir 'prompter' correctement et comprendre le code produit afin de le corriger si besoin. En conclusion, pour ma part je suis toujours avide de savoir ce qui a été produit pour essayer de le reproduire par la suite et l'utilisation de l'IA permet de m'aider à réaliser beaucoup de chose tout en me laissant du temps pour les études (ce Portfolio est un parfait exemple).",
+    contentEn: "AI has become ubiquitous in the workplace, and the recurring question is: 'Can we be replaced by it?'. In my view, not necessarily! The rise of AI is akin to electricity or steam locomotives: these breakthroughs replaced some jobs but generated new ones. Moreover, AI doesn't work on its own; one must master how to leverage it. I see it as an assistant possessing vast documentation knowledge and lightning-fast coding abilities, which saves precious time. However, it often blends diverse sources and can make mistakes. The key critique from professors is not using AI per se, but blindly accepting its output without thorough review and understanding. Prompting effectively and fully comprehending the generated code is crucial. In conclusion, I remain eager to understand every output to reproduce it myself, and AI assists me in building ambitious projects while keeping time for my studies (this Portfolio being a prime example).",
     images: ["/AI.jpg"]
   }
 ])
@@ -15,6 +21,21 @@ const newsList = ref([
 const sortedNews = computed(() => {
   return [...newsList.value].sort((a, b) => new Date(b.date) - new Date(a.date))
 })
+
+const getArticleTitle = (article) => {
+  if (locale.value === 'en' && article.titleEn) return article.titleEn
+  return article.title
+}
+
+const getArticleSummary = (article) => {
+  if (locale.value === 'en' && article.summaryEn) return article.summaryEn
+  return article.summary
+}
+
+const getArticleContent = (article) => {
+  if (locale.value === 'en' && article.contentEn) return article.contentEn
+  return article.content
+}
 
 const activeArticle = ref(null)
 
@@ -43,7 +64,7 @@ onUnmounted(() => {
 
 <template>
   <section id="news" class="news-section">
-    <h2 v-reveal>News</h2>
+    <h2 v-reveal>{{ t('news.title') }}</h2>
 
     <div class="news-grid">
       <article
@@ -58,11 +79,11 @@ onUnmounted(() => {
           <span class="news-date">{{ item.date }}</span>
         </div>
 
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.summary }}</p>
+        <h3>{{ getArticleTitle(item) }}</h3>
+        <p>{{ getArticleSummary(item) }}</p>
 
         <div class="news-read-more">
-          <span>Lire le log complet ➔</span>
+          <span>{{ t('news.readFullLog') }}</span>
         </div>
       </article>
     </div>
@@ -74,7 +95,7 @@ onUnmounted(() => {
             type="button"
             class="modal-close-btn"
             @click="closeArticleModal"
-            aria-label="Fermer l'article"
+            :aria-label="t('news.closeArticleAria')"
           >
             ✕
           </button>
@@ -84,17 +105,17 @@ onUnmounted(() => {
               <span class="news-category">{{ activeArticle.category }}</span>
               <span class="news-date">{{ activeArticle.date }}</span>
             </div>
-            <h3>{{ activeArticle.title }}</h3>
+            <h3>{{ getArticleTitle(activeArticle) }}</h3>
           </div>
 
           <div class="modal-body">
             <div class="modal-images-box" v-if="activeArticle.images && activeArticle.images.length">
-              <img :src="activeArticle.images[0]" :alt="activeArticle.title" class="modal-img" />
+              <img :src="activeArticle.images[0]" :alt="getArticleTitle(activeArticle)" class="modal-img" />
             </div>
 
             <div class="modal-details">
-              <h4>Contenu de l'article</h4>
-              <p>{{ activeArticle.content }}</p>
+              <h4>{{ t('news.articleContent') }}</h4>
+              <p>{{ getArticleContent(activeArticle) }}</p>
             </div>
           </div>
         </div>
