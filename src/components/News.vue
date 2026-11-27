@@ -1,13 +1,16 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useI18n } from '@/composables/useI18n.js'
+import { useFocusTrap } from '@/composables/useFocusTrap.js'
 
 const { locale, t } = useI18n()
 
 const newsList = ref([
   {
     date: "18 Novembre 2026",
+    dateEn: "November 18, 2026",
     category: "IA",
+    categoryEn: "AI",
     title: "Mon avis sur l'utilisation de l'IA",
     titleEn: "My thoughts on the use of AI",
     summary: "Pour le premier article de mon Portfolio, je vous propose mon point de vue sur l'utilisation de l'IA dans le domaine professionnel et scolaire",
@@ -37,7 +40,21 @@ const getArticleContent = (article) => {
   return article.content
 }
 
+const getArticleDate = (article) => {
+  if (locale.value === 'en' && article.dateEn) return article.dateEn
+  return article.date
+}
+
+const getArticleCategory = (article) => {
+  if (locale.value === 'en' && article.categoryEn) return article.categoryEn
+  return article.category
+}
+
 const activeArticle = ref(null)
+const modalRef = ref(null)
+const isArticleModalOpen = computed(() => Boolean(activeArticle.value))
+
+useFocusTrap(modalRef, isArticleModalOpen)
 
 const openArticleModal = (article) => {
   activeArticle.value = article
@@ -72,11 +89,17 @@ onUnmounted(() => {
         :key="item.title"
         v-reveal="{ delay: 100 }"
         class="news-card"
+        tabindex="0"
+        role="button"
+        aria-haspopup="dialog"
+        :aria-label="getArticleTitle(item)"
         @click="openArticleModal(item)"
+        @keydown.enter.prevent="openArticleModal(item)"
+        @keydown.space.prevent="openArticleModal(item)"
       >
         <div class="news-header-meta">
-          <span class="news-category">{{ item.category }}</span>
-          <span class="news-date">{{ item.date }}</span>
+          <span class="news-category">{{ getArticleCategory(item) }}</span>
+          <span class="news-date">{{ getArticleDate(item) }}</span>
         </div>
 
         <h3>{{ getArticleTitle(item) }}</h3>
@@ -90,7 +113,15 @@ onUnmounted(() => {
 
     <Transition name="modal">
       <div class="modal-backdrop" v-if="activeArticle" @click="closeArticleModal">
-        <div class="modal-content" @click.stop>
+        <div
+          ref="modalRef"
+          class="modal-content"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="news-modal-title"
+          tabindex="-1"
+          @click.stop
+        >
           <button
             type="button"
             class="modal-close-btn"
@@ -102,10 +133,10 @@ onUnmounted(() => {
 
           <div class="modal-header">
             <div class="modal-meta-row">
-              <span class="news-category">{{ activeArticle.category }}</span>
-              <span class="news-date">{{ activeArticle.date }}</span>
+              <span class="news-category">{{ getArticleCategory(activeArticle) }}</span>
+              <span class="news-date">{{ getArticleDate(activeArticle) }}</span>
             </div>
-            <h3>{{ getArticleTitle(activeArticle) }}</h3>
+            <h3 id="news-modal-title">{{ getArticleTitle(activeArticle) }}</h3>
           </div>
 
           <div class="modal-body">
@@ -136,7 +167,7 @@ onUnmounted(() => {
 .news-section > h2 {
   font-family: var(--font-title);
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 2rem;
   text-align: left;
 }
@@ -163,7 +194,8 @@ onUnmounted(() => {
   min-width: 0;
 }
 
-.news-card:hover {
+.news-card:hover,
+.news-card:focus-visible {
   box-shadow: 0 0 20px var(--accent-color);
   transform: translateY(-3px);
 }
@@ -179,7 +211,7 @@ onUnmounted(() => {
 .news-category {
   font-family: var(--font-title);
   font-size: 0.7rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   background: color-mix(in srgb, var(--accent-color) 15%, transparent);
   border: 1px solid var(--accent-color);
   padding: 0.1rem 0.5rem;
@@ -214,7 +246,7 @@ onUnmounted(() => {
   margin-top: auto;
   font-family: var(--font-title);
   font-size: 0.8rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   letter-spacing: 0.5px;
 }
 
@@ -271,7 +303,7 @@ onUnmounted(() => {
   right: 1.5rem;
   background: transparent;
   border: 1px solid var(--accent-color);
-  color: var(--accent-color);
+  color: var(--accent-text);
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -340,7 +372,7 @@ onUnmounted(() => {
 .modal-details h4 {
   font-family: var(--font-title);
   font-size: 0.9rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -455,6 +487,23 @@ onUnmounted(() => {
 
   .modal-images-box {
     height: 170px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-card,
+  .modal-close-btn,
+  .modal-enter-active,
+  .modal-leave-active,
+  .modal-enter-active .modal-content,
+  .modal-leave-active .modal-content {
+    transition: none !important;
+  }
+
+  .news-card:hover,
+  .news-card:focus-visible,
+  .modal-close-btn:hover {
+    transform: none !important;
   }
 }
 </style>

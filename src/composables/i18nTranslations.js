@@ -8,9 +8,12 @@ export const messages = {
       contact: 'Contact',
       theme: 'Thème',
       toggleTheme: 'Changer le thème',
+      themeAriaLight: 'Passer au thème sombre',
+      themeAriaDark: 'Passer au thème clair',
       toggleLang: 'Passer en anglais (English)',
       langSwitchAria: 'Changer la langue, langue actuelle : Français',
-      menuAria: 'Menu principal'
+      menuAria: 'Menu principal',
+      skipToContent: 'Aller au contenu principal'
     },
     alert: {
       badge: 'News',
@@ -67,9 +70,24 @@ export const messages = {
       sectionAutodidacte: 'Apprentissage Autodidacte & Personnel',
       projectsLabel: 'Projets :',
       ratingLabel: 'Aisance :',
+      ratingAria: '{rating} sur 5',
       allProjects: 'Tous les projets',
       projectTagTitle: 'Voir le projet {name}',
       allProjectsTitle: 'Voir la section projets',
+      projectNames: {
+        'Systèmes de vote': 'Systèmes de vote',
+        'Candy Crush': 'Candy Crush',
+        "Rock O' Rama": "Rock O' Rama",
+        'Les Tenracs': 'Les Tenracs',
+        'PageRank': 'PageRank',
+        'Serveurs Apache/DNS/MX': 'Serveurs Apache/DNS/MX',
+        'VigieChiro': 'VigieChiro',
+        'DataLab': 'DataLab',
+        'Flexarion': 'Flexarion',
+        'Portfolio': 'Portfolio'
+      },
+      emptyResults: 'Aucune compétence ne correspond à vos critères de recherche.',
+      resultsCount: '{count} compétence(s) affichée(s)',
       categories: {
         'Infrastructure & Réseaux': 'Infrastructure & Réseaux',
         'Outils & Versioning': 'Outils & Versioning',
@@ -118,11 +136,14 @@ export const messages = {
       closeModalAria: 'Fermer la fenêtre',
       prevImageAria: 'Image précédente',
       nextImageAria: 'Image suivante',
+      carouselCounterAria: 'Image {current} sur {total}',
       zoomTitle: 'Cliquer pour zoomer en plein écran',
       detailedDescription: 'Description détaillée',
       viewGithubRepo: 'Voir le dépôt GitHub',
       closeZoomAria: "Fermer l'agrandissement",
-      zoomAlt: "Agrandissement de l'image"
+      zoomAlt: "Agrandissement de l'image",
+      emptyResults: 'Aucun projet ne correspond à vos critères de recherche.',
+      resultsCount: '{count} projet(s) affiché(s)',
     },
     terminal: {
       restartTitle: 'Relancer le jeu',
@@ -140,7 +161,9 @@ export const messages = {
       quickContinue: '1. Continuer',
       quickPlay: '2. Jouer',
       quickBackMenu: '0. Retour Menu',
-      quickSize: 'Taille :'
+      quickSize: 'Taille :',
+      inputAria: 'Entrer une commande dans le terminal Candy Crush',
+      logAria: 'Sortie du terminal Candy Crush'
     },
     footer: {
       contactTitle: 'Contact & Informations',
@@ -161,9 +184,12 @@ export const messages = {
       contact: 'Contact',
       theme: 'Theme',
       toggleTheme: 'Switch color theme',
+      themeAriaLight: 'Switch to dark theme',
+      themeAriaDark: 'Switch to light theme',
       toggleLang: 'Switch to French (Français)',
       langSwitchAria: 'Change language, current: English',
-      menuAria: 'Main menu'
+      menuAria: 'Main menu',
+      skipToContent: 'Skip to main content'
     },
     alert: {
       badge: 'News',
@@ -220,9 +246,24 @@ export const messages = {
       sectionAutodidacte: 'Self-Taught & Personal Learning',
       projectsLabel: 'Projects:',
       ratingLabel: 'Proficiency:',
+      ratingAria: '{rating} out of 5',
       allProjects: 'All projects',
       projectTagTitle: 'View project {name}',
       allProjectsTitle: 'View projects section',
+      projectNames: {
+        'Systèmes de vote': 'Voting Systems',
+        'Candy Crush': 'Candy Crush',
+        "Rock O' Rama": "Rock O' Rama",
+        'Les Tenracs': 'Les Tenracs',
+        'PageRank': 'PageRank',
+        'Serveurs Apache/DNS/MX': 'Apache/DNS/MX Servers',
+        'VigieChiro': 'VigieChiro',
+        'DataLab': 'DataLab',
+        'Flexarion': 'Flexarion',
+        'Portfolio': 'Portfolio'
+      },
+      emptyResults: 'No skills match your search criteria.',
+      resultsCount: '{count} skill(s) shown',
       categories: {
         'Infrastructure & Réseaux': 'Infrastructure & Networking',
         'Outils & Versioning': 'Tools & Version Control',
@@ -271,11 +312,66 @@ export const messages = {
       closeModalAria: 'Close modal',
       prevImageAria: 'Previous image',
       nextImageAria: 'Next image',
+      carouselCounterAria: 'Image {current} of {total}',
       zoomTitle: 'Click to view full screen',
       detailedDescription: 'Detailed Description',
       viewGithubRepo: 'View GitHub Repository',
       closeZoomAria: 'Close zoomed image',
-      zoomAlt: 'Enlarged image view'
+      zoomAlt: 'Enlarged image view',
+      emptyResults: 'No projects match your search criteria.',
+      resultsCount: '{count} project(s) shown',
+      items: {
+        'project-systemes-de-vote': {
+          title: 'Voting Systems',
+          description: 'Implementation of multiple voting systems in C++ with Oracle file testing',
+          longDescription: 'For my first C++ project, my team and I were tasked with recreating 3 voting systems: the two-round majority vote (currently used in France), the Borda method (ranked-choice list), and limited voting (multi-member plurality). The programs work with input files and outputs are compared to Oracle files for verification.'
+        },
+        'project-candy-crush': {
+          title: 'Candy Crush',
+          description: 'Recreation of the iconic Candy Crush game in C++ with the following modes: classic, story, 1v1',
+          longDescription: 'This second C++ project required recreating Candy Crush, one of the most well-known mobile games. This version is turn-based but still simulates the combo system and gravity (inverted, unfortunately). Several game modes are available: Classic, 1v1, and even a Story mode! BONUS: the game is playable from this page — give it a try! (Game adapted for the website using Antigravity)'
+        },
+        'project-rock-o-rama': {
+          title: 'Static Web Page: Rock O\' Rama',
+          description: 'Creation of my first static web page on the theme of rock music!',
+          longDescription: 'For my first experience with HTML and CSS, we were asked to create a static web page with several features: multiple responsive pages with a navbar and hamburger menu, maximizing Google Lighthouse scores. Here is Rock O\' Rama!'
+        },
+        'project-les-tenracs': {
+          title: 'Database Modeling & Exploitation: Les Tenracs',
+          description: 'Modeling of the TENders RAClette brotherhood system and data exploitation generated via Faker',
+          longDescription: 'The fictional TENRAC brotherhood needed a functional database to organize their upcoming meals. We created an operational Conceptual Data Model with Looping. To generate statistics from the database, we created synthetic data with Faker and analyzed it using Python libraries such as pandas, numpy, etc.'
+        },
+        'project-pagerank': {
+          title: 'PageRank Statistics',
+          description: 'Analysis of Google\'s PageRank algorithm with Python',
+          longDescription: 'PageRank is an algorithm used to manage website ranking systems. We first recreated a simplified version of the algorithm and tested it with matrices simulating a web.'
+        },
+        'project-serveurs-apache-dns-mx': {
+          title: 'Apache, DNS & MX Server Setup',
+          description: 'Server deployment and introduction to cybersecurity concepts',
+          longDescription: 'For my first networking experience, my teammate and I set up an Apache server along with two DNS servers (primary/secondary) and a mail server (MX). We gained awareness of cybersecurity practices and countermeasures by launching a DoS attack from a pirate VM.'
+        },
+        'project-vigiechiro': {
+          title: 'VigieChiro Companion',
+          description: 'Modeling, visualization, design and testing of an application for studying nocturnal wildlife',
+          longDescription: 'We contributed to the VigieChiro Companion application by writing unit tests to validate each step of our Model-View-Controller. The goal of this application is to measure the impact of artificial lighting on nocturnal wildlife (mainly bats). Biologists and volunteers can place sound sensors that are cataloged and whose recordings are analyzed to produce statistics based on geographic location and time of day.'
+        },
+        'project-datalab': {
+          title: 'DataLab',
+          description: 'Creation of a pedagogical database management website',
+          longDescription: 'My biggest project to date. For database practice, students can use online interpreters like OneCompiler, which remain superficial, or PhpMyAdmin, which is more complete but whose interface is rustic or even hostile for beginners. DataLab aims to create an online website that blends PhpMyAdmin\'s completeness while making it pedagogical like the Ametice platform. Students can complete exercises available based on their year of study, lab group, etc., by creating workspaces using the course database. A gamification system is planned to make the site more engaging.'
+        },
+        'project-flexarion': {
+          title: 'Flexarion',
+          description: 'Advanced SEO strategy aimed at ranking the Flexarion website first on Google using various communication techniques',
+          longDescription: 'The goal of this project is to explore how to build a solid communication plan. The concept is simple: several teams create a fictional game development studio called Flexarion, and the best team is the one ranked highest on Google. To achieve this, we used techniques like typosquatting and tools like AI to manage the website and create content on various social media platforms to maximize visits. By following the PageRank algorithm studied in the first year, if one of these pages goes viral and links back to our site, it becomes better indexed (technically, you are contributing to Flexarion\'s ranking by visiting my Portfolio — the team thanks you).'
+        },
+        'project-portfolio': {
+          title: 'Portfolio',
+          description: 'Creation of an interactive technical space with a custom design system and control center aesthetics',
+          longDescription: 'Design and development of this personal portfolio using Vue.js (Composition API). Added useful features such as search bars, filtering systems, etc.'
+        }
+      },
     },
     terminal: {
       restartTitle: 'Restart game',
@@ -293,7 +389,9 @@ export const messages = {
       quickContinue: '1. Continue',
       quickPlay: '2. Play',
       quickBackMenu: '0. Back to Menu',
-      quickSize: 'Size:'
+      quickSize: 'Size:',
+      inputAria: 'Enter a command in the Candy Crush terminal',
+      logAria: 'Candy Crush terminal output'
     },
     footer: {
       contactTitle: 'Contact & Information',
