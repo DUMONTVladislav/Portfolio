@@ -77,7 +77,7 @@ defineExpose({
       <div class="banner-content">
         <span class="banner-badge">{{ t('alert.badge') }}</span>
         <p class="banner-text">
-          {{ t('alert.textPrefix') }} <strong>{{ t('alert.textStrong') }}</strong> {{ t('alert.textSuffix') }}
+          <span aria-hidden="true">{{ t('alert.textPrefix') }}</span> <strong>{{ t('alert.textStrong') }}</strong> {{ t('alert.textSuffix') }}
         </p>
         <a href="#news" class="banner-link">{{ t('alert.link') }}</a>
       </div>
@@ -129,7 +129,7 @@ defineExpose({
 .banner-badge {
   font-family: var(--font-title);
   font-size: 0.65rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   background: color-mix(in srgb, var(--accent-color) 25%, transparent);
   border: 1px solid var(--accent-color);
   padding: 0.15rem 0.45rem;
@@ -148,7 +148,7 @@ defineExpose({
 .banner-link {
   font-family: var(--font-title);
   font-size: 0.8rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   text-decoration: none;
   font-weight: 600;
   white-space: nowrap;
@@ -163,7 +163,7 @@ defineExpose({
 .banner-close-btn {
   background: transparent;
   border: 1px solid var(--accent-color);
-  color: var(--accent-color);
+  color: var(--accent-text);
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -233,6 +233,19 @@ defineExpose({
 
   .banner-text {
     font-size: 0.74rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .banner-slide-enter-active,
+  .banner-slide-leave-active,
+  .banner-close-btn {
+    transition: none !important;
+  }
+
+  .banner-close-btn:hover,
+  .banner-close-btn:active {
+    transform: none !important;
   }
 }
 </style>

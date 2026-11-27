@@ -1,10 +1,11 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useI18n } from '@/composables/useI18n.js'
 
-const { t } = useI18n()
+const { locale, t } = useI18n()
 
 const activeMobileTab = ref('timeline')
+const cvPath = computed(() => (locale.value === 'en' ? '/cv-eng.pdf' : '/cv.pdf'))
 </script>
 
 <template>
@@ -105,12 +106,12 @@ const activeMobileTab = ref('timeline')
           :class="{ 'mobile-hidden': activeMobileTab !== 'cv' }"
         >
           <h3 class="desktop-only-title">{{ t('home.titleCv') }}</h3>
-          <iframe src="/cv.pdf" class="cv-viewer" :title="t('home.cvAria')"></iframe>
+          <iframe :key="cvPath" :src="cvPath" class="cv-viewer" :title="t('home.cvAria')"></iframe>
           <div class="cv-actions">
-            <a href="/cv.pdf" target="_blank" rel="noopener noreferrer" class="btn-outline">
+            <a :href="cvPath" target="_blank" rel="noopener noreferrer" class="btn-outline">
               {{ t('home.cvOpenTab') }}
             </a>
-            <a href="/cv.pdf" download class="btn-outline btn-secondary">
+            <a :href="cvPath" download class="btn-outline btn-secondary">
               {{ t('home.cvDownload') }}
             </a>
           </div>
@@ -140,7 +141,7 @@ const activeMobileTab = ref('timeline')
 .hero-header h1 {
   font-family: var(--font-title);
   font-size: 2.2rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 0.5rem;
 }
 
@@ -205,7 +206,7 @@ const activeMobileTab = ref('timeline')
 .card-display-box h3 {
   font-family: var(--font-title);
   font-size: 1.15rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-top: 0;
   margin-bottom: 1rem;
 }
@@ -237,7 +238,7 @@ const activeMobileTab = ref('timeline')
 }
 
 .btn-outline:hover {
-  background-color: var(--accent-color);
+  background-color: var(--accent-text);
   color: #ffffff;
   box-shadow: 0 0 12px var(--accent-color);
   transform: translateY(-2px);
@@ -281,7 +282,7 @@ const activeMobileTab = ref('timeline')
   top: 0.25rem;
   width: 10px;
   height: 10px;
-  background-color: var(--accent-color);
+  background-color: var(--accent-text);
   border-radius: 50%;
   box-shadow: 0 0 8px var(--accent-color);
 }
@@ -289,7 +290,7 @@ const activeMobileTab = ref('timeline')
 .timeline-date {
   font-family: var(--font-title);
   font-size: 0.75rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   opacity: 0.9;
 }
 
@@ -327,7 +328,7 @@ const activeMobileTab = ref('timeline')
   content: ">";
   position: absolute;
   left: 0;
-  color: var(--accent-color);
+  color: var(--accent-text);
   font-weight: bold;
 }
 
@@ -341,7 +342,7 @@ const activeMobileTab = ref('timeline')
 }
 
 .timeline-container::-webkit-scrollbar-thumb {
-  background-color: var(--accent-color);
+  background-color: var(--accent-text);
   border-radius: 4px;
   box-shadow: 0 0 5px var(--accent-color);
 }
@@ -406,7 +407,7 @@ const activeMobileTab = ref('timeline')
 .mobile-tab-btn.active {
   background: var(--accent-color);
   color: #ffffff;
-  border-color: var(--accent-color);
+  border-color: var(--accent-text);
   box-shadow: 0 0 10px var(--accent-color);
 }
 

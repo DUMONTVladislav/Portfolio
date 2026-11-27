@@ -95,7 +95,9 @@ const onNavLeave = () => {
 const onScroll = () => {
   if (isScrollingManual) return
 
-  const atBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60
+  const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0
+  const scrollHeight = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight)
+  const atBottom = window.innerHeight + scrollTop >= scrollHeight - 60
   if (atBottom) {
     if (activeSection.value !== '#footer') {
       activeSection.value = '#footer'
@@ -105,12 +107,11 @@ const onScroll = () => {
   }
 
   const navOffset = (navRef.value?.getBoundingClientRect().height || 64) + 116
-  const scrollPosition = window.scrollY + navOffset
   for (let i = navItems.value.length - 1; i >= 0; i--) {
-    const item = navItems[i]
+    const item = navItems.value[i]
     const el = document.querySelector(item.href)
     if (el) {
-      if (scrollPosition >= el.offsetTop) {
+      if (el.getBoundingClientRect().top <= navOffset) {
         if (activeSection.value !== item.href) {
           activeSection.value = item.href
           updateIndicator(item.href)
@@ -156,6 +157,7 @@ onMounted(() => {
   updateIndicator(activeSection.value)
   window.addEventListener('resize', onResize)
   window.addEventListener('scroll', onScroll, { passive: true })
+  document.body.addEventListener('scroll', onScroll, { passive: true })
   document.addEventListener('click', onDocumentClick)
   document.addEventListener('keydown', onKeydown)
 })
@@ -164,6 +166,7 @@ onUnmounted(() => {
   navResizeObserver?.disconnect()
   window.removeEventListener('resize', onResize)
   window.removeEventListener('scroll', onScroll)
+  document.body.removeEventListener('scroll', onScroll)
   document.removeEventListener('click', onDocumentClick)
   document.removeEventListener('keydown', onKeydown)
   clearTimeout(manualScrollTimeout)
@@ -207,7 +210,14 @@ onUnmounted(() => {
         <span class="lang-text">{{ locale === 'fr' ? 'EN' : 'FR' }}</span>
       </button>
 
-      <button type="button" @click="toggleTheme" class="theme-btn" :title="t('nav.toggleTheme')">
+      <button
+        type="button"
+        @click="toggleTheme"
+        class="theme-btn"
+        :title="t('nav.toggleTheme')"
+        :aria-label="isLightMode ? t('nav.themeAriaLight') : t('nav.themeAriaDark')"
+        :aria-pressed="isLightMode"
+      >
         {{ t('nav.theme') }}
       </button>
 
@@ -267,7 +277,7 @@ onUnmounted(() => {
 }
 
 .logo-last {
-  color: var(--accent-color);
+  color: var(--accent-text);
   font-weight: 700;
   text-shadow: 0 0 10px color-mix(in srgb, var(--accent-color) 40%, transparent);
 }
@@ -294,13 +304,13 @@ onUnmounted(() => {
 }
 
 .nav-links a.active {
-  color: var(--accent-color);
+  color: var(--accent-text);
   font-weight: 600;
   text-shadow: 0 0 10px color-mix(in srgb, var(--accent-color) 40%, transparent);
 }
 
 .nav-links a:hover {
-  color: var(--accent-color);
+  color: var(--accent-text);
 }
 
 .nav-indicator {
@@ -439,8 +449,9 @@ onUnmounted(() => {
     max-height: 0;
     overflow: hidden;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0.35s step-end;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     box-sizing: border-box;
@@ -449,7 +460,9 @@ onUnmounted(() => {
   .nav-links.is-open {
     max-height: 380px;
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, visibility 0s;
   }
 
   .nav-links li {
@@ -471,7 +484,7 @@ onUnmounted(() => {
   .nav-links a.active {
     background: color-mix(in srgb, var(--accent-color) 15%, transparent);
     border-left-color: var(--accent-color);
-    color: var(--accent-color);
+    color: var(--accent-text);
   }
 }
 
@@ -507,6 +520,24 @@ onUnmounted(() => {
 
   .hamburger-btn.is-active .hamburger-bar:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .nav-links,
+  .nav-links a,
+  .nav-indicator,
+  .lang-btn,
+  .theme-btn,
+  .hamburger-btn,
+  .hamburger-bar {
+    transition: none !important;
+  }
+
+  .lang-btn:hover,
+  .theme-btn:hover {
+    transform: none !important;
   }
 }
 </style>

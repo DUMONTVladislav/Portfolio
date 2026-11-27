@@ -8,7 +8,7 @@ const { t } = useI18n()
   <footer id="footer" class="footer-section">
     <div v-reveal class="footer-container">
       <div class="footer-info">
-        <h3>{{ t('footer.contactTitle') }}</h3>
+        <h2>{{ t('footer.contactTitle') }}</h2>
         <p>{{ t('footer.subtitle') }}</p>
         <p>{{ t('footer.university') }}</p>
         <p>
@@ -37,7 +37,7 @@ const { t } = useI18n()
       </div>
 
       <div class="footer-legal">
-        <h3>{{ t('footer.legalTitle') }}</h3>
+        <h2>{{ t('footer.legalTitle') }}</h2>
         <p>{{ t('footer.legalP1') }}</p>
         <p>{{ t('footer.legalP2') }}</p>
       </div>
@@ -72,10 +72,10 @@ const { t } = useI18n()
   min-width: 0;
 }
 
-.footer-section h3 {
+.footer-section h2 {
   font-family: var(--font-title);
   font-size: 1.1rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -98,12 +98,12 @@ const { t } = useI18n()
 }
 
 .social-separator {
-  color: var(--accent-color);
+  color: var(--accent-text);
   opacity: 0.6;
 }
 
 .footer-link {
-  color: var(--accent-color);
+  color: var(--accent-text);
   text-decoration: none;
   overflow-wrap: anywhere;
   transition: opacity 0.3s ease;

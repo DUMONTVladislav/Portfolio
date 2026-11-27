@@ -31,7 +31,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="background-effect-container">
+  <div class="background-effect-container" aria-hidden="true">
     <div class="bg-layer cyber-grid" :style="mouseGridStyle">
       <!-- Grille de base : repère subtil bien visible -->
       <div class="grid-mesh-base"></div>

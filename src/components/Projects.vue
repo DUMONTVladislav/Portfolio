@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import CandyCrushTerminal from './CandyCrushTerminal.vue'
 import { useI18n } from '@/composables/useI18n.js'
+import { useFocusTrap } from '@/composables/useFocusTrap.js'
 
 const { t } = useI18n()
 
@@ -140,10 +141,24 @@ const isPersonnelOpen = ref(true)
 const activeProject = ref(null)
 const currentImageIndex = ref(0)
 const zoomedImageSrc = ref(null)
+const projectModalRef = ref(null)
+const zoomModalRef = ref(null)
+
+const isProjectModalOpen = computed(() => Boolean(activeProject.value))
+const isZoomModalOpen = computed(() => Boolean(zoomedImageSrc.value))
+
+useFocusTrap(projectModalRef, isProjectModalOpen, { isSuspended: isZoomModalOpen })
+useFocusTrap(zoomModalRef, isZoomModalOpen)
 
 const openModal = (project) => {
   activeProject.value = project
   currentImageIndex.value = 0
+}
+
+const onCardKeydown = (e, project) => {
+  if (e.target !== e.currentTarget) return
+  e.preventDefault()
+  openModal(project)
 }
 
 const closeModal = () => {
@@ -343,6 +358,10 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <p class="sr-only" aria-live="polite">
+      {{ t('projects.resultsCount', { count: filteredUniversitaires.length + filteredPersonnels.length }) }}
+    </p>
+
     <div v-reveal="{ delay: 100 }" class="project-category-group" v-if="filteredUniversitaires.length">
       <button
         type="button"
@@ -352,7 +371,7 @@ onUnmounted(() => {
         :aria-expanded="isUniversitaireOpen"
       >
         <span class="category-title-text">{{ t('projects.sectionUniversitaire') }} <span class="count-badge">({{ filteredUniversitaires.length }})</span></span>
-        <span class="toggle-icon" :class="{ rotated: !isUniversitaireOpen }">▼</span>
+        <span class="toggle-icon" aria-hidden="true" :class="{ rotated: !isUniversitaireOpen }">▼</span>
       </button>
 
       <div class="section-collapse" :class="{ 'is-collapsed': !isUniversitaireOpen }">
@@ -364,9 +383,17 @@ onUnmounted(() => {
               :id="project.id"
               class="project-card-large clickable-card"
               :class="{ highlighted: highlightedProjectId === project.id }"
+              tabindex="0"
+              role="button"
+              aria-haspopup="dialog"
+              :aria-label="getProjectTitle(project)"
               @click="openModal(project)"
+              @keydown.enter="onCardKeydown($event, project)"
+              @keydown.space="onCardKeydown($event, project)"
             >
-              <div class="pin-badge" v-if="project.pinned" :title="t('projects.pinnedTitle')">📌</div>
+              <div class="pin-badge" v-if="project.pinned" role="img" :aria-label="t('projects.pinnedTitle')" :title="t('projects.pinnedTitle')">
+                <span aria-hidden="true">📌</span>
+              </div>
 
               <div v-if="project.title === 'Candy Crush'" class="project-terminal-box" @click.stop>
                 <CandyCrushTerminal :allow-expand="true" @expand="openModal(project)" />
@@ -378,7 +405,7 @@ onUnmounted(() => {
                     :alt="project.title"
                     class="project-screenshot"
                   />
-                  <div class="zoom-overlay">
+                  <div class="zoom-overlay" aria-hidden="true">
                     <span>{{ t('projects.zoomBadge') }}</span>
                   </div>
                 </template>
@@ -393,7 +420,7 @@ onUnmounted(() => {
                 <div class="project-languages-tags">
                   <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
                 </div>
-                <h4>{{ getProjectTitle(project) }}</h4>
+                <h3>{{ getProjectTitle(project) }}</h3>
                 <p>{{ getProjectDescription(project) }}</p>
 
                 <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
@@ -416,7 +443,7 @@ onUnmounted(() => {
         :aria-expanded="isPersonnelOpen"
       >
         <span class="category-title-text">{{ t('projects.sectionPersonnel') }} <span class="count-badge">({{ filteredPersonnels.length }})</span></span>
-        <span class="toggle-icon" :class="{ rotated: !isPersonnelOpen }">▼</span>
+        <span class="toggle-icon" aria-hidden="true" :class="{ rotated: !isPersonnelOpen }">▼</span>
       </button>
 
       <div class="section-collapse" :class="{ 'is-collapsed': !isPersonnelOpen }">
@@ -428,9 +455,17 @@ onUnmounted(() => {
               :id="project.id"
               class="project-card-large clickable-card"
               :class="{ highlighted: highlightedProjectId === project.id }"
+              tabindex="0"
+              role="button"
+              aria-haspopup="dialog"
+              :aria-label="getProjectTitle(project)"
               @click="openModal(project)"
+              @keydown.enter="onCardKeydown($event, project)"
+              @keydown.space="onCardKeydown($event, project)"
             >
-              <div class="pin-badge" v-if="project.pinned" :title="t('projects.pinnedTitle')">📌</div>
+              <div class="pin-badge" v-if="project.pinned" role="img" :aria-label="t('projects.pinnedTitle')" :title="t('projects.pinnedTitle')">
+                <span aria-hidden="true">📌</span>
+              </div>
 
               <div class="project-screenshot-box">
                 <template v-if="project.images && project.images.length">
@@ -439,7 +474,7 @@ onUnmounted(() => {
                     :alt="getProjectTitle(project)"
                     class="project-screenshot"
                   />
-                  <div class="zoom-overlay">
+                  <div class="zoom-overlay" aria-hidden="true">
                     <span>{{ t('projects.zoomBadge') }}</span>
                   </div>
                 </template>
@@ -454,7 +489,7 @@ onUnmounted(() => {
                 <div class="project-languages-tags">
                   <span class="project-tag-lang" v-for="lang in project.languages" :key="lang">{{ lang }}</span>
                 </div>
-                <h4>{{ getProjectTitle(project) }}</h4>
+                <h3>{{ getProjectTitle(project) }}</h3>
                 <p>{{ getProjectDescription(project) }}</p>
 
                 <div class="project-actions" v-if="project.githubUrl || project.siteUrl" @click.stop>
@@ -468,16 +503,28 @@ onUnmounted(() => {
       </div>
     </div>
 
+    <div v-if="!filteredUniversitaires.length && !filteredPersonnels.length" class="empty-results" role="status">
+      {{ t('projects.emptyResults') }}
+    </div>
+
     <Transition name="modal">
       <div class="modal-backdrop" v-if="activeProject" @click="closeModal">
-        <div class="modal-content" @click.stop>
+        <div
+          ref="projectModalRef"
+          class="modal-content"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="project-modal-title"
+          tabindex="-1"
+          @click.stop
+        >
           <button type="button" class="modal-close-btn" @click="closeModal" :aria-label="t('projects.closeModalAria')">✕</button>
 
           <div class="modal-header">
             <div class="project-languages-tags">
               <span class="project-tag-lang" v-for="lang in activeProject.languages" :key="lang">{{ lang }}</span>
             </div>
-            <h3>{{ getProjectTitle(activeProject) }}</h3>
+            <h3 id="project-modal-title">{{ getProjectTitle(activeProject) }}</h3>
           </div>
 
           <div class="modal-body">
@@ -493,14 +540,18 @@ onUnmounted(() => {
                   :src="activeProject.images[currentImageIndex]"
                   :alt="getProjectTitle(activeProject)"
                   class="modal-screenshot zoomable-img"
+                  tabindex="0"
+                  role="button"
                   @click="openZoom(activeProject.images[currentImageIndex])"
+                  @keydown.enter.prevent="openZoom(activeProject.images[currentImageIndex])"
+                  @keydown.space.prevent="openZoom(activeProject.images[currentImageIndex])"
                   :title="t('projects.zoomTitle')"
                 />
               </Transition>
 
               <button type="button" class="carousel-btn next" @click="nextImage" v-if="activeProject.images.length > 1" :aria-label="t('projects.nextImageAria')">❯</button>
 
-              <div class="carousel-counter" v-if="activeProject.images.length > 1">
+              <div class="carousel-counter" v-if="activeProject.images.length > 1" aria-live="polite" :aria-label="t('projects.carouselCounterAria', { current: currentImageIndex + 1, total: activeProject.images.length })">
                 {{ currentImageIndex + 1 }} / {{ activeProject.images.length }}
               </div>
             </div>
@@ -527,7 +578,16 @@ onUnmounted(() => {
 
     <Transition name="zoom-modal">
       <div class="zoom-lightbox-backdrop" v-if="zoomedImageSrc" @click="closeZoom">
-        <div class="zoom-lightbox-content" @click.stop>
+        <div
+          ref="zoomModalRef"
+          class="zoom-lightbox-content"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="zoom-modal-title"
+          tabindex="-1"
+          @click.stop
+        >
+          <h3 id="zoom-modal-title" class="sr-only">{{ t('projects.zoomAlt') }}</h3>
           <button type="button" class="modal-close-btn" @click="closeZoom" :aria-label="t('projects.closeZoomAria')">✕</button>
           <img :src="zoomedImageSrc" :alt="t('projects.zoomAlt')" class="zoomed-full-img" />
         </div>
@@ -548,7 +608,7 @@ onUnmounted(() => {
 .projects-section > h2 {
   font-family: var(--font-title);
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 2rem;
   text-align: left;
 }
@@ -584,8 +644,9 @@ onUnmounted(() => {
   transition: all 0.3s ease;
 }
 
-.search-input:focus {
-  border-color: var(--accent-color);
+.search-input:focus,
+.search-input:focus-visible {
+  border-color: var(--accent-text);
   box-shadow: 0 0 8px var(--accent-color);
 }
 
@@ -599,7 +660,7 @@ onUnmounted(() => {
 .control-label {
   font-family: var(--font-title);
   font-size: 0.8rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -633,7 +694,8 @@ onUnmounted(() => {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
-.category-toggle-btn:hover {
+.category-toggle-btn:hover,
+.category-toggle-btn:focus-visible {
   background: color-mix(in srgb, var(--accent-color) 10%, var(--nav-bg));
   box-shadow: 0 0 12px var(--accent-color);
 }
@@ -683,7 +745,7 @@ onUnmounted(() => {
 
 .toggle-icon {
   font-size: 0.9rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   transition: transform 0.3s ease;
   flex-shrink: 0;
 }
@@ -714,7 +776,8 @@ onUnmounted(() => {
   position: relative;
 }
 
-.project-card-large:hover {
+.project-card-large:hover,
+.project-card-large:focus-visible {
   box-shadow: 0 0 20px var(--accent-color);
   transform: translateY(-3px);
 }
@@ -738,7 +801,7 @@ onUnmounted(() => {
 
 .project-card-large:target,
 .project-card-large.highlighted {
-  border-color: var(--accent-color);
+  border-color: var(--accent-text);
   box-shadow: 0 0 25px var(--accent-color), inset 0 0 10px color-mix(in srgb, var(--accent-color) 25%, transparent);
   animation: project-pulse 1.8s ease-in-out;
 }
@@ -820,7 +883,7 @@ onUnmounted(() => {
 .zoom-overlay span {
   background: var(--nav-bg);
   border: 1px solid var(--accent-color);
-  color: var(--accent-color);
+  color: var(--accent-text);
   padding: 0.6rem 1.2rem;
   border-radius: 6px;
   font-family: var(--font-title);
@@ -858,7 +921,7 @@ onUnmounted(() => {
 .project-tag-lang {
   font-family: var(--font-title);
   font-size: 0.7rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   background: color-mix(in srgb, var(--accent-color) 15%, transparent);
   border: 1px solid var(--accent-color);
   padding: 0.1rem 0.5rem;
@@ -867,7 +930,7 @@ onUnmounted(() => {
   letter-spacing: 0.5px;
 }
 
-.project-content h4 {
+.project-content h3 {
   font-family: var(--font-title);
   font-size: 1.4rem;
   color: var(--text-color);
@@ -906,7 +969,7 @@ onUnmounted(() => {
 }
 
 .btn-outline:hover {
-  background-color: var(--accent-color);
+  background-color: var(--accent-text);
   color: #ffffff;
   box-shadow: 0 0 12px var(--accent-color);
   transform: translateY(-2px);
@@ -950,7 +1013,7 @@ onUnmounted(() => {
   right: 1.5rem;
   background: transparent;
   border: 1px solid var(--accent-color);
-  color: var(--accent-color);
+  color: var(--accent-text);
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -1018,9 +1081,9 @@ onUnmounted(() => {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.72);
   border: 1px solid var(--accent-color);
-  color: var(--accent-color);
+  color: #f8fafc;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -1052,9 +1115,9 @@ onUnmounted(() => {
   position: absolute;
   bottom: 0.8rem;
   right: 1rem;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.78);
   border: 1px solid var(--accent-color);
-  color: var(--accent-color);
+  color: #f8fafc;
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
   font-family: var(--font-title);
@@ -1073,8 +1136,8 @@ onUnmounted(() => {
 .no-img-text {
   font-family: var(--font-title);
   font-size: 0.9rem;
-  color: var(--accent-color);
-  opacity: 0.8;
+  color: var(--accent-text);
+  opacity: 0.9;
   letter-spacing: 0.5px;
 }
 
@@ -1089,7 +1152,7 @@ onUnmounted(() => {
 .modal-details h4 {
   font-family: var(--font-title);
   font-size: 0.9rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1320,7 +1383,7 @@ onUnmounted(() => {
     height: 260px;
   }
 
-  .project-content h4 {
+  .project-content h3 {
     font-size: 1.15rem;
   }
 
@@ -1396,6 +1459,42 @@ onUnmounted(() => {
 
   .checkbox-label {
     font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-collapse,
+  .section-collapse.is-collapsed,
+  .toggle-icon,
+  .project-card-large,
+  .category-toggle-btn,
+  .modal-close-btn,
+  .carousel-btn,
+  .project-item-enter-active,
+  .project-item-leave-active,
+  .project-item-move,
+  .modal-enter-active,
+  .modal-leave-active,
+  .modal-enter-active .modal-content,
+  .modal-leave-active .modal-content,
+  .zoom-modal-enter-active,
+  .zoom-modal-leave-active,
+  .zoom-modal-enter-active .zoom-lightbox-content,
+  .zoom-modal-leave-active .zoom-lightbox-content,
+  .carousel-fade-enter-active,
+  .carousel-fade-leave-active {
+    transition: none !important;
+  }
+
+  .project-card-large:target,
+  .project-card-large.highlighted {
+    animation: none !important;
+  }
+
+  .project-card-large:hover,
+  .project-card-large:focus-visible,
+  .modal-close-btn:hover {
+    transform: none !important;
   }
 }
 </style>

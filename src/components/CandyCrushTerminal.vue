@@ -231,7 +231,7 @@ onBeforeUnmount(() => {
     </div>
 
     <div class="terminal-screen" ref="terminalBodyRef">
-      <div class="terminal-output">
+      <div class="terminal-output" role="log" aria-live="polite" :aria-label="t('terminal.logAria')">
         <div v-for="(line, lineIdx) in lines" :key="lineIdx" class="terminal-line">
           <span
             v-for="(segment, segIdx) in line"
@@ -242,17 +242,18 @@ onBeforeUnmount(() => {
       </div>
 
       <div v-if="isWaitingInput" class="terminal-input-row">
-        <span class="terminal-cursor-prompt">&gt;</span>
+        <span class="terminal-cursor-prompt" aria-hidden="true">&gt;</span>
         <input
           ref="inputRef"
           type="text"
           v-model="userInput"
           class="terminal-real-input"
+          :aria-label="t('terminal.inputAria')"
           @keydown.enter="submit()"
           autocomplete="off"
           spellcheck="false"
         />
-        <span class="terminal-cursor-blink">█</span>
+        <span class="terminal-cursor-blink" aria-hidden="true">█</span>
       </div>
     </div>
 
@@ -397,10 +398,13 @@ onBeforeUnmount(() => {
   transition: all 0.2s ease;
 }
 
-.terminal-action-btn:hover {
+.terminal-action-btn:hover,
+.terminal-action-btn:focus-visible {
   background: var(--accent-color, #38bdf8);
   color: #ffffff;
   border-color: var(--accent-color, #38bdf8);
+  outline: 2px solid #f1f5f9;
+  outline-offset: 2px;
 }
 
 .expand-btn {
@@ -511,11 +515,14 @@ onBeforeUnmount(() => {
   transition: all 0.2s ease;
 }
 
-.quick-btn:hover {
+.quick-btn:hover,
+.quick-btn:focus-visible {
   background: var(--accent-color, #0055a5);
   color: #ffffff;
   border-color: var(--accent-color, #0055a5);
   transform: translateY(-1px);
+  outline: 2px solid #f1f5f9;
+  outline-offset: 2px;
 }
 
 .quick-btn.danger {

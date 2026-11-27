@@ -226,7 +226,8 @@ const getProjectDisplayName = (proj) => {
   if (proj === 'Tous les projets') {
     return t('skills.allProjects')
   }
-  return proj
+  const translated = t(`skills.projectNames.${proj}`)
+  return (translated && translated !== `skills.projectNames.${proj}`) ? translated : proj
 }
 
 const onProjectClick = (projectName) => {
@@ -277,6 +278,10 @@ const onProjectClick = (projectName) => {
       </div>
     </div>
 
+    <p class="sr-only" aria-live="polite">
+      {{ t('skills.resultsCount', { count: cursusSkills.length + autodidacteSkills.length }) }}
+    </p>
+
     <div v-reveal="{ delay: 100 }" class="skill-section-group" v-if="cursusSkills.length">
       <button 
         type="button"
@@ -286,7 +291,7 @@ const onProjectClick = (projectName) => {
         :aria-expanded="isCursusOpen"
       >
         <span class="category-title-text">{{ t('skills.sectionCursus') }} <span class="count-badge">({{ cursusSkills.length }})</span></span>
-        <span class="toggle-icon" :class="{ 'rotated': !isCursusOpen }">▼</span>
+        <span class="toggle-icon" aria-hidden="true" :class="{ 'rotated': !isCursusOpen }">▼</span>
       </button>
 
       <div class="section-collapse" :class="{ 'is-collapsed': !isCursusOpen }">
@@ -298,7 +303,7 @@ const onProjectClick = (projectName) => {
               class="skill-card"
               :class="{ 'reverse': index % 2 !== 1 }"
             >
-              <div class="skill-icon-box">
+              <div class="skill-icon-box" aria-hidden="true">
                 <span class="skill-emoji">{{ skill.icon }}</span>
               </div>
 
@@ -321,10 +326,15 @@ const onProjectClick = (projectName) => {
 
                 <div class="skill-rating-container">
                   <span class="rating-label">{{ t('skills.ratingLabel') }}</span>
-                  <div class="skill-rating">
+                  <div
+                    class="skill-rating"
+                    role="img"
+                    :aria-label="t('skills.ratingAria', { rating: skill.rating })"
+                  >
                     <span 
                       v-for="star in 5" 
                       :key="star" 
+                      aria-hidden="true"
                       class="star" 
                       :class="{ 
                         'filled': star <= skill.rating, 
@@ -349,7 +359,7 @@ const onProjectClick = (projectName) => {
         :aria-expanded="isAutodidacteOpen"
       >
         <span class="category-title-text">{{ t('skills.sectionAutodidacte') }} <span class="count-badge">({{ autodidacteSkills.length }})</span></span>
-        <span class="toggle-icon" :class="{ 'rotated': !isAutodidacteOpen }">▼</span>
+        <span class="toggle-icon" aria-hidden="true" :class="{ 'rotated': !isAutodidacteOpen }">▼</span>
       </button>
 
       <div class="section-collapse" :class="{ 'is-collapsed': !isAutodidacteOpen }">
@@ -361,7 +371,7 @@ const onProjectClick = (projectName) => {
               class="skill-card"
               :class="{ 'reverse': index % 2 !== 1 }"
             >
-              <div class="skill-icon-box">
+              <div class="skill-icon-box" aria-hidden="true">
                 <span class="skill-emoji">{{ skill.icon }}</span>
               </div>
 
@@ -384,10 +394,15 @@ const onProjectClick = (projectName) => {
 
                 <div class="skill-rating-container">
                   <span class="rating-label">{{ t('skills.ratingLabel') }}</span>
-                  <div class="skill-rating">
+                  <div
+                    class="skill-rating"
+                    role="img"
+                    :aria-label="t('skills.ratingAria', { rating: skill.rating })"
+                  >
                     <span 
                       v-for="star in 5" 
                       :key="star" 
+                      aria-hidden="true"
                       class="star" 
                       :class="{ 
                         'filled': star <= skill.rating, 
@@ -401,6 +416,10 @@ const onProjectClick = (projectName) => {
           </TransitionGroup>
         </div>
       </div>
+    </div>
+
+    <div v-if="!cursusSkills.length && !autodidacteSkills.length" class="empty-results" role="status">
+      {{ t('skills.emptyResults') }}
     </div>
   </section>
 </template>
@@ -417,7 +436,7 @@ const onProjectClick = (projectName) => {
 .skills-section h2 {
   font-family: var(--font-title);
   font-size: 2rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   margin-bottom: 2rem;
   text-align: left;
 }
@@ -453,7 +472,8 @@ const onProjectClick = (projectName) => {
   transition: all 0.3s ease;
 }
 
-.search-input:focus {
+.search-input:focus,
+.search-input:focus-visible {
   border-color: var(--accent-color);
   box-shadow: 0 0 8px var(--accent-color);
 }
@@ -474,7 +494,7 @@ const onProjectClick = (projectName) => {
 .control-label {
   font-family: var(--font-title);
   font-size: 0.8rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -499,6 +519,13 @@ const onProjectClick = (projectName) => {
   cursor: pointer;
 }
 
+.sort-select:focus-visible {
+  border-color: var(--accent-color);
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  box-shadow: 0 0 8px var(--accent-color);
+}
+
 .skill-section-group {
   margin-bottom: 2.5rem;
 }
@@ -519,7 +546,8 @@ const onProjectClick = (projectName) => {
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
 
-.category-toggle-btn:hover {
+.category-toggle-btn:hover,
+.category-toggle-btn:focus-visible {
   background: color-mix(in srgb, var(--accent-color) 10%, var(--nav-bg));
   box-shadow: 0 0 12px var(--accent-color);
 }
@@ -569,7 +597,7 @@ const onProjectClick = (projectName) => {
 
 .toggle-icon {
   font-size: 0.9rem;
-  color: var(--accent-color);
+  color: var(--accent-text);
   transition: transform 0.3s ease;
   flex-shrink: 0;
 }
@@ -646,8 +674,8 @@ const onProjectClick = (projectName) => {
 .skill-category {
   font-family: var(--font-title);
   font-size: 0.7rem;
-  color: var(--accent-color);
-  opacity: 0.8;
+  color: var(--accent-text);
+  opacity: 0.9;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
@@ -726,12 +754,12 @@ const onProjectClick = (projectName) => {
 }
 
 .star.filled {
-  color: var(--accent-color);
+  color: var(--accent-text);
   text-shadow: 0 0 5px var(--accent-color);
 }
 
 .star.half {
-  background: linear-gradient(90deg, var(--accent-color) 50%, color-mix(in srgb, var(--text-color) 25%, transparent) 50%);
+  background: linear-gradient(90deg, var(--accent-text) 50%, color-mix(in srgb, var(--text-color) 25%, transparent) 50%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 0 3px var(--accent-color));
@@ -834,6 +862,23 @@ const onProjectClick = (projectName) => {
 
   .checkbox-label {
     font-size: 0.8rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-collapse,
+  .section-collapse.is-collapsed,
+  .toggle-icon,
+  .skill-card,
+  .category-toggle-btn,
+  .grid-item-enter-active,
+  .grid-item-leave-active,
+  .grid-item-move {
+    transition: none !important;
+  }
+
+  .skill-card:hover {
+    transform: none !important;
   }
 }
 </style>
